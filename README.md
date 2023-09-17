@@ -1,27 +1,15 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+# Dir. Layout
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+├─api: API를 모아놓은 폴더입니다.
+├─assets: logo와 같은 변하지않는 이미지를 모아놓은 폴더입니다.
+├─components: 컴포넌트를 정의하는 폴더입니다.
+│  ├─common: 공용 컴포넌트를 정의하는 폴더입니다.
+├─constants: 상수를 정의하는 폴더입니다.
+├─hooks: 커스텀hook을 정의하는 폴더입니다.
+├─mocks: mock데이터를 모아놓은 폴더입니다.
+├─pages: 각 페이지를 정의하는 폴더입니다.
+├─store: 상태관리를 위한 폴더입니다.
+├─styles: 공용으로 사용되는 스타일을 정의하는 폴더입니다.
+├─types: 프론트 공용 타입을 정의하는 폴더입니다. 
+└─utils: 자주사용되는 메소드를 정의하는 폴더입니다.
+```
