@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import FoodMateLogo from '../../assets/logo.svg';
 import { Link } from 'react-router-dom';
+import { NAV_MENUS } from '../../constants/nav-menus';
 
 const StyledNavContainer = styled.div`
   display: flex;
@@ -52,12 +53,6 @@ const SignInUp = styled.div`
 `;
 
 const Nav = () => {
-  const menus = [
-    { name: 'search', title: '밥친구구해요' },
-    { name: 'neighborhood', title: '내근처모임' },
-    { name: 'information', title: '모임정보' },
-    { name: 'mypage', title: '마이페이지' },
-  ];
   return (
     <StyledNavContainer>
       <NavContent>
@@ -67,10 +62,10 @@ const Nav = () => {
           </Link>
         </h1>
         <Links>
-          {menus.map((menu) => {
+          {NAV_MENUS.map((menu) => {
             return (
-              <li key={menu.name}>
-                <Link to={`/${menu.name}`}>{menu.title}</Link>
+              <li key={menu.path}>
+                <Link to={`/${menu.path}`}>{menu.title}</Link>
               </li>
             );
           })}
