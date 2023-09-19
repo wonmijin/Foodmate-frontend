@@ -3,8 +3,8 @@ import styled from "styled-components";
 interface BasicButtonPropsType {
     children: React.ReactNode;
     $fontSize: string;
-    $fontColor: string;
-    $backgdColor: string;
+    $fontColor?: string;
+    $backgdColor?: string;
     $borderColor?: string;
     $hoverFontColor?: string;
     $hoverBackgdColor?: string;
@@ -13,9 +13,9 @@ interface BasicButtonPropsType {
 
 export const BasicButton = ({
     children,
-    $fontColor,
-    $backgdColor,
-    $borderColor,
+    $fontColor = "#212121",
+    $backgdColor = "#FFCE00",
+    $borderColor = $backgdColor,
     $hoverFontColor,
     $hoverBackgdColor,
     $fontSize,
