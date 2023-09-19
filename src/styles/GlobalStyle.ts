@@ -1,17 +1,18 @@
 import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
-@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+export const GlobalStyle = createGlobalStyle`
+
+@font-face {
+  font-family: "spoqa";
+  src: url('../assets/fonts/SpoqaHanSansNeo-Medium.otf');
+}
 
   *, *::before, *::after {
     margin: 0;
     padding: 0;
     list-style: none;
     box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+    font-family: 'spoqa', 'sans-serif';
   }
 `;
 
