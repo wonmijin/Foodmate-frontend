@@ -3,15 +3,27 @@ import styled from "styled-components";
 interface MenuLabelPropsType {
   children: React.ReactNode;
   $menuColor: string;
+  $isSelected?: boolean;
+  onClick?: () => void;
 }
 
-export const MenuLabel = ({ children, $menuColor }: MenuLabelPropsType) => {
-  return <Label $menuColor={$menuColor}>{children}</Label>;
+export const MenuLabel = ({
+  children,
+  $menuColor,
+  $isSelected,
+  onClick,
+}: MenuLabelPropsType) => {
+  return (
+    <Label $menuColor={$menuColor} onClick={onClick} $isSelected={$isSelected}>
+      {children}
+    </Label>
+  );
 };
 
 const Label = styled.span<MenuLabelPropsType>`
-  padding: 8px 12px;
-  background-color: ${(props) => props.$menuColor}30;
+  padding: 6px 12px;
+  background-color: ${(props) =>
+    props.$isSelected ? `${props.$menuColor}30` : ""};
   color: ${(props) => props.$menuColor};
   font-size: 14px;
   font-weight: 600;
