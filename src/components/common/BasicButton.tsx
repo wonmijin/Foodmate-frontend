@@ -17,7 +17,7 @@ export const BasicButton = ({
     $backgdColor = "#FFCE00",
     $borderColor = $backgdColor,
     $hoverFontColor,
-    $hoverBackgdColor,
+    $hoverBackgdColor = "#ffbf00",
     $fontSize,
 }: BasicButtonPropsType) => {
     return (
