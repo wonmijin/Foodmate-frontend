@@ -13,7 +13,6 @@ export const GlobalStyle = createGlobalStyle`
     list-style: none;
     box-sizing: border-box;
     font-family: 'spoqa', 'sans-serif';
-    color: ${(props) => props.theme.color.BLACK};
   }
 `;
 
