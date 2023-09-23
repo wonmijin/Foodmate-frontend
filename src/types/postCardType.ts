@@ -12,7 +12,7 @@ export interface PostCardType {
     participationStatus: boolean,
 }
 
-export interface postDetailInfoType {
+export interface PostDetailInfoType {
         groupId: number,
         memberId: number,
         nickname : string,
@@ -31,4 +31,23 @@ export interface postDetailInfoType {
         longitude: string,
         createdDate: string,
         chatRoomId : number,
+}
+
+export interface commentsType {
+    commentId: number,
+    memberId: number,
+    nickname : string,
+    image : string,
+    content: string,
+    createdDate: string,
+    replies: replyType[]
+}
+
+export interface replyType {
+    replyId: number,
+    memberId: number,
+    nickname : string,
+    image : string,
+    content: string,
+    createdDate: string,
 }
