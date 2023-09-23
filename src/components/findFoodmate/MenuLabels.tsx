@@ -2,7 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { MenuLabel } from "../common/MenuLabel";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { LABELCOLOR } from "../../constants/menu";
 
 interface MenuLabelsPropsType {
     handleMenuLabelModal: (bool: boolean) => void;

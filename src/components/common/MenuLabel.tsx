@@ -1,11 +1,5 @@
 import styled from "styled-components";
-
-interface MenuLabelPropsType {
-    children: React.ReactNode;
-    $menuColor: string;
-    $isSelected?: boolean;
-    onClick?: () => void;
-}
+import { MenuLabelPropsType } from "../../types/menuType";
 
 export const MenuLabel = ({
     children,
