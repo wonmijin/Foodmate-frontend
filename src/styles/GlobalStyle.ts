@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
 
@@ -14,6 +14,11 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     font-family: 'spoqa', 'sans-serif';
   }
+  
+  a {
+    text-decoration: none;
+    color: #212121;
+}
 `;
 
 export default GlobalStyle;
