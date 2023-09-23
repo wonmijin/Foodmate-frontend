@@ -15,12 +15,9 @@ const MainBg = styled.div`
     background-color: rgb(130, 130, 130, 0.5);
   }
 `;
+
 const MainText = styled.h2`
   color: #fff;
-  /* position: absolute; */
-  /* top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   font-size: 50px;
   width: 100%;
   text-align: center;
@@ -46,9 +43,9 @@ const MainSearchContainer = styled.div`
     width: 80%;
     margin-right: 18px;
     border-radius: 8px;
-    /* margin: 24px; */
   }
 `;
+
 const MainContentsContainer = styled.div`
   position: relative;
   top: 50%;
@@ -60,6 +57,7 @@ const MainContentsContainer = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
 const Shortcuts = styled.div`
   padding: 0 10px;
   display: flex;
@@ -81,7 +79,7 @@ export const MainSearchbar = () => {
           당신의 <span>Food Mate</span>를 찾아보세요
         </MainText>
         <MainSearchContainer>
-          <input placeholder='원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)'></input>
+          <input placeholder='원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)' />
           <BasicButton
             $fontSize={'16px'}
             $fontColor='#fff'
