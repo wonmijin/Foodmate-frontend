@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { MenuLabel } from "../common/MenuLabel";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { LabelColorType } from "../../types/menuType";
 
 interface MenuLabelsPropsType {
     handleMenuLabelModal: (bool: boolean) => void;
@@ -10,7 +11,7 @@ interface MenuLabelsPropsType {
 export const MenuLabels = ({ handleMenuLabelModal }: MenuLabelsPropsType) => {
     const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
 
-    const lebelsColor = [
+    const lebelsColor: LabelColorType[] = [
         {
             menu: "족발·보쌈",
             color: "#B9693C",
