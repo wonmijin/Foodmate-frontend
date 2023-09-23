@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const BasicPadding = ({ children }: { children: React.ReactNode }) => {
   return <PaddingContainer>{children}</PaddingContainer>;

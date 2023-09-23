@@ -67,19 +67,12 @@ const SubmenuList = styled.div`
 
 const MenuButton = styled.div<ButtonStyle>`
   cursor: pointer;
-  font-weight: ${(props) =>
-    props.fontWeight === undefined ? '400' : props.fontWeight};
-  background-color: ${(props) =>
-    props.bgColor === undefined ? '#fff' : props.bgColor};
+  font-weight: ${(props) => (props.fontWeight === undefined ? '400' : props.fontWeight)};
+  background-color: ${(props) => (props.bgColor === undefined ? '#fff' : props.bgColor)};
   border: ${(props) => (props.border === undefined ? 'none' : props.border)};
 `;
 
-const Dropdown = ({
-  children,
-  trigger = 'all',
-  menus,
-  ...style
-}: DropdownProps) => {
+const Dropdown = ({ children, trigger = 'all', menus, ...style }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (

@@ -1,5 +1,5 @@
-import Nav from './components/main-page/Nav';
 import { BrowserRouter } from 'react-router-dom';
+import Nav from './components/common/Nav';
 
 export const App = (): JSX.Element => {
   return (
