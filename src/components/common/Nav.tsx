@@ -67,14 +67,14 @@ const LinksContainer = styled.ul`
   }
 `;
 
-const SignInUp = styled.div`
-  position: absolute;
-  right: 20px;
+// const SignInUp = styled.div`
+//   position: absolute;
+//   right: 20px;
 
-  button:first-child {
-    margin-right: 10px;
-  }
-`;
+//   button:first-child {
+//     margin-right: 10px;
+//   }
+// `;
 
 const DefaultProfile = styled.div`
   display: flex;
