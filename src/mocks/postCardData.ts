@@ -210,3 +210,34 @@ export const postCardData = [
     participationStatus: true,
   },
 ];
+
+export const commentsData = [
+    {
+        commentId: 1,
+        memberId: 10,
+        nickname: "히밥",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM4vHdExU4YJF6ejyLvoWb5Ojt1QcmM8d7BiXtalvKeQxvXRnTSampcNTMuciVrZzoazY&usqp=CAU",
+        content: "참여하실 분은 모임 참여 후 대화 참여 해주세요!",
+        createdDate: "2023-09-24",
+        replies: [
+            {
+                replyId: 2,
+                memberId: 3,
+                nickname: "루피",
+                image: "https://img1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/dFGD/image/MH85tgXHFdoO6f8R3N_VcIjHStw.png",
+                content: "넹!!!",
+                createdDate: "2023-09-24",
+            },
+        ],
+    },
+    {
+        commentId: 2,
+        memberId: 5,
+        nickname: "포비",
+        image: "https://img1.daumcdn.net/thumb/C500x500/?fname=http://t1.daumcdn.net/brunch/service/user/7EJg/image/ZkS5NGdpSLQZ0PfhUgbJIlV2wmQ.jpg",
+        content:
+            "혹시 시간을 좀 미룰 수 없을까요? 저도 꼭 참여하고 싶은데...",
+        createdDate: "2023-09-23",
+        replies: [],
+    },
+];
