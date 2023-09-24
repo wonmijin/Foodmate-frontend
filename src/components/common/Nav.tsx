@@ -67,14 +67,14 @@ const LinksContainer = styled.ul`
   }
 `;
 
-const SignInUp = styled.div`
-  position: absolute;
-  right: 20px;
+// const SignInUp = styled.div`
+//   position: absolute;
+//   right: 20px;
 
-  button:first-child {
-    margin-right: 10px;
-  }
-`;
+//   button:first-child {
+//     margin-right: 10px;
+//   }
+// `;
 
 const DefaultProfile = styled.div`
   display: flex;
@@ -131,8 +131,8 @@ const Nav = () => {
     <StyledNavContainer>
       <NavContent>
         <h1>
-          <Link to='/'>
-            <img src={FoodMateLogo} alt='foodmate Logo' />
+          <Link to="/">
+            <img src={FoodMateLogo} alt="foodmate Logo" />
           </Link>
         </h1>
         <LinksContainer>
@@ -144,7 +144,7 @@ const Nav = () => {
                     <MenuTitleDiv>{menu.title}</MenuTitleDiv>
                   </Link>
                 ) : (
-                  <Dropdown trigger='hover' menus={getMenus(menu.subList)}>
+                  <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
                     <MenuTitleDiv>{menu.title}</MenuTitleDiv>
                   </Dropdown>
                 )}
@@ -164,11 +164,7 @@ const Nav = () => {
         </SignInUp> */}
         <DefaultProfile>
           <div>
-            <Dropdown
-              fontWeight='600'
-              trigger='click'
-              menus={myProfileDropMenu}
-            >
+            <Dropdown fontWeight="600" trigger="click" menus={myProfileDropMenu}>
               <div
                 style={{
                   height: '50px',
@@ -178,8 +174,8 @@ const Nav = () => {
                   alignItems: 'center',
                 }}
               >
-                <div className='profile-bg'>
-                  <BsPersonFill size='30px' color='#fff' />
+                <div className="profile-bg">
+                  <BsPersonFill size="30px" color="#fff" />
                 </div>
                 {'sera1313 '}
                 <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
