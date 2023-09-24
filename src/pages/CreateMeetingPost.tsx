@@ -2,14 +2,16 @@ import styled from "styled-components";
 import { BasicPadding } from "../components/common/BasicPadding";
 import { BasicButton } from "../components/common/BasicButton";
 import { MenuLabel } from "../components/common/MenuLabel";
-import { postDetailInfoType } from "../types/postCardType";
+import { PostDetailInfoType } from "../types/postCardType";
 import { LABELCOLOR } from "../constants/menu";
 import { KakaoMap } from "../components/kakao/KakaoMap";
+import { Comments } from "../components/createMeetingPost/Comments";
+import { SmallGrayButton } from "../components/common/SmallGrayButton";
 
 export const CreateMeetingPost = ({
     postDetailInfo,
 }: {
-    postDetailInfo: postDetailInfoType;
+    postDetailInfo: PostDetailInfoType;
 }) => {
     const selectedFoods = LABELCOLOR.find((item) =>
         postDetailInfo.food.includes(item.menu)
@@ -92,11 +94,12 @@ export const CreateMeetingPost = ({
                         </div>
 
                         <div>
-                            <button>수정</button>
-                            <button>삭제</button>
+                            <SmallGrayButton>수정</SmallGrayButton>
+                            <SmallGrayButton>삭제</SmallGrayButton>
                         </div>
                     </RightAlign>
                 </div>
+                <Comments />
             </BasicPadding>
         </PostContainer>
     );
@@ -220,20 +223,6 @@ const RightAlign = styled.div`
         span {
             font-size: 12px;
             margin-left: 4px;
-        }
-    }
-
-    & > div:last-child > button {
-        background-color: #d8d8d8;
-        border: none;
-        padding: 4px 8px;
-        border-radius: 8px;
-        margin: 12px 0 0 4px;
-        cursor: pointer;
-        font-size: 10px;
-
-        &:hover {
-            background-color: #d8d8d890;
         }
     }
 `;
