@@ -33,17 +33,17 @@ export interface PostDetailInfoType {
         chatRoomId : number,
 }
 
-export interface commentsType {
+export interface CommentsType {
     commentId: number,
     memberId: number,
     nickname : string,
     image : string,
     content: string,
     createdDate: string,
-    replies: replyType[]
+    replies?: ReplyType[]
 }
 
-export interface replyType {
+export interface ReplyType {
     replyId: number,
     memberId: number,
     nickname : string,
