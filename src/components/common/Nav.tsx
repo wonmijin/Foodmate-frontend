@@ -13,7 +13,6 @@ const StyledNavContainer = styled.div`
   margin: 0 auto;
   width: 100%;
   height: 50px;
-  padding: 12px auto;
   background-color: #fff;
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.05);
 `;
@@ -24,7 +23,7 @@ const NavContent = styled.div`
   width: 1248px;
   align-items: center;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: var(--basic-padding);
   position: relative;
 
   h1 {
