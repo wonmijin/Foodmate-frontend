@@ -92,6 +92,7 @@ const Kakao = styled.button`
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 8px;
+    cursor:pointer;
 `;
 
 const PasswordFind = styled.a`
