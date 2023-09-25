@@ -1,5 +1,16 @@
+import { Route, Routes } from 'react-router-dom';
 import Nav from './components/common/Nav';
+import { FindFoodmate } from './pages/FindFoodmate';
+import { CreateMeetingPost } from './pages/CreateMeetingPost';
 
 export const App = (): JSX.Element => {
-  return <Nav />;
+  return (
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/findfoodmate" element={<FindFoodmate />} />
+        <Route path="/findfoodmate/:groupId" element={<CreateMeetingPost />} />
+      </Routes>
+    </>
+  );
 };
