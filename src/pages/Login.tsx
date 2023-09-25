@@ -115,7 +115,7 @@ const Login: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormValues> = (data:FormValues) => console.log(data);
 
   return (
     <LoginWrap>
