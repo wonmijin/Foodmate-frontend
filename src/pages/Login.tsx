@@ -1,7 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { styled } from "styled-components";
-import { BasicButton } from "../components/common/BasicButton";
 import kakao from "../assets/kakao_login.png"
 
 const LoginWrap = styled.div`
