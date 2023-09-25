@@ -13,27 +13,6 @@ export interface PostCardType {
   current: number;
   storeName: string;
   storeAddress: string;
-  latitude: 37.52362;
-  longitude: 127.02221;
-  createdDate: string;
-  chatRoomId: number;
-}
-
-export interface PostDetailInfoType {
-  groupId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
-  title: string;
-  name: string;
-  content: string;
-  food: string;
-  date: string;
-  time: string;
-  maximum: number;
-  current: number;
-  storeName: string;
-  storeAddress: string;
   latitude: string;
   longitude: string;
   createdDate: string;
