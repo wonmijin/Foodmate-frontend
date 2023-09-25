@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Nav from './components/common/Nav';
 import { FindFoodmate } from './pages/FindFoodmate';
-import { CreateMeetingPost } from './pages/CreateMeetingPost';
+import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
 
 export const App = (): JSX.Element => {
   return (
@@ -9,7 +9,7 @@ export const App = (): JSX.Element => {
       <Nav />
       <Routes>
         <Route path="/findfoodmate" element={<FindFoodmate />} />
-        <Route path="/findfoodmate/:groupId" element={<CreateMeetingPost />} />
+        <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
       </Routes>
     </>
   );
