@@ -4,8 +4,6 @@ import { PostCardType } from '../../types/postCardType';
 import { useNavigate } from 'react-router-dom';
 
 export const PostCard = ({ cardData }: { cardData: PostCardType }) => {
-  console.log(cardData);
-
   const navigation = useNavigate();
   const postCardOnClickHandler = () => {
     navigation(`/findfoodmate/${cardData.groupId}`);

@@ -5,6 +5,7 @@ import { BasicButton } from '../components/common/BasicButton';
 import { useState, useEffect } from 'react';
 import { MenuLabels } from '../components/findFoodmate/MenuLabels';
 import { PostCardsList } from '../components/common/PostCardsList';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
   { key: 'total', label: '전체' },
@@ -14,16 +15,9 @@ const categories = [
 ];
 
 export const FindFoodmate = () => {
+  const navigation = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string>('total');
   const [menuLabelModalOpened, setMenuLabelModalOpened] = useState<boolean>(false);
-
-  const handleCategories = (category: string) => {
-    setSelectedCategory(category);
-  };
-
-  const handleMenuLabelModal = (bool: boolean) => {
-    setMenuLabelModalOpened(bool);
-  };
 
   useEffect(() => {
     if (selectedCategory === 'menu') {
@@ -33,6 +27,14 @@ export const FindFoodmate = () => {
     }
   }, [selectedCategory]);
 
+  const handleCategories = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  const handleMenuLabelModal = (bool: boolean) => {
+    setMenuLabelModalOpened(bool);
+  };
+
   return (
     <BasicPadding>
       <FindFoodmateContainer>
@@ -40,7 +42,9 @@ export const FindFoodmate = () => {
           <h2>밥 친구 구해요!</h2>
           <div className="input-button-container">
             <BasicInput $backgdColor="#e8e8e8" placeholder="제목이나 닉네임을 입력하세요" />
-            <BasicButton $fontSize="12px">모임 만들기</BasicButton>
+            <BasicButton $fontSize="12px" onClick={() => navigation('/findfoodmate/newpost')}>
+              모임 만들기
+            </BasicButton>
           </div>
           <div className="filters">
             {categories.map((category) => (
