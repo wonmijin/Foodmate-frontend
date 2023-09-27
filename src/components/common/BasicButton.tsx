@@ -8,7 +8,7 @@ interface BasicButtonPropsType {
   $borderColor?: string;
   $hoverFontColor?: string;
   $hoverBackgdColor?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const BasicButton = ({

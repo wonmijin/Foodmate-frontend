@@ -18,8 +18,8 @@ export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] })
             <div className="contents">{item.content}</div>
             {/* 현재 로그인된 닉네임과 item 닉네임이 같을 때만 아래 버튼을 보여줘야 함 */}
             <div className="buttons-wrap">
-              <SmallGrayButton>수정</SmallGrayButton>
-              <SmallGrayButton>삭제</SmallGrayButton>
+              <SmallGrayButton onClick={() => ''}>수정</SmallGrayButton>
+              <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
             </div>
             {item.replies && item.replies.length > 0 && <RepliesList repliesData={item.replies} />}
             <hr key={item.commentId} />

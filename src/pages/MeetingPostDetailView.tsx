@@ -101,8 +101,8 @@ export const MeetingPostDetailView = () => {
             </div>
 
             <div>
-              <SmallGrayButton>수정</SmallGrayButton>
-              <SmallGrayButton>삭제</SmallGrayButton>
+              <SmallGrayButton onClick={() => ''}>수정</SmallGrayButton>
+              <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
             </div>
           </RightAlign>
         </div>
@@ -115,7 +115,7 @@ export const MeetingPostDetailView = () => {
 const PostContainer = styled.div`
   .post-box {
     margin: 50px auto;
-    width: 50%;
+    width: 60%;
     height: fit-content;
     border-radius: 12px;
     padding: 32px 24px;
