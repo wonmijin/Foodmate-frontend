@@ -38,7 +38,7 @@ const NavContent = styled.div`
   }
 `;
 
-const MenuTitleDiv = styled.div`
+const MenuTitle = styled.a`
   height: 50px;
   display: flex;
   justify-content: center;
@@ -107,6 +107,7 @@ const SubMenuTitle = styled.a`
 `;
 const Nav = () => {
   const navigate = useNavigate();
+
   const myProfileDropMenu = [
     {
       children: <SubMenuTitle>마이페이지</SubMenuTitle>,
@@ -149,11 +150,17 @@ const Nav = () => {
               <li key={menu.path}>
                 {menu.subList === undefined ? (
                   <Link to={`/${menu.path}`}>
-                    <MenuTitleDiv>{menu.title}</MenuTitleDiv>
+                    <MenuTitle>{menu.title}</MenuTitle>
                   </Link>
                 ) : (
                   <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
-                    <MenuTitleDiv>{menu.title}</MenuTitleDiv>
+                    <MenuTitle
+                      onClick={() => {
+                        navigate(`/${menu.subList![0].path}`);
+                      }}
+                    >
+                      {menu.title}
+                    </MenuTitle>
                   </Dropdown>
                 )}
               </li>

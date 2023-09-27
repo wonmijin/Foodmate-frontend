@@ -67,10 +67,10 @@ const MenuButton = styled.div<ButtonStyle>`
   border: ${(props) => (props.border === undefined ? 'none' : props.border)};
 `;
 
-const MenuButtonText = styled.div<{ isHover: boolean }>`
-  a {
-    ${(props) => (props.isHover ? 'color: #f96223' : '')};
-    ${(props) => (props.isHover ? 'font-weight: bold' : '')};
+const MenuButtonText = styled.div<{ $isHover: boolean }>`
+  > a {
+    ${(props) => (props.$isHover ? 'color: #f96223' : '')};
+    ${(props) => (props.$isHover ? 'font-weight: bold' : '')};
   }
 `;
 
@@ -98,7 +98,7 @@ const Dropdown = ({ children, trigger = 'all', menus, ...style }: DropdownProps)
           }
         }}
       >
-        <MenuButtonText isHover={isOpen}>{children}</MenuButtonText>
+        <MenuButtonText $isHover={isOpen}>{children}</MenuButtonText>
       </MenuButton>
 
       <Ul $isOpen={isOpen}>
