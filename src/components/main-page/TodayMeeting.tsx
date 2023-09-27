@@ -47,6 +47,12 @@ const ButtonArrow = styled.div`
     vertical-align: middle;
     width: 40px;
     height: 40px;
+    border-radius: 50%;
+    box-shadow: 0px 14px 32px 0px rgba(255, 178, 14, 0.29), 0px 5px 8px 0px rgba(222, 151, 0, 0.24);
+
+    &:hover {
+      filter: brightness(105%);
+    }
   }
   .btn-container {
     margin-left: 20px;
@@ -64,13 +70,39 @@ const TodayCardContainer = styled.div`
 
 export const TodayMeeting = () => {
   let sliderRef: Slider | null;
-
   const settings = {
     infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
     arrows: true,
+    accessibility: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   return (
     <TodayMeetingContainer>
@@ -111,7 +143,7 @@ export const TodayMeeting = () => {
       >
         {postCardData.map((card) => {
           return (
-            <TodayCardContainer>
+            <TodayCardContainer key={card.id}>
               <PostCard cardData={card} key={card.id} />
             </TodayCardContainer>
           );
