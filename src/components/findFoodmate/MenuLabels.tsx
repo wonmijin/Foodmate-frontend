@@ -5,7 +5,7 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { LABELCOLOR } from '../../constants/menu';
 
 interface MenuLabelsPropsType {
-  handleMenuLabelModal?: (bool: boolean) => void;
+  handleMenuLabelModal?: (isOpen: boolean) => void;
 }
 
 export const MenuLabels = ({ handleMenuLabelModal }: MenuLabelsPropsType) => {
