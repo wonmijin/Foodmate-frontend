@@ -4,12 +4,14 @@ import { BasicPadding } from '../components/common/BasicPadding';
 import { TinyEditor } from '../components/groupPost/TinyEditor';
 import { LABELCOLOR } from '../constants/menu';
 import { MenuLabel } from '../components/common/MenuLabel';
-import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { BasicButton } from '../components/common/BasicButton';
 import { useNavigate } from 'react-router-dom';
+import { getGeocode } from '../components/kakao/getGeocode';
+import { KakaoMap } from '../components/kakao/KakaoMap';
 
 export const CreateGroupPost = () => {
   const navigation = useNavigate();
+  const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
   const [content, setContent] = useState('');
   const [groupData, setGroupData] = useState({
     title: '',
@@ -17,10 +19,9 @@ export const CreateGroupPost = () => {
     selectedMenu: '',
     meetingDate: '',
     maximum: '',
-    meetingPlace: '',
+    meetingAddress: '',
+    store: '',
   });
-
-  console.log(groupData);
 
   const handleContent = (content: string) => {
     setContent(content);
@@ -28,6 +29,19 @@ export const CreateGroupPost = () => {
 
   const handleLabels = (menu: string) => {
     setGroupData((prev) => ({ ...prev, selectedMenu: menu }));
+  };
+
+  const getAddress = () => {
+    new daum.Postcode({
+      oncomplete: async (data) => {
+        const fullAddress = data.address;
+        const extraAddress = '';
+        setGroupData((prev) => ({ ...prev, meetingAddress: fullAddress + ' ' + extraAddress }));
+        const geocode = await getGeocode(fullAddress);
+        console.log(geocode);
+        setMeetingPlaceGeocode([geocode.La.toString(), geocode.Ma.toString()]);
+      },
+    }).open();
   };
 
   return (
@@ -50,7 +64,7 @@ export const CreateGroupPost = () => {
             <div>
               <label htmlFor="input-group-name" className="title">
                 모임명
-              </label>{' '}
+              </label>
               <br />
               <input
                 id="input-group-name"
@@ -115,8 +129,19 @@ export const CreateGroupPost = () => {
 
           <div>
             <div className="title">모임 장소</div>
-            <SmallGrayButton>주소 찾기</SmallGrayButton>
+            <input
+              type="text"
+              onClick={getAddress}
+              placeholder="주소를 입력해 주세요"
+              value={groupData.meetingAddress}
+            />
+            <input
+              type="text"
+              placeholder="가게명을 입력해 주세요"
+              onChange={(e) => setGroupData((prev) => ({ ...prev, store: e.target.value }))}
+            />
           </div>
+          {meetingPlaceGeocode && <KakaoMap geoCode={meetingPlaceGeocode} />}
 
           <div className="buttons">
             <BasicButton $fontSize="12px">작성하기</BasicButton>
