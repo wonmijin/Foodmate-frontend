@@ -40,6 +40,9 @@ const ButtonArrow = styled.div`
     color: #a4a4a4;
     font-weight: 600;
     font-size: 14px;
+    a {
+      color: #a4a4a4;
+    }
   }
 
   img {
@@ -48,7 +51,9 @@ const ButtonArrow = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    box-shadow: 0px 14px 32px 0px rgba(255, 178, 14, 0.29), 0px 5px 8px 0px rgba(222, 151, 0, 0.24);
+    box-shadow:
+      0px 14px 32px 0px rgba(255, 178, 14, 0.29),
+      0px 5px 8px 0px rgba(222, 151, 0, 0.24);
 
     &:hover {
       filter: brightness(105%);
@@ -64,8 +69,8 @@ const ButtonArrow = styled.div`
 const TodayCardContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  min-width: 309px;
-  padding: 0px 15px;
+  min-width: 40%;
+  padding: 0 2%;
 `;
 
 export const TodayMeeting = () => {
@@ -76,6 +81,7 @@ export const TodayMeeting = () => {
     slidesToShow: 4,
     slidesToScroll: 4,
     arrows: true,
+    dots: false,
     accessibility: true,
     responsive: [
       {
@@ -84,7 +90,6 @@ export const TodayMeeting = () => {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-          dots: true,
         },
       },
       {
@@ -100,6 +105,7 @@ export const TodayMeeting = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          initialSlide: 1,
         },
       },
     ],
@@ -113,8 +119,10 @@ export const TodayMeeting = () => {
         </p>
         <ButtonArrow>
           <div className="view-all">
-            <span>모임전체보기</span>
-            <IoIosArrowForward />
+            <a href="">
+              모임전체보기
+              <IoIosArrowForward />
+            </a>
           </div>
           <div className="btn-container">
             <img

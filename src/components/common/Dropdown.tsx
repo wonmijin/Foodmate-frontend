@@ -25,10 +25,6 @@ const DropdownContainer = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.01);
 
-  /* &:hover {
-    display: block;
-  } */
-
   a {
     padding: 16px 12px;
     font-weight: 400;
