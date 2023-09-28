@@ -8,6 +8,7 @@ import { BasicButton } from '../components/common/BasicButton';
 import { useNavigate } from 'react-router-dom';
 import { getGeocode } from '../components/kakao/getGeocode';
 import { KakaoMap } from '../components/kakao/KakaoMap';
+import { GeocodeType } from '../types/mapType';
 
 export const CreateGroupPost = () => {
   const navigation = useNavigate();
@@ -37,9 +38,8 @@ export const CreateGroupPost = () => {
         const fullAddress = data.address;
         const extraAddress = '';
         setGroupData((prev) => ({ ...prev, meetingAddress: fullAddress + ' ' + extraAddress }));
-        const geocode = await getGeocode(fullAddress);
-        console.log(geocode);
-        setMeetingPlaceGeocode([geocode.La.toString(), geocode.Ma.toString()]);
+        const geocode: GeocodeType = await getGeocode(fullAddress);
+        setMeetingPlaceGeocode([geocode.La, geocode.Ma]);
       },
     }).open();
   };
