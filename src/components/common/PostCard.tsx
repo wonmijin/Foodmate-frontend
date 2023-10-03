@@ -56,7 +56,7 @@ const PostCards = styled.div`
   background-color: #f3f3f3;
   width: 100%;
   min-width: 160px;
-  height: 250px;
+  min-height: 300px;
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
