@@ -25,10 +25,6 @@ const DropdownContainer = styled.div`
   position: relative;
   background-color: rgba(255, 255, 255, 0.01);
 
-  /* &:hover {
-    display: block;
-  } */
-
   a {
     padding: 16px 12px;
     font-weight: 400;
@@ -41,18 +37,17 @@ const DropdownContainer = styled.div`
   }
 `;
 
-const Ul = styled.ul<{ isOpen: boolean }>`
+const Ul = styled.ul<{ $isOpen: boolean }>`
   position: absolute;
   z-index: 9;
   width: 140px;
   left: 50%;
   transform: translate(-50%);
-  display: ${(props) => (props.isOpen ? 'block' : 'none')};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
 
   > li {
     display: flex;
     flex-direction: column;
-    /* transform: translate(-50%, -50%); */
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
@@ -70,6 +65,13 @@ const MenuButton = styled.div<ButtonStyle>`
   font-weight: ${(props) => (props.fontWeight === undefined ? '400' : props.fontWeight)};
   background-color: ${(props) => (props.bgColor === undefined ? '#fff' : props.bgColor)};
   border: ${(props) => (props.border === undefined ? 'none' : props.border)};
+`;
+
+const MenuButtonText = styled.div<{ $isHover: boolean }>`
+  > span {
+    ${(props) => (props.$isHover ? 'color: #f96223' : '')};
+    ${(props) => (props.$isHover ? 'font-weight: bold' : '')};
+  }
 `;
 
 const Dropdown = ({ children, trigger = 'all', menus, ...style }: DropdownProps) => {
@@ -96,10 +98,10 @@ const Dropdown = ({ children, trigger = 'all', menus, ...style }: DropdownProps)
           }
         }}
       >
-        {children}
+        <MenuButtonText $isHover={isOpen}>{children}</MenuButtonText>
       </MenuButton>
 
-      <Ul isOpen={isOpen}>
+      <Ul $isOpen={isOpen}>
         <li>
           {menus?.map((menu, index) => (
             <SubmenuList key={index} onClick={menu.onClick}>
