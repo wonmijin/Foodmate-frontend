@@ -151,8 +151,8 @@ export const TodayMeeting = () => {
       >
         {postCardData.map((card) => {
           return (
-            <TodayCardContainer key={card.id}>
-              <PostCard cardData={card} key={card.id} />
+            <TodayCardContainer key={card.groupId}>
+              <PostCard cardData={card} key={card.groupId} />
             </TodayCardContainer>
           );
         })}
