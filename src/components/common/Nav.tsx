@@ -38,11 +38,12 @@ const NavContent = styled.div`
   }
 `;
 
-const MenuTitle = styled.a`
+const MenuTitle = styled.span`
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 400;
 
   &:hover {
     color: #f96223;

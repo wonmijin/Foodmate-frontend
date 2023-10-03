@@ -68,7 +68,7 @@ const MenuButton = styled.div<ButtonStyle>`
 `;
 
 const MenuButtonText = styled.div<{ $isHover: boolean }>`
-  > a {
+  > span {
     ${(props) => (props.$isHover ? 'color: #f96223' : '')};
     ${(props) => (props.$isHover ? 'font-weight: bold' : '')};
   }
