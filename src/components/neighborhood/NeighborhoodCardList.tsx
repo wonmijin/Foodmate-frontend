@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { postCardData } from '../../mocks/postCardData';
-import { NeighborhoodCard } from './neighborhoodCard';
+import { NeighborhoodCard } from './NeighborhoodCard';
 
 export const NeighborhoodCardList = () => {
   return (
