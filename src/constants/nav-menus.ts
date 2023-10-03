@@ -3,7 +3,7 @@ export const NAV_MENUS: {
   title: string;
   subList?: { path: string; title: string }[];
 }[] = [
-  { path: 'search', title: '밥친구구해요' },
+  { path: 'findfoodmate', title: '밥친구구해요' },
   { path: 'neighborhood', title: '내근처모임' },
   {
     path: 'myapply',

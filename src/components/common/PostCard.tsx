@@ -1,26 +1,33 @@
 import styled from 'styled-components';
 import { PostCardType } from '../../types/postCardType';
-import { BsStar, BsStarFill } from 'react-icons/bs';
+// import { BsStar, BsStarFill } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
-interface PropsType {
-  cardData: PostCardType;
-}
+export const PostCard = ({ cardData }: { cardData: PostCardType }) => {
+  const navigation = useNavigate();
+  const postCardOnClickHandler = () => {
+    navigation(`/findfoodmate/${cardData.groupId}`);
+  };
 
-export const PostCard = ({ cardData }: PropsType) => {
   return (
     <div>
-      <PostCards>
+      <PostCards onClick={postCardOnClickHandler}>
         <RightAlign>
           <div className="date">{cardData.date}</div>
         </RightAlign>
         <LeftAlign>
           <div className="title">{cardData.title}</div>
           <div className="sub-title">모임명</div>
-          <div className="input-text">{cardData.meetingName}</div>
+          <div className="input-text">{cardData.name}</div>
           <div className="sub-title">언제?</div>
-          <div className="input-text">{cardData.when}</div>
+          <div className="input-text">
+            {cardData.date} {cardData.time}
+          </div>
           <div className="sub-title">어디서?</div>
-          <div className="input-text">{cardData.where}</div>
+          <div className="input-text">
+            <strong>{cardData.storeName}</strong>
+            <br /> {cardData.storeAddress}
+          </div>
         </LeftAlign>
         <RightAlign>
           <span className="participant">
@@ -31,11 +38,12 @@ export const PostCard = ({ cardData }: PropsType) => {
       </PostCards>
       <WriterInfo>
         <div className="photo">
-          <img src={cardData.imageUrl} />
+          <img src={cardData.image} />
         </div>
         <div className="status">
           <div>{cardData.nickname}</div>
-          <div>
+          {/* 현재 로그인된 계정 기준으로 나의 신청 현황(/enrollment) 전체 가져와서 groupId만 뽑아내야함 */}
+          {/* <div>
             {cardData.participationStatus ? (
               <Participated>
                 <BsStarFill /> 참여됨
@@ -45,7 +53,7 @@ export const PostCard = ({ cardData }: PropsType) => {
                 <BsStar /> 참여하기
               </NotParticipating>
             )}
-          </div>
+          </div> */}
         </div>
       </WriterInfo>
     </div>
@@ -143,10 +151,10 @@ const WriterInfo = styled.div`
   }
 `;
 
-const Participated = styled.div`
-  color: ${(props) => props.theme.color.ORANGE};
-  font-weight: 600;
-`;
-const NotParticipating = styled.div`
-  color: #777777;
-`;
+// const Participated = styled.div`
+//   color: ${(props) => props.theme.color.ORANGE};
+//   font-weight: 600;
+// `;
+// const NotParticipating = styled.div`
+//   color: #777777;
+// `;

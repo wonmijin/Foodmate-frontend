@@ -19,6 +19,7 @@ export const BasicButton = ({
   $hoverFontColor,
   $hoverBackgdColor = '#ffbf00',
   $fontSize,
+  onClick,
 }: BasicButtonPropsType) => {
   return (
     <Button
@@ -28,6 +29,7 @@ export const BasicButton = ({
       $hoverFontColor={$hoverFontColor}
       $hoverBackgdColor={$hoverBackgdColor}
       $fontSize={$fontSize}
+      onClick={onClick}
     >
       {children}
     </Button>
