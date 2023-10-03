@@ -213,7 +213,7 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
-  margin: 50px auto;
+  margin: 120px auto;
   width: 60%;
   height: fit-content;
   border-radius: 12px;
