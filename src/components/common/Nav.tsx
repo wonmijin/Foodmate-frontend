@@ -6,6 +6,10 @@ import { NAV_MENUS } from '../../constants/nav-menus';
 import Dropdown, { MenuItem } from './Dropdown';
 import { BiSolidDownArrow } from 'react-icons/bi';
 
+const FakeNav = styled.div`
+  height: 60px;
+`;
+
 const StyledNavContainer = styled.div`
   display: flex;
   z-index: 10;
@@ -141,37 +145,39 @@ const Nav = () => {
   };
 
   return (
-    <StyledNavContainer>
-      <NavContent>
-        <h1>
-          <Link to="/">
-            <img src={FoodMateLogo} alt="foodmate Logo" />
-          </Link>
-        </h1>
-        <LinksContainer>
-          {NAV_MENUS.map((menu) => {
-            return (
-              <li key={menu.path}>
-                {menu.subList === undefined ? (
-                  <Link to={`/${menu.path}`}>
-                    <MenuTitle>{menu.title}</MenuTitle>
-                  </Link>
-                ) : (
-                  <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
-                    <MenuTitle
-                      onClick={() => {
-                        navigate(`/${menu.subList![0].path}`);
-                      }}
-                    >
-                      {menu.title}
-                    </MenuTitle>
-                  </Dropdown>
-                )}
-              </li>
-            );
-          })}
-        </LinksContainer>
-        {/* <SignInUp>
+    <>
+      <FakeNav />
+      <StyledNavContainer>
+        <NavContent>
+          <h1>
+            <Link to="/">
+              <img src={FoodMateLogo} alt="foodmate Logo" />
+            </Link>
+          </h1>
+          <LinksContainer>
+            {NAV_MENUS.map((menu) => {
+              return (
+                <li key={menu.path}>
+                  {menu.subList === undefined ? (
+                    <Link to={`/${menu.path}`}>
+                      <MenuTitle>{menu.title}</MenuTitle>
+                    </Link>
+                  ) : (
+                    <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
+                      <MenuTitle
+                        onClick={() => {
+                          navigate(`/${menu.subList![0].path}`);
+                        }}
+                      >
+                        {menu.title}
+                      </MenuTitle>
+                    </Dropdown>
+                  )}
+                </li>
+              );
+            })}
+          </LinksContainer>
+          {/* <SignInUp>
           <BasicButton $fontSize={'16px'}>로그인</BasicButton>
           <BasicButton
             $fontSize={'16px'}
@@ -181,21 +187,22 @@ const Nav = () => {
             회원가입
           </BasicButton>
         </SignInUp> */}
-        <DefaultProfile>
-          <div>
-            <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
-              <SignInContainer>
-                <div className="profile-bg">
-                  <BsPersonFill size="30" color="#fff" />
-                </div>
-                <span className="nick-name">{'sera1313 '}</span>
-                <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
-              </SignInContainer>
-            </Dropdown>
-          </div>
-        </DefaultProfile>
-      </NavContent>
-    </StyledNavContainer>
+          <DefaultProfile>
+            <div>
+              <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
+                <SignInContainer>
+                  <div className="profile-bg">
+                    <BsPersonFill size="30" color="#fff" />
+                  </div>
+                  <span className="nick-name">{'sera1313 '}</span>
+                  <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
+                </SignInContainer>
+              </Dropdown>
+            </div>
+          </DefaultProfile>
+        </NavContent>
+      </StyledNavContainer>
+    </>
   );
 };
 
