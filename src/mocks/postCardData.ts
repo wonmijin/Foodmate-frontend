@@ -1,4 +1,6 @@
-export const postCardData = [
+import { PostCardType } from '../types/postCardType';
+
+export const postCardData: PostCardType[] = [
   {
     groupId: 1,
     memberId: 1,

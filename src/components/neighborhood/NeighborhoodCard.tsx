@@ -3,7 +3,7 @@ import { PostCardType } from '../../types/postCardType';
 // import { BsStar, BsStarFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
-export const PostCard = ({ cardData }: { cardData: PostCardType }) => {
+export const NeighborhoodCard = ({ cardData }: { cardData: PostCardType }) => {
   const navigation = useNavigate();
   const postCardOnClickHandler = () => {
     navigation(`/findfoodmate/${cardData.groupId}`);
@@ -11,14 +11,12 @@ export const PostCard = ({ cardData }: { cardData: PostCardType }) => {
 
   return (
     <div>
-      <PostCards onClick={postCardOnClickHandler}>
+      <NeighborhoodCards onClick={postCardOnClickHandler}>
         <RightAlign>
           <div className="date">{cardData.date}</div>
         </RightAlign>
         <LeftAlign>
           <div className="title">{cardData.title}</div>
-          <div className="sub-title">모임명</div>
-          <div className="input-text">{cardData.name}</div>
           <div className="sub-title">언제?</div>
           <div className="input-text">
             {cardData.date} {cardData.time}
@@ -35,36 +33,14 @@ export const PostCard = ({ cardData }: { cardData: PostCardType }) => {
           </span>
           명
         </RightAlign>
-      </PostCards>
-      <WriterInfo>
-        <div className="photo">
-          <img src={cardData.image} />
-        </div>
-        <div className="status">
-          <div>{cardData.nickname}</div>
-          {/* 현재 로그인된 계정 기준으로 나의 신청 현황(/enrollment) 전체 가져와서 groupId만 뽑아내야함 */}
-          {/* <div>
-            {cardData.participationStatus ? (
-              <Participated>
-                <BsStarFill /> 참여됨
-              </Participated>
-            ) : (
-              <NotParticipating>
-                <BsStar /> 참여하기
-              </NotParticipating>
-            )}
-          </div> */}
-        </div>
-      </WriterInfo>
+      </NeighborhoodCards>
     </div>
   );
 };
 
-const PostCards = styled.div`
-  background-color: #f3f3f3;
+const NeighborhoodCards = styled.div`
+  background-color: #fff;
   width: 100%;
-  min-width: 260px;
-  min-height: 300px;
   border-radius: 12px;
   padding: 18px;
   cursor: pointer;
@@ -117,44 +93,3 @@ const RightAlign = styled.div`
     padding: 0 4px;
   }
 `;
-
-const WriterInfo = styled.div`
-  width: 100%;
-  height: 70px;
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .photo {
-    border: 1px solid #dbdbdb;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-
-    img {
-      border-radius: 50%;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .status {
-    font-size: 12px;
-    cursor: pointer;
-
-    &::first-line {
-      font-weight: 600;
-    }
-  }
-`;
-
-// const Participated = styled.div`
-//   color: ${(props) => props.theme.color.ORANGE};
-//   font-weight: 600;
-// `;
-// const NotParticipating = styled.div`
-//   color: #777777;
-// `;

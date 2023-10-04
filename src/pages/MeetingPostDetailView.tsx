@@ -6,12 +6,13 @@ import { LABELCOLOR } from '../constants/menu';
 import { KakaoMap } from '../components/kakao/KakaoMap';
 import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
+import { PostCardType } from '../types/postCardType';
 
 export const MeetingPostDetailView = () => {
   //   const { groupId } = useParams();
   // groupId로 특정 모임 상세 조회 API 요청 후 뿌리기
   // 아래는 임시 더미 데이터
-  const postDetailInfo = {
+  const postDetailInfo: PostCardType = {
     groupId: 1,
     memberId: 1,
     nickname: '띠띠',
@@ -113,6 +114,8 @@ export const MeetingPostDetailView = () => {
 };
 
 const PostContainer = styled.div`
+  margin: 120px 0;
+
   .post-box {
     margin: 50px auto;
     width: 60%;
