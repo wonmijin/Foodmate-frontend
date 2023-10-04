@@ -72,7 +72,7 @@ export const FindFoodmate = () => {
 };
 
 const FindFoodmateContainer = styled.div`
-  margin: 28px 0;
+  margin: 120px 0;
 
   .upper {
     display: flex;
