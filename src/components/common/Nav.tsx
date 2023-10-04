@@ -16,16 +16,14 @@ const StyledNavContainer = styled.div`
   width: 100%;
   height: 60px;
   background-color: #fff;
+  padding: var(--basic-padding);
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.05);
 `;
 
 const NavContent = styled.div`
   display: flex;
-  max-width: 1248px;
-  width: 1248px;
+  width: 100%;
   align-items: center;
-  margin: 0 auto;
-  padding: var(--basic-padding);
   position: relative;
 
   h1 {
@@ -68,17 +66,18 @@ const LinksContainer = styled.ul`
     }
   }
 `;
-
+// TODO: 로그인 회원가입 버튼 스타일
 // const SignInUp = styled.div`
 //   position: absolute;
-//   right: 20px;
+//   right: 0px;
 
 //   button:first-child {
 //     margin-right: 10px;
 //   }
 // `;
+
 const SignInContainer = styled.div`
-  width: 140px;
+  width: 160px;
   height: 50px;
   display: flex;
   justify-content: end;
@@ -89,7 +88,7 @@ const DefaultProfile = styled.div`
   display: flex;
   align-items: center;
   position: absolute;
-  right: 20px;
+  right: 0px;
 
   .profile-bg {
     border-radius: 50%;
@@ -100,6 +99,10 @@ const DefaultProfile = styled.div`
     align-items: center;
     display: flex;
     justify-content: center;
+  }
+
+  .nick-name {
+    margin-right: 5px;
   }
 `;
 
@@ -185,7 +188,7 @@ const Nav = () => {
                 <div className="profile-bg">
                   <BsPersonFill size="30" color="#fff" />
                 </div>
-                {'sera1313 '}
+                <span className="nick-name">{'sera1313 '}</span>
                 <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
               </SignInContainer>
             </Dropdown>
