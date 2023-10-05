@@ -1,9 +1,9 @@
- {
+{
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "cSpell.words": ["kakao", "Foodmate", "mypage", "spoqa"],
+  "cSpell.words": ["kakao", "Foodmate", "mypage", "spoqa", "findfoodmate", "newpost", "backgd", "tinymce"],
   "prettier.prettierPath": "./node_modules/prettier/index.cjs",
   "svg.preview.background": "white"
 }

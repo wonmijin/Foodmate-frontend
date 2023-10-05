@@ -10,6 +10,7 @@ export const MenuLabel = ({ children, $menuColor, $isSelected, onClick }: MenuLa
 };
 
 const Label = styled.span<MenuLabelPropsType>`
+  display: flex;
   padding: 6px 12px;
   background-color: ${(props) => (props.$isSelected ? `${props.$menuColor}30` : '')};
   color: ${(props) => props.$menuColor};
