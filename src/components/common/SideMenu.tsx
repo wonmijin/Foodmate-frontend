@@ -8,17 +8,17 @@ interface SideMenuListType {
     title: string;
     list: string[];
   };
+  navMenuIdx: number;
   parentPath?: string;
-  // handleSideMenu: (menu: string) => void;
 }
 
 export const SideMenu = (props: SideMenuListType) => {
   const navigation = useNavigate();
-  const { sideMenuList } = props;
+  const { sideMenuList, navMenuIdx } = props;
   const [selectedSideMenu, setSelectedSideMenu] = useState(sideMenuList.list[0]);
 
   const getSubListPath = (submenu: string) => {
-    const subMenuData = NAV_MENUS[2].subList?.find((sub) => sub.title === submenu);
+    const subMenuData = NAV_MENUS[navMenuIdx].subList?.find((sub) => sub.title === submenu);
     return subMenuData?.path || '';
   };
 
