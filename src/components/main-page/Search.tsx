@@ -14,7 +14,7 @@ const MainBg = styled.div`
 
   .bg-filter {
     width: 100%;
-    height: 97vh;
+    height: 100vh;
     position: absolute;
     background-color: rgb(130, 130, 130, 0.5);
   }
@@ -39,15 +39,6 @@ const MainSearchContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  /* > input {
-    display: inline-block;
-    padding: 14px;
-    background-color: #f5f5f5;
-    border: none;
-    width: 80%;
-    margin-right: 18px;
-    border-radius: 8px;
-  } */
 `;
 
 const SearchInputContainer = styled.div`
@@ -71,13 +62,14 @@ const SearchPopup = styled.div`
     padding: 5px 24px 5px 16px;
     height: 40px;
     background-color: #fff;
+    color: ${(props) => props.theme.color.BLACK};
 
     &:hover {
       background-color: #eee;
     }
 
     &.active {
-      background-color: ${(props) => props.theme.color.YELLOW};
+      background-color: #ffcc0021;
       font-weight: bold;
     }
 
@@ -142,14 +134,12 @@ type SearchItem = {
 export const Search = () => {
   const navigate = useNavigate();
   const [searchList, setSearchList] = useState<SearchItem[]>([]);
-  const [searchKeyword, inputKeyword, setInputKeyword] = useDebounce<string>(
-    '',
-    500
-  );
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+  const [searchKeyword, inputKeyword, setInputKeyword] = useDebounce<string>('', 500);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [isOnSkeleton, setIsOnSkeleton] = useState<boolean>(false);
 
   useEffect(() => {
+    setSelectedGroupId(null);
     if (searchKeyword.length === 0) {
       setSearchList([]);
       return;
@@ -177,7 +167,7 @@ export const Search = () => {
 
   return (
     <MainBg>
-      <div className='bg-filter'></div>
+      <div className="bg-filter"></div>
       <MainContentsContainer>
         <MainText>
           당신의 <span>Food Mate</span>를 찾아보세요
@@ -187,41 +177,35 @@ export const Search = () => {
             <SearchInput
               value={inputKeyword}
               onChange={onChange}
-              placeholder='원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)'
+              placeholder="원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
             />
             {searchList.length === 0 ? (
               ''
             ) : (
               <SearchPopup>
                 {isOnSkeleton ? (
-                  <Skeleton src='src/assets/skeleton.gif' />
+                  <Skeleton src="src/assets/skeleton.gif" />
                 ) : (
                   <ul>
                     {searchList.map((item) => {
                       return (
                         <li
-                          className='item-list'
+                          className="item-list"
                           onClick={(e) => {
-                            const len = (e.currentTarget as Element)
-                              .parentElement!.children.length;
+                            const len = (e.currentTarget as Element).parentElement!.children.length;
 
                             for (let i = 0; i < len; i++) {
-                              (e.currentTarget as Element)
-                                .parentElement!.children.item(i)
-                                ?.classList.remove('active');
+                              (e.currentTarget as Element).parentElement!.children.item(i)?.classList.remove('active');
                             }
-                            (e.currentTarget as Element).classList.add(
-                              'active'
-                            );
+                            (e.currentTarget as Element).classList.add('active');
 
-                            setSelectedGroupId(item.groupId)
-                          }
-                        }
+                            setSelectedGroupId(item.groupId);
+                          }}
                         >
                           글제목:&nbsp;
-                          <span className='item-text'>{item.postTitle}</span>
+                          <span className="item-text">{item.postTitle}</span>
                           모임명:&nbsp;
-                          <span className='item-text'>{item.groupName}</span>
+                          <span className="item-text">{item.groupName}</span>
                           음식명:&nbsp; <span> {item.foodName}</span>
                         </li>
                       );
@@ -231,16 +215,17 @@ export const Search = () => {
               </SearchPopup>
             )}
           </SearchInputContainer>
-          <BasicButton onClick={() => {
-            navigate(`/findfoodmate/${selectedGroupId}`)
-          }}
+          <BasicButton
+            onClick={() => {
+              if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
+            }}
             $fontSize={'16px'}
-            $fontColor='#fff'
+            $fontColor="#fff"
             $backgdColor={'#f96223'}
             $hoverBackgdColor={'#fb8958'}
           >
             <Shortcuts>
-              <div className='iconDiv'>
+              <div className="iconDiv">
                 <ImSearch />
               </div>
               모임 바로가기
