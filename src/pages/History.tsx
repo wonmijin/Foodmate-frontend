@@ -4,13 +4,13 @@ import { SideMenu } from '../components/common/SideMenu';
 import { useState } from 'react';
 import { MeetingInfoCardList } from '../components/meetingInfo/MeetingInfoCardList';
 import Dropdown from '../components/common/Dropdown';
+import { MEETING_INFO_MENU } from '../constants/menu';
 
 export const History = () => {
-  const sideMenuList = { title: '모임 정보', list: ['신청 내역', '요청 조회'] };
-  const [selectedSideMenu, setSelectedSideMenu] = useState('신청 현황');
+  const [selectedCategory, setSelectedCategory] = useState('신청 현황');
 
   const handleCategory = (category: string) => {
-    setSelectedSideMenu(category);
+    setSelectedCategory(category);
   };
 
   const myProfileDropMenu = [
@@ -36,28 +36,28 @@ export const History = () => {
     <>
       <BasicPadding>
         <HistoryContainer>
-          <h2>모임 정보 - 신청 내역 - {selectedSideMenu}</h2>
+          <h2>모임 정보 - 신청 내역</h2>
           <div className="contents-box">
-            <SideMenu sideMenuList={sideMenuList} />
+            <SideMenu sideMenuList={MEETING_INFO_MENU} />
             <Contents>
               <div className="category">
                 <div className="category-list">
                   <div
                     onClick={() => handleCategory('신청 현황')}
-                    className={selectedSideMenu === '신청 현황' ? 'selected-category' : ''}
+                    className={selectedCategory === '신청 현황' ? 'selected-category' : ''}
                   >
                     신청 현황
                   </div>
                   <div
                     onClick={() => handleCategory('지난 모임')}
-                    className={selectedSideMenu === '지난 모임' ? 'selected-category' : ''}
+                    className={selectedCategory === '지난 모임' ? 'selected-category' : ''}
                   >
                     지난 모임
                   </div>
                 </div>
                 <div>
                   <Dropdown fontWeight="600" trigger="hover" menus={myProfileDropMenu}>
-                    <div className={selectedSideMenu !== '신청 현황' ? 'selected-status' : ''}>전체 ▼</div>
+                    <div className={selectedCategory !== '신청 현황' ? 'selected-status' : ''}>전체 ▼</div>
                   </Dropdown>
                 </div>
               </div>
