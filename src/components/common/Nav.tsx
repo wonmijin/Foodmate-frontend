@@ -151,7 +151,7 @@ const Nav = () => {
         <NavContent>
           <h1>
             <Link to="/">
-              <img src={FoodMateLogo} alt="foodmate Logo" />
+              <img src={FoodMateLogo} alt="foodmate" />
             </Link>
           </h1>
           <LinksContainer>
