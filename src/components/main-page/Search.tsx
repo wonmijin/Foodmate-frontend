@@ -8,13 +8,13 @@ import { searchData } from '../../mocks/serchData';
 import { useNavigate } from 'react-router-dom';
 
 const MainBg = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: calc(100vh - 60px);
   background: url(${mainbg}) no-repeat center;
 
   .bg-filter {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 60px);
     position: absolute;
     background-color: rgb(130, 130, 130, 0.5);
   }
