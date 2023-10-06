@@ -6,6 +6,10 @@ import { NAV_MENUS } from '../../constants/nav-menus';
 import Dropdown, { MenuItem } from './Dropdown';
 import { BiSolidDownArrow } from 'react-icons/bi';
 
+const FakeNav = styled.div`
+  height: 60px;
+`;
+
 const StyledNavContainer = styled.div`
   display: flex;
   z-index: 10;
@@ -16,16 +20,14 @@ const StyledNavContainer = styled.div`
   width: 100%;
   height: 60px;
   background-color: #fff;
+  padding: var(--basic-padding);
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.05);
 `;
 
 const NavContent = styled.div`
   display: flex;
-  max-width: 1248px;
-  width: 1248px;
+  width: 100%;
   align-items: center;
-  margin: 0 auto;
-  padding: var(--basic-padding);
   position: relative;
 
   h1 {
@@ -68,17 +70,18 @@ const LinksContainer = styled.ul`
     }
   }
 `;
-
+// TODO: 로그인 회원가입 버튼 스타일
 // const SignInUp = styled.div`
 //   position: absolute;
-//   right: 20px;
+//   right: 0px;
 
 //   button:first-child {
 //     margin-right: 10px;
 //   }
 // `;
+
 const SignInContainer = styled.div`
-  width: 140px;
+  width: 160px;
   height: 50px;
   display: flex;
   justify-content: end;
@@ -89,7 +92,7 @@ const DefaultProfile = styled.div`
   display: flex;
   align-items: center;
   position: absolute;
-  right: 20px;
+  right: 0px;
 
   .profile-bg {
     border-radius: 50%;
@@ -100,6 +103,10 @@ const DefaultProfile = styled.div`
     align-items: center;
     display: flex;
     justify-content: center;
+  }
+
+  .nick-name {
+    margin-right: 5px;
   }
 `;
 
@@ -138,37 +145,39 @@ const Nav = () => {
   };
 
   return (
-    <StyledNavContainer>
-      <NavContent>
-        <h1>
-          <Link to="/">
-            <img src={FoodMateLogo} alt="foodmate Logo" />
-          </Link>
-        </h1>
-        <LinksContainer>
-          {NAV_MENUS.map((menu) => {
-            return (
-              <li key={menu.path}>
-                {menu.subList === undefined ? (
-                  <Link to={`/${menu.path}`}>
-                    <MenuTitle>{menu.title}</MenuTitle>
-                  </Link>
-                ) : (
-                  <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
-                    <MenuTitle
-                      onClick={() => {
-                        navigate(`/${menu.subList![0].path}`);
-                      }}
-                    >
-                      {menu.title}
-                    </MenuTitle>
-                  </Dropdown>
-                )}
-              </li>
-            );
-          })}
-        </LinksContainer>
-        {/* <SignInUp>
+    <>
+      <FakeNav />
+      <StyledNavContainer>
+        <NavContent>
+          <h1>
+            <Link to="/">
+              <img src={FoodMateLogo} alt="foodmate" />
+            </Link>
+          </h1>
+          <LinksContainer>
+            {NAV_MENUS.map((menu) => {
+              return (
+                <li key={menu.path}>
+                  {menu.subList === undefined ? (
+                    <Link to={`/${menu.path}`}>
+                      <MenuTitle>{menu.title}</MenuTitle>
+                    </Link>
+                  ) : (
+                    <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
+                      <MenuTitle
+                        onClick={() => {
+                          navigate(`/${menu.subList![0].path}`);
+                        }}
+                      >
+                        {menu.title}
+                      </MenuTitle>
+                    </Dropdown>
+                  )}
+                </li>
+              );
+            })}
+          </LinksContainer>
+          {/* <SignInUp>
           <BasicButton $fontSize={'16px'}>로그인</BasicButton>
           <BasicButton
             $fontSize={'16px'}
@@ -178,21 +187,22 @@ const Nav = () => {
             회원가입
           </BasicButton>
         </SignInUp> */}
-        <DefaultProfile>
-          <div>
-            <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
-              <SignInContainer>
-                <div className="profile-bg">
-                  <BsPersonFill size="30" color="#fff" />
-                </div>
-                {'sera1313 '}
-                <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
-              </SignInContainer>
-            </Dropdown>
-          </div>
-        </DefaultProfile>
-      </NavContent>
-    </StyledNavContainer>
+          <DefaultProfile>
+            <div>
+              <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
+                <SignInContainer>
+                  <div className="profile-bg">
+                    <BsPersonFill size="30" color="#fff" />
+                  </div>
+                  <span className="nick-name">{'sera1313 '}</span>
+                  <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
+                </SignInContainer>
+              </Dropdown>
+            </div>
+          </DefaultProfile>
+        </NavContent>
+      </StyledNavContainer>
+    </>
   );
 };
 
