@@ -3,6 +3,7 @@ import { BasicPadding } from '../components/common/BasicPadding';
 import { SideMenu } from '../components/common/SideMenu';
 import { useState } from 'react';
 import { MeetingInfoCardList } from '../components/meetingInfo/MeetingInfoCardList';
+import Dropdown from '../components/common/Dropdown';
 
 export const History = () => {
   const sideMenuList = { title: '모임 정보', list: ['신청 내역', '요청 조회'] };
@@ -11,6 +12,25 @@ export const History = () => {
   const handleCategory = (category: string) => {
     setSelectedSideMenu(category);
   };
+
+  const myProfileDropMenu = [
+    {
+      children: <div>요청 수락</div>,
+      onClick: () => {},
+    },
+    {
+      children: <div>요청 거절</div>,
+      onClick: () => {},
+    },
+    {
+      children: <div>요청 대기중</div>,
+      onClick: () => {},
+    },
+    {
+      children: <div>요청 취소</div>,
+      onClick: () => {},
+    },
+  ];
 
   return (
     <>
@@ -35,7 +55,11 @@ export const History = () => {
                     지난 모임
                   </div>
                 </div>
-                <div>요청 수락</div>
+                <div>
+                  <Dropdown fontWeight="600" trigger="hover" menus={myProfileDropMenu}>
+                    <div className={selectedSideMenu !== '신청 현황' ? 'selected-status' : ''}>전체 ▼</div>
+                  </Dropdown>
+                </div>
               </div>
 
               <hr />
@@ -86,6 +110,10 @@ const Contents = styled.div`
 
   .selected-category {
     color: ${(props) => props.theme.color.ORANGE};
+  }
+
+  .selected-status {
+    display: none;
   }
 
   p {
