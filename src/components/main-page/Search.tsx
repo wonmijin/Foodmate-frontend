@@ -165,6 +165,15 @@ export const Search = () => {
     setInputKeyword(e.target.value);
   };
 
+  const selectGroup = (item: SearchItem, e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    const len = (e.currentTarget as Element).parentElement!.children.length;
+
+    for (let i = 0; i < len; i++) {
+      (e.currentTarget as Element).parentElement!.children.item(i)?.classList.remove('active');
+    }
+    (e.currentTarget as Element).classList.add('active');
+    setSelectedGroupId(item.groupId);
+  };
   return (
     <MainBg>
       <div className="bg-filter"></div>
@@ -187,21 +196,9 @@ export const Search = () => {
                   <Skeleton src="src/assets/skeleton.gif" />
                 ) : (
                   <ul>
-                    {searchList.map((item) => {
+                    {searchList.map((item, index) => {
                       return (
-                        <li
-                          className="item-list"
-                          onClick={(e) => {
-                            const len = (e.currentTarget as Element).parentElement!.children.length;
-
-                            for (let i = 0; i < len; i++) {
-                              (e.currentTarget as Element).parentElement!.children.item(i)?.classList.remove('active');
-                            }
-                            (e.currentTarget as Element).classList.add('active');
-
-                            setSelectedGroupId(item.groupId);
-                          }}
-                        >
+                        <li key={index} className="item-list" onClick={(e) => selectGroup(item, e)}>
                           글제목:&nbsp;
                           <span className="item-text">{item.postTitle}</span>
                           모임명:&nbsp;
