@@ -1,13 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
-import Bold2 from '../assets/fonts/SpoqaHanSansNeo-Bold.woff2'
-import Bold from '../assets/fonts/SpoqaHanSansNeo-Bold.woff'
-import Regular2 from '../assets/fonts/SpoqaHanSansNeo-Regular.woff2'
-import Regular from '../assets/fonts/SpoqaHanSansNeo-Regular.woff'
-import Light2 from '../assets/fonts/SpoqaHanSansNeo-Light.woff2'
-import Light from '../assets/fonts/SpoqaHanSansNeo-Light.woff'
-import Thin2 from '../assets/fonts/SpoqaHanSansNeo-Thin.woff2'
-import Thin from '../assets/fonts/SpoqaHanSansNeo-Thin.woff'
-
+import Bold2 from '../assets/fonts/SpoqaHanSansNeo-Bold.woff2';
+import Bold from '../assets/fonts/SpoqaHanSansNeo-Bold.woff';
+import Regular2 from '../assets/fonts/SpoqaHanSansNeo-Regular.woff2';
+import Regular from '../assets/fonts/SpoqaHanSansNeo-Regular.woff';
+import Light2 from '../assets/fonts/SpoqaHanSansNeo-Light.woff2';
+import Light from '../assets/fonts/SpoqaHanSansNeo-Light.woff';
+import Thin2 from '../assets/fonts/SpoqaHanSansNeo-Thin.woff2';
+import Thin from '../assets/fonts/SpoqaHanSansNeo-Thin.woff';
 
 export const GlobalStyle = createGlobalStyle`
   :root {
@@ -57,6 +56,12 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: #212121;
   }
+
+  button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
 `;
 
 export default GlobalStyle;
