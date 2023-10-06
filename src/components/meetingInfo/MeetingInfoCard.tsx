@@ -29,6 +29,8 @@ export const MeetingInfoCard = ({ meetingInfoData }: { meetingInfoData: MeetingI
 
 const CardContainer = styled.div`
   width: 100%;
+  min-width: 400px;
+
   height: 140px;
   background-color: ${(props) => props.theme.color.GRAY}60;
   border-radius: 12px;
