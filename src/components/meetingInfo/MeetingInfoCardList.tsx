@@ -32,8 +32,8 @@ export const MeetingInfoCardList = () => {
 
   return (
     <MeetingInfoCardListContainer>
-      {meetingInfoData.map((data) => {
-        return <MeetingInfoCard meetingInfoData={data} />;
+      {meetingInfoData.map((data, idx) => {
+        return <MeetingInfoCard meetingInfoData={data} key={idx} />;
       })}
     </MeetingInfoCardListContainer>
   );
