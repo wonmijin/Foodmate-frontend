@@ -8,23 +8,22 @@ interface SideMenuListType {
     title: string;
     list: string[];
   };
+  parentPath?: string;
   // handleSideMenu: (menu: string) => void;
 }
 
 export const SideMenu = (props: SideMenuListType) => {
   const navigation = useNavigate();
   const { sideMenuList } = props;
-
-  // 요청 조회 만들 때 동적으로 수정하기!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedSideMenu, setSelectedSideMenu] = useState('history');
+  const [selectedSideMenu, setSelectedSideMenu] = useState(sideMenuList.list[0]);
 
   const getSubListPath = (submenu: string) => {
     const subMenuData = NAV_MENUS[2].subList?.find((sub) => sub.title === submenu);
     return subMenuData?.path || '';
   };
 
-  const handleSideMenu = (subListPath: string) => {
+  const handleSideMenu = (subListPath: string, menu: string) => {
+    setSelectedSideMenu(menu);
     navigation('/' + subListPath);
   };
 
@@ -41,8 +40,8 @@ export const SideMenu = (props: SideMenuListType) => {
         return (
           <div
             key={idx}
-            className={subListPath === selectedSideMenu ? 'selected-sidemenu' : ''}
-            onClick={() => handleSideMenu(subListPath)}
+            className={menu === selectedSideMenu ? 'selected-sidemenu' : ''}
+            onClick={() => handleSideMenu(subListPath, menu)}
           >
             {menu}
           </div>
@@ -84,7 +83,7 @@ const SideMenuContainer = styled.aside`
 
   & > div:not(:first-child) {
     cursor: pointer;
-    transition: all 0.4s;
+    transition: all 0.2s;
 
     &:hover {
       background-color: ${(props) => props.theme.color.YELLOW};
