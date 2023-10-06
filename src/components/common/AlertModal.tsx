@@ -69,11 +69,6 @@ const AlertModalContainer = styled.div`
   border: 3px solid ${(props) => props.theme.color.GRAY};
   border-radius: 12px;
 
-  h2 {
-    font-size: 18px;
-    margin-bottom: 16px;
-  }
-
   .icon {
     color: ${(props) => props.theme.color.ORANGE};
     font-size: 24px;
@@ -83,6 +78,8 @@ const AlertModalContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
+    font-size: 16px;
+    color: ${(props) => props.theme.color.BLACK};
   }
 `;
 
