@@ -56,3 +56,5 @@ export const LABELCOLOR = [
     color: '#E63B3B',
   },
 ];
+
+export const MEETING_INFO_MENU = { title: '모임 정보', list: ['신청 내역', '요청 조회'] };
