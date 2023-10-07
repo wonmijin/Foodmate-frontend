@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import { NAV_MENUS } from '../../constants/nav-menus';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SideMenuListType {
   sideMenuList: {
@@ -14,17 +13,16 @@ interface SideMenuListType {
 
 export const SideMenu = (props: SideMenuListType) => {
   const navigation = useNavigate();
-  const { sideMenuList, navMenuIdx } = props;
-  const [selectedSideMenu, setSelectedSideMenu] = useState(sideMenuList.list[0]);
+  const location = useLocation();
+  const { sideMenuList } = props;
 
   const getSubListPath = (submenu: string) => {
-    const subMenuData = NAV_MENUS[navMenuIdx].subList?.find((sub) => sub.title === submenu);
-    return subMenuData?.path || '';
+    const subMenuData = NAV_MENUS[2].subList?.find((sub) => sub.title === submenu);
+    return '/' + subMenuData?.path || '';
   };
 
-  const handleSideMenu = (subListPath: string, menu: string) => {
-    setSelectedSideMenu(menu);
-    navigation('/' + subListPath);
+  const handleSideMenu = (subListPath: string) => {
+    navigation(subListPath);
   };
 
   return (
@@ -40,8 +38,8 @@ export const SideMenu = (props: SideMenuListType) => {
         return (
           <div
             key={idx}
-            className={menu === selectedSideMenu ? 'selected-sidemenu' : ''}
-            onClick={() => handleSideMenu(subListPath, menu)}
+            className={location.pathname === subListPath ? 'selected-sidemenu' : ''}
+            onClick={() => handleSideMenu(subListPath)}
           >
             {menu}
           </div>
