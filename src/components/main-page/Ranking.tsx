@@ -12,9 +12,11 @@ const MainPageCommonTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .title-text {
     font-weight: bold;
     font-size: 24px;
+
     .point {
       display: inline-block;
       margin-right: 10px;
@@ -50,7 +52,7 @@ const Button = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${(props) => props.theme.color.YELLOW};
+    background-color: #ffcc0021;
   }
 
   &.active {
@@ -63,7 +65,7 @@ const RankingList = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  justify-content: center;
+  justify-content: space-between;
   margin: 0 auto;
 `;
 
@@ -75,6 +77,10 @@ const RankingItem = styled.div`
 
   .text {
     width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
   }
 
   .photo {

@@ -3,15 +3,12 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import styled from 'styled-components';
-
 import { postCardData } from '../../mocks/postCardData';
 import { PostCard } from '../common/PostCard';
+import { Link } from 'react-router-dom';
 
 const TodayMeetingContainer = styled.div`
   padding: var(--basic-padding);
-  height: 100px;
-  align-items: center;
-  justify-content: space-between;
 
   .title-text {
     font-weight: bold;
@@ -119,10 +116,10 @@ export const TodayMeeting = () => {
         </p>
         <ButtonArrow>
           <div className="view-all">
-            <a href="">
+            <Link to="/findfoodmate">
               모임전체보기
               <IoIosArrowForward />
-            </a>
+            </Link>
           </div>
           <div className="btn-container">
             <img
