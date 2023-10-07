@@ -6,12 +6,14 @@ import { CreateGroupPost } from './pages/CreateGroupPost';
 import { Neighborhood } from './pages/Neighborhood';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
+import MainPage from './pages/MainPage';
 
 export const App = (): JSX.Element => {
   return (
     <>
       <Nav />
       <Routes>
+        <Route path="/" element={<MainPage />} />
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />
