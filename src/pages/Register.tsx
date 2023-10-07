@@ -246,7 +246,7 @@ export const Register = () => {
 };
 
 const RegisterWrap = styled.div`
-  margin: 205px auto 0;
+  margin: 145px auto 0;
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -309,6 +309,7 @@ const RegisterButton = styled.button`
   cursor: pointer;
   transition: 0.3s;
   margin-top: 30px;
+  margin-bottom: 130px;
 `;
 
 const ConfirmButton = styled.button`
