@@ -7,6 +7,7 @@ import { Neighborhood } from './pages/Neighborhood';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
 import MainPage from './pages/MainPage';
+import Login from './pages/Login';
 
 export const App = (): JSX.Element => {
   return (
@@ -14,6 +15,8 @@ export const App = (): JSX.Element => {
       <Nav />
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<Login />} />
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />
