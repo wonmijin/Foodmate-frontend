@@ -2,7 +2,7 @@ export const rankingLikesData = [
   {
     memberId: 1,
     nickname: '사용자1 닉네임',
-    image: 'https://cdn-icons-png.flaticon.com/512/11194/11194916.png',
+    image: 'https://cdn-icons-png.flaticon.com/513/11194/11194916.png',
     likesCount: 100,
   },
   {

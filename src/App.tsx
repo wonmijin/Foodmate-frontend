@@ -1,18 +1,26 @@
 import { Route, Routes } from 'react-router-dom';
 import Nav from './components/common/Nav';
-import { FindFoodmate } from './pages/FindFoodmate';
-import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
 import { CreateGroupPost } from './pages/CreateGroupPost';
-import { Neighborhood } from './pages/Neighborhood';
-import { Register } from './pages/Register';
+import { FindFoodmate } from './pages/FindFoodmate';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
+import Login from './pages/Login';
+import MainPage from './pages/MainPage';
+import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
+import { Neighborhood } from './pages/Neighborhood';
+import { Register } from './pages/Register';
+
+import ScrollToTop from './utils/ScrollToTop';
 
 export const App = (): JSX.Element => {
   return (
     <>
       <Nav />
+      <ScrollToTop />
       <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<Login />} />
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />

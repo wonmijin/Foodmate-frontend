@@ -1,10 +1,13 @@
-import { BsPersonFill } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import FoodMateLogo from '../../assets/logo2.png';
 import { NAV_MENUS } from '../../constants/nav-menus';
 import Dropdown, { MenuItem } from './Dropdown';
-import { BiSolidDownArrow } from 'react-icons/bi';
+import { BasicButton } from './BasicButton';
+
+// TODO: 로그인 후 필요한 아이콘
+// import { BsPersonFill } from 'react-icons/bs';
+// import { BiSolidDownArrow } from 'react-icons/bi';
 
 const FakeNav = styled.div`
   height: 60px;
@@ -70,45 +73,51 @@ const LinksContainer = styled.ul`
     }
   }
 `;
+
 // TODO: 로그인 회원가입 버튼 스타일
-// const SignInUp = styled.div`
-//   position: absolute;
-//   right: 0px;
-
-//   button:first-child {
-//     margin-right: 10px;
-//   }
-// `;
-
-const SignInContainer = styled.div`
-  width: 160px;
-  height: 50px;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-`;
-
-const DefaultProfile = styled.div`
-  display: flex;
-  align-items: center;
+const SignInUp = styled.div`
   position: absolute;
   right: 0px;
 
-  .profile-bg {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    background-color: #e8e8e8;
+  button:first-child {
     margin-right: 10px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
   }
 
-  .nick-name {
-    margin-right: 5px;
+  button > span {
+    font-weight: 400;
   }
 `;
+
+//TODO: 로그인 후, 스타일
+// const SignInContainer = styled.div`
+//   width: 160px;
+//   height: 50px;
+//   display: flex;
+//   justify-content: end;
+//   align-items: center;
+// `;
+
+// const DefaultProfile = styled.div`
+//   display: flex;
+//   align-items: center;
+//   position: absolute;
+//   right: 0px;
+
+//   .profile-bg {
+//     border-radius: 50%;
+//     width: 40px;
+//     height: 40px;
+//     background-color: #e8e8e8;
+//     margin-right: 10px;
+//     align-items: center;
+//     display: flex;
+//     justify-content: center;
+//   }
+
+//   .nick-name {
+//     margin-right: 5px;
+//   }
+// `;
 
 const SubMenuTitle = styled.a`
   font-size: 14px;
@@ -116,20 +125,21 @@ const SubMenuTitle = styled.a`
 const Nav = () => {
   const navigate = useNavigate();
 
-  const myProfileDropMenu = [
-    {
-      children: <SubMenuTitle>마이페이지</SubMenuTitle>,
-      onClick: () => {
-        navigate(`/mypage`);
-      },
-    },
-    {
-      children: <SubMenuTitle>로그아웃</SubMenuTitle>,
-      onClick: () => {
-        console.log('로그아웃');
-      },
-    },
-  ];
+  //TODO: 로그인 이후, 프로필 드롭메뉴
+  // const myProfileDropMenu = [
+  //   {
+  //     children: <SubMenuTitle>마이페이지</SubMenuTitle>,
+  //     onClick: () => {
+  //       navigate(`/mypage`);
+  //     },
+  //   },
+  //   {
+  //     children: <SubMenuTitle>로그아웃</SubMenuTitle>,
+  //     onClick: () => {
+  //       console.log('로그아웃');
+  //     },
+  //   },
+  // ];
 
   const getMenus = (subList: { path: string; title: string }[]): MenuItem[] => {
     return subList.map<MenuItem>(({ title, path }) => {
@@ -177,17 +187,15 @@ const Nav = () => {
               );
             })}
           </LinksContainer>
-          {/* <SignInUp>
-          <BasicButton $fontSize={'16px'}>로그인</BasicButton>
-          <BasicButton
-            $fontSize={'16px'}
-            $backgdColor={'#fff'}
-            $borderColor={'#FFCE00'}
-          >
-            회원가입
-          </BasicButton>
-        </SignInUp> */}
-          <DefaultProfile>
+          <SignInUp>
+            <BasicButton $fontSize={'16px'} onClick={ () => navigate('/login')}>
+              <span>로그인</span>
+            </BasicButton>
+            <BasicButton $fontSize={'16px'} $backgdColor={'#fff'} $borderColor={'#FFCE00'}>
+              <span>회원가입</span>
+            </BasicButton>
+          </SignInUp>
+          {/* <DefaultProfile>
             <div>
               <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
                 <SignInContainer>
@@ -199,7 +207,7 @@ const Nav = () => {
                 </SignInContainer>
               </Dropdown>
             </div>
-          </DefaultProfile>
+          </DefaultProfile> */}
         </NavContent>
       </StyledNavContainer>
     </>
