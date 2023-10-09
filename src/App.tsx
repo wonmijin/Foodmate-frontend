@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Nav from './components/common/Nav';
-import ScrollToTop from './components/main-page/ScrollToTop';
+import ScrollToTop from './utils/ScrollToTop';
 import { CreateGroupPost } from './pages/CreateGroupPost';
 import { FindFoodmate } from './pages/FindFoodmate';
 import { History } from './pages/History';
