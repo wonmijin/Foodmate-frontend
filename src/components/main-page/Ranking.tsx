@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FaMedal } from 'react-icons/fa';
 import { rankingFoodData, rankingLikesData, rankingMeetingData } from '../../mocks/rankingData';
 import { rankingCategories, RankingType } from '../../constants/ranking';
-import defaultImg from '../../assets/error.png';
+import Image from '../common/Image';
 
 const RankingContainer = styled.div`
   padding: var(--basic-padding);
@@ -92,17 +92,7 @@ const RankingItem = styled.div`
     align-items: center;
     border: 1px solid #c0c0c0;
     border-radius: 8px;
-
-    img {
-      object-fit: cover;
-      width: 100px;
-      height: 100px;
-    }
-
-    img.error {
-      width: 60px;
-      height: 60px;
-    }
+    overflow: hidden;
   }
 `;
 
@@ -158,11 +148,6 @@ const Ranking = () => {
     setRankingList(newRankingList);
   }, [rankingType]);
 
-  const onErrorImg = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = defaultImg;
-    e.currentTarget.classList.add('error');
-  };
-
   return (
     <RankingContainer>
       <MainPageCommonTitle>
@@ -209,7 +194,7 @@ const Ranking = () => {
             <RankingItem key={index}>
               {rankTag}
               <div className="photo">
-                <img key={item.photo} src={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} onError={onErrorImg} />
+                <Image key={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
               </div>
               <span className="text">{item.text}</span>
             </RankingItem>
