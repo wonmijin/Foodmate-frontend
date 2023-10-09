@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { FaMedal } from 'react-icons/fa';
-import { rankingFoodData, rankingLikesData, rankingMeetingData, rankingStoreData } from '../../mocks/rankingData';
+import { rankingFoodData, rankingLikesData, rankingMeetingData } from '../../mocks/rankingData';
 import { rankingCategories, RankingType } from '../../constants/ranking';
 
 const RankingContainer = styled.div`
@@ -132,15 +132,6 @@ const Ranking = () => {
             rank: index,
             photo: value.image,
             text: value.nickname,
-          });
-        });
-        break;
-      case RankingType.Place:
-        rankingStoreData.forEach((value, index) => {
-          newRankingList.push({
-            rank: index,
-            photo: value.address,
-            text: value.storeName,
           });
         });
         break;
