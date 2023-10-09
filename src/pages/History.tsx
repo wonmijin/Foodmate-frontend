@@ -38,7 +38,7 @@ export const History = () => {
         <HistoryContainer>
           <h2>모임 정보 - 신청 내역</h2>
           <div className="contents-box">
-            <SideMenu sideMenuList={MEETING_INFO_MENU} />
+            <SideMenu sideMenuList={MEETING_INFO_MENU} navMenuIdx={2} />
             <Contents>
               <div className="category">
                 <div className="category-list">
