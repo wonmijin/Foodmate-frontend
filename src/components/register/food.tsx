@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { MenuLabel } from '../register/MenuLabel';
+import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
 
 export const Food = () => {

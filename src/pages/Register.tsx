@@ -4,7 +4,7 @@ import { emailRegExp, passwordRegExp, nickNameRegExp } from '../regex/Regex';
 
 import styled from 'styled-components';
 import { ChangeEvent, useState } from 'react';
-import { Food } from '../components/register/food';
+import { Food } from '../components/register/Food';
 
 interface InputState {
   value: string;
