@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Food } from '../components/register/Food';
+import { Food } from '../components/register/food';
 
 interface RegisterForm {
   nickname: string;
