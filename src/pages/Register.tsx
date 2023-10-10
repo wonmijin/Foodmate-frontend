@@ -1,252 +1,148 @@
-import { useNavigate } from 'react-router';
-import axios from 'axios';
-import { emailRegExp, passwordRegExp, nickNameRegExp } from '../regex/Regex';
-
 import styled from 'styled-components';
-import { ChangeEvent, useState } from 'react';
-import { Food } from '../components/register/food';
+import { useRef } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Food } from '../components/register/Food';
 
-interface InputState {
-  value: string;
-  valid: boolean;
-  message: string;
+interface RegisterForm {
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  extraError?: string;
 }
 
 export const Register = () => {
-  const navigator = useNavigate();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm<RegisterForm>({ mode: 'onBlur' });
 
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState<InputState>({ value: '', valid: false, message: '' });
-  const [password, setPassword] = useState<InputState>({ value: '', valid: false, message: '' });
-  const [passwordConfirm, setPasswordConfirm] = useState<InputState>({ value: '', valid: false, message: '' });
-  const [nickName, setNicName] = useState<InputState>({ value: '', valid: false, message: '' });
+  const passwordRef = useRef<string | null>(null);
+  passwordRef.current = watch('password');
 
-  const [showPassword] = useState(false);
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    validator: (value: string) => { valid: boolean; message: string },
-  ) => {
-    const { name, value } = e.target;
-    const { valid, message } = validator(value);
-
-    const updatedValue = { value, valid, message };
-
-    switch (name) {
-      case 'email':
-        setEmail(updatedValue);
-        break;
-      case 'password':
-        setPassword(updatedValue);
-        break;
-      case 'passwordConfirm':
-        setPasswordConfirm(updatedValue);
-        break;
-      case 'nickname':
-        setNicName(updatedValue);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const validateEmail = (value: string) => {
-    // 이메일 유효성 검사
-    if (!emailRegExp.test(value)) {
-      return { valid: false, message: '이메일의 형식이 올바르지 않습니다.' };
-    } else {
-      return { valid: true, message: '사용 가능한 이메일 입니다.' };
-    }
-  };
-
-  const validatePassword = (value: string) => {
-    if (!passwordRegExp.test(value)) {
-      return { valid: false, message: '숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!' };
-    } else {
-      return { valid: true, message: '안전한 비밀번호 입니다.' };
-    }
-  };
-
-  const validatePasswordConfirm = (value: string) => {
-    if (value !== password.value) {
-      return { valid: false, message: '비밀번호가 다릅니다.' };
-    } else {
-      return { valid: true, message: '똑같은 비밀번호를 입력했습니다.' };
-    }
-  };
-
-  const validateNicName = (value: string) => {
-    if (!nickNameRegExp.test(value)) {
-      return { valid: false, message: '닉네임은 2글자 이상 5글자 이하로 입력 부탁드립니다.' };
-    } else {
-      return { valid: true, message: '사용 가능한 닉네임 입니다.' };
-    }
-  };
-
-  const isFormValid = () => {
-    return email.valid && password.valid && passwordConfirm.valid;
-  };
-
-  const sendSignupData = async (formData: any) => {
-    try {
-      const res = await axios.post('', formData);
-      return res.data;
-    } catch (error: any) {
-      if (error.response) {
-        console.log('gqw: ', error.response);
-        return error.response.data;
-      }
-      console.error('API 요청 실패:', error);
-      throw error;
-    }
-  };
-
-  const handleSignup = async () => {
-    if (isFormValid()) {
-      try {
-        const formData = {
-          email: email.value,
-          password: password.value,
-          nickname: nickName.value,
-        };
-
-        const res = await sendSignupData(formData);
-        console.log('error', res);
-        if (res.registerOk) {
-          alert(res.registerOk);
-          navigator('/main');
-        } else if (res) {
-          console.log(res);
-          setError(res);
-        } else {
-          setError('회원가입에 실패했습니다.');
-        }
-      } catch (error: any) {
-        console.error('error:', error);
-        setError('서버와 연결이 되지 않습니다.');
-      }
-    }
-  };
-
-  const sendEmailCertified = async (emailAddress: any) => {
-    try {
-      const res = await axios.post('', {
-        email: emailAddress,
-      });
-      return res.data;
-    } catch (error: any) {
-      console.error('이메일 인증 요청 실패:', error);
-      throw error;
-    }
-  };
-
-  const handleEmailCertified = async () => {
-    if (email.valid) {
-      try {
-        const response = await sendEmailCertified(email.value);
-        if (response.postMailOk) {
-          alert('이메일에 인증 문자를 전송했습니다.');
-        } else {
-          console.log(response);
-          console.error('error', error);
-          alert('이메일 인증 요청에 실패했습니다.');
-        }
-      } catch (error) {
-        alert('인증 요청 실패');
-      }
-    }
+  const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
+    console.log(data);
   };
 
   return (
     <>
       <RegisterWrap>
         <RegisterTitle>회원가입</RegisterTitle>
-        <hr></hr>
-        <RegisterBox>
-          <RegisterInBox>
-            <p>이메일</p>
-            <InputBoxWrap>
-              <div>
+        <form onSubmit={handleSubmit(onSubmitHandler)}>
+          <hr></hr>
+          <RegisterBox>
+            <RegisterInBox>
+              <p>이메일</p>
+              <InputBoxWrap>
+                <div>
+                  <input
+                    {...register('email', {
+                      required: '필수 값입니다.',
+                      pattern: {
+                        value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                        message: '이메일을 올바르게 입력해주세요.',
+                      },
+                    })}
+                    placeholder="이메일을 입력해주세요."
+                  />
+                  <p>{errors?.email?.message}</p>
+                </div>
+                <ConfirmButton type="button">중복확인</ConfirmButton>
+              </InputBoxWrap>
+            </RegisterInBox>
+
+            <RegisterInBox>
+              <p>비밀번호</p>
+              <InputBoxWrap2>
                 <input
-                  type="email"
-                  name="email"
-                  value={email.value}
-                  onChange={(e) => handleChange(e, validateEmail)}
-                  placeholder="이메일을 입력하세요."
+                  type="password"
+                  {...register('password', {
+                    required: '필수 값입니다.',
+                    minLength: {
+                      value: 8,
+                      message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                    },
+                    pattern: {
+                      value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                      message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                    },
+                  })}
+                  placeholder="비밀번호를 입력해주세요."
                 />
-                {email.valid ? null : <p>{email.message}</p>}
-              </div>
-              <ConfirmButton type="button" onClick={handleEmailCertified}>
-                중복확인
-              </ConfirmButton>
-            </InputBoxWrap>
-          </RegisterInBox>
+                <p>{errors?.password?.message}</p>
+              </InputBoxWrap2>
+            </RegisterInBox>
 
-          <RegisterInBox>
-            <p>비밀번호</p>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={password.value}
-              onChange={(e) => handleChange(e, validatePassword)}
-              placeholder="비밀번호를 입력하세요."
-            />
-            <p>{password.message}</p>
-          </RegisterInBox>
-
-          <RegisterInBox>
-            <p>비밀번호 확인</p>
-            <input
-              type="password"
-              name="passwordConfirm"
-              value={passwordConfirm.value}
-              onChange={(e) => handleChange(e, validatePasswordConfirm)}
-              placeholder="비밀번호를 한번 더 입력해주세요."
-            />
-            {passwordConfirm.valid ? null : <p>{passwordConfirm.message}</p>}
-          </RegisterInBox>
-
-          <RegisterInBox>
-            <p>닉네임</p>
-            <InputBoxWrap>
-              <div>
+            <RegisterInBox>
+              <p>비밀번호 확인</p>
+              <InputBoxWrap2>
                 <input
-                  type="text"
-                  name="nickname"
-                  value={nickName.value}
-                  onChange={(e) => handleChange(e, validateNicName)}
-                  placeholder="닉네임을 입력하세요."
+                  type="password"
+                  {...register('passwordConfirm', {
+                    required: '필수 값입니다.',
+                    minLength: {
+                      value: 8,
+                      message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                    },
+                    validate: (value) => value === passwordRef.current,
+                  })}
+                  placeholder="비밀번호를 한번 더 입력해주세요"
                 />
-                <p>{nickName.message}</p>
-              </div>
-              <ConfirmButton type="button">중복확인</ConfirmButton>
-            </InputBoxWrap>
-          </RegisterInBox>
+                <p>{errors?.passwordConfirm?.message}</p>
+              </InputBoxWrap2>
+            </RegisterInBox>
 
-          <RegisterInBox>
-            <p>
-              선호 음식 <br />
-              <span>
-                중복체크 가능
-                <br />
-                (최대 3개)
-              </span>
-            </p>
-            <Food />
-          </RegisterInBox>
-        </RegisterBox>
-        <hr></hr>
-        <RegisterButton type="submit" className={isFormValid() ? 'active' : ''} onClick={handleSignup}>
-          회원가입
-        </RegisterButton>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+            <RegisterInBox>
+              <p>닉네임</p>
+              <InputBoxWrap>
+                <div>
+                  <input
+                    {...register('nickname', {
+                      required: '필수 값입니다.',
+                      minLength: {
+                        value: 3,
+                        message: '3글자 이상 입력해주세요.',
+                      },
+                      pattern: {
+                        value: /^[A-za-z0-9가-힣]{3,10}$/,
+                        message: '가능한 문자: 영문 대소문자, 글자 단위 한글, 숫자',
+                      },
+                    })}
+                    placeholder="닉네임을 입력해주세요."
+                  />
+                  <p>{errors?.nickname?.message}</p>
+                </div>
+                <ConfirmButton type="button">중복확인</ConfirmButton>
+              </InputBoxWrap>
+            </RegisterInBox>
+
+            <RegisterInBox>
+              <p>
+                선호 음식
+                <span>
+                  중복체크 가능
+                  <br />
+                  (최대 3개)
+                </span>
+              </p>
+              <Food />
+            </RegisterInBox>
+          </RegisterBox>
+
+          <hr></hr>
+
+          <RegisterButton>회원가입</RegisterButton>
+          {errors?.extraError?.message && <p>{errors?.extraError?.message}</p>}
+        </form>
       </RegisterWrap>
     </>
   );
 };
 
 const RegisterWrap = styled.div`
-  margin: 145px auto 0;
+  margin: 100px auto 0;
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -269,7 +165,7 @@ const RegisterBox = styled.div`
 
 const RegisterInBox = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 10px 0;
 
   p {
@@ -279,10 +175,13 @@ const RegisterInBox = styled.div`
     font-size: 14px;
     color: #212121;
     font-weight: 600;
+    line-height: 48px;
 
     span {
       font-size: 12px;
       font-weight: 400;
+      line-height: 1;
+      display: block;
     }
   }
 
@@ -308,8 +207,10 @@ const RegisterButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: 30px;
-  margin-bottom: 130px;
+  margin: 30px auto 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ConfirmButton = styled.button`
@@ -329,5 +230,26 @@ const ConfirmButton = styled.button`
 
 const InputBoxWrap = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+
+  p {
+    color: red;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    margin-left: 10px;
+    margin-top: 4px;
+  }
+`;
+const InputBoxWrap2 = styled.div`
+  p {
+    color: red;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    margin-left: 10px;
+    margin-top: 4px;
+  }
 `;
