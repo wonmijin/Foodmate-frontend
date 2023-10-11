@@ -3,7 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "cSpell.words": ["kakao", "Foodmate", "mypage", "spoqa", "findfoodmate", "newpost", "backgd", "tinymce"],
+  "cSpell.words": ["kakao", "Foodmate", "mypage", "spoqa", "findfoodmate", "newpost", "backgd", "tinymce", "serchData"],
   "prettier.prettierPath": "./node_modules/prettier/index.cjs",
   "svg.preview.background": "white"
 }
