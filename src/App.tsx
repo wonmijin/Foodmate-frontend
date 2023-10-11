@@ -8,6 +8,8 @@ import { Register } from './pages/Register';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
 import { ProfileChange } from './pages/ProfileChange';
+import { PasswordChange } from './pages/PasswordChange';
+import { QuitMembership } from './pages/QuitMembership';
 
 export const App = (): JSX.Element => {
   return (
@@ -22,6 +24,8 @@ export const App = (): JSX.Element => {
         <Route path="meeting-info/history" element={<History />} />
         <Route path="meeting-info/inquiry" element={<Inquiry />} />
         <Route path="mypage/profile" element={<ProfileChange />} />
+        <Route path="mypage/password" element={<PasswordChange />} />
+        <Route path="mypage/quit" element={<QuitMembership />} />
       </Routes>
     </>
   );
