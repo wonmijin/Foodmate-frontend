@@ -13,5 +13,5 @@ export const NAV_MENUS: {
       { path: 'meeting-info/inquiry', title: '요청 조회' },
     ],
   },
-  { path: 'mypage', title: '마이페이지' },
+  { path: 'mypage/profile', title: '마이페이지' },
 ];
