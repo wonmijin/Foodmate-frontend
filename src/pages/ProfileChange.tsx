@@ -7,15 +7,16 @@ export const ProfileChange = () => {
   return (
     <>
       <BasicPadding>
-        <MypageWrap>
+        <ProfileWrap>
           <SideMenu sideMenuList={MYPAGE_CATEGORY} navMenuIdx={3} />
-          <div>안녕하세요.</div>
-        </MypageWrap>
+          <div>프로필 수정</div>
+        </ProfileWrap>
       </BasicPadding>
     </>
   );
 };
 
-const MypageWrap = styled.div`
+const ProfileWrap = styled.div`
   display: flex;
+  margin: 120px 0;
 `;
