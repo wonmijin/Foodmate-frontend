@@ -4,9 +4,9 @@ import { CreateGroupPost } from './pages/CreateGroupPost';
 import { FindFoodmate } from './pages/FindFoodmate';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
-import { ProfileChange } from './pages/ProfileChange';
-import { PasswordChange } from './pages/PasswordChange';
-import { QuitMembership } from './pages/QuitMembership';
+import { Profile } from './pages/Profile';
+import { Password } from './pages/Password';
+import { Quit } from './pages/Quit';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
@@ -31,9 +31,9 @@ export const App = (): JSX.Element => {
         <Route path="/register" element={<Register />} />
         <Route path="meeting-info/history" element={<History />} />
         <Route path="meeting-info/inquiry" element={<Inquiry />} />
-        <Route path="mypage/profile" element={<ProfileChange />} />
-        <Route path="mypage/password" element={<PasswordChange />} />
-        <Route path="mypage/quit" element={<QuitMembership />} />
+        <Route path="mypage/profile" element={<Profile />} />
+        <Route path="mypage/password" element={<Password />} />
+        <Route path="mypage/quit" element={<Quit />} />
       </Routes>
     </>
   );
