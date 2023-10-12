@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import mainBg from '../../assets/main-background.png';
-import { BasicButton } from '../common/BasicButton';
-import { ImSearch } from 'react-icons/im';
 import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { searchData } from '../../mocks/serchData';
@@ -63,19 +61,16 @@ const SearchPopup = styled.div`
     height: 40px;
     background-color: #fff;
     color: ${(props) => props.theme.color.BLACK};
+    cursor: pointer;
 
     &:hover {
       background-color: #eee;
-    }
-
-    &.active {
-      background-color: #ffcc0021;
       font-weight: bold;
     }
 
     .item-text {
       display: inline-block;
-      width: 118px;
+      width: 200px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -84,6 +79,10 @@ const SearchPopup = styled.div`
       margin-right: 15px;
       padding-right: 5px;
     }
+  }
+
+  .item-list .item-text:last-child {
+    border-right: none;
   }
 `;
 
@@ -94,6 +93,10 @@ const SearchInput = styled.input`
   border: none;
   width: 98%;
   border-radius: 8px;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const MainContentsContainer = styled.div`
@@ -106,18 +109,6 @@ const MainContentsContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-`;
-
-const Shortcuts = styled.div`
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  white-space: nowrap;
-  .iconDiv {
-    margin-right: 10px;
-    font-size: 12px;
-  }
 `;
 
 const Skeleton = styled.img`
@@ -173,7 +164,10 @@ export const Search = () => {
     }
     (e.currentTarget as Element).classList.add('active');
     setSelectedGroupId(item.groupId);
+
+    if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
   };
+
   return (
     <MainBg>
       <div className="bg-filter"></div>
@@ -184,6 +178,7 @@ export const Search = () => {
         <MainSearchContainer>
           <SearchInputContainer>
             <SearchInput
+              autoFocus
               value={inputKeyword}
               onChange={onChange}
               placeholder="원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
@@ -199,11 +194,9 @@ export const Search = () => {
                     {searchList.map((item, index) => {
                       return (
                         <li key={index} className="item-list" onClick={(e) => selectGroup(item, e)}>
-                          글제목:&nbsp;
-                          <span className="item-text">{item.postTitle}</span>
-                          모임명:&nbsp;
-                          <span className="item-text">{item.groupName}</span>
-                          음식명:&nbsp; <span> {item.foodName}</span>
+                          <span className="item-text">글제목: &nbsp;{item.postTitle}</span>
+                          <span className="item-text">모임명:&nbsp; {item.groupName}</span>
+                          <span className="item-text">음식명:&nbsp; {item.foodName}</span>
                         </li>
                       );
                     })}
@@ -212,23 +205,6 @@ export const Search = () => {
               </SearchPopup>
             )}
           </SearchInputContainer>
-          <BasicButton
-            onClick={() => {
-              if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
-            }}
-            $fontSize={'16px'}
-            $fontColor="#fff"
-            $backgdColor={'#f96223'}
-            $hoverBackgdColor={'#fb8958'}
-            $borderColor={'transparent'}
-          >
-            <Shortcuts>
-              <div className="iconDiv">
-                <ImSearch />
-              </div>
-              모임 바로가기
-            </Shortcuts>
-          </BasicButton>
         </MainSearchContainer>
       </MainContentsContainer>
     </MainBg>

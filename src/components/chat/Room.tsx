@@ -56,6 +56,7 @@ const ChatRoomMessage = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 15px;
+    cursor: pointer;
   }
 
   .chat-room-state {

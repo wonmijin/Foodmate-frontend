@@ -39,19 +39,19 @@ const ChatHomeMain = styled.main`
     border: 1px solid rgba(0, 0, 0, 0.14);
     background-color: #fff;
     box-shadow: 2px 2px 15px 0px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
   }
 
   .intro-message {
     margin: 10px;
     border-radius: 8px;
-    padding: 22px 17px;
-    transition: all 0.3s;
+    padding: 22px 24px;
+    transition: background-color 0.3s;
 
     &:hover {
       background-color: #f5f5f5;
     }
 
-    padding: 22px 24px;
 
     > p {
       font-weight: bold;
