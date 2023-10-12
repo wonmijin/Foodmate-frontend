@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { BiHome, BiMessageRoundedDots, BiSolidHome, BiSolidMessageRoundedDots } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { AiFillHome } from 'react-icons/ai';
-import { BiMessageRoundedDots } from 'react-icons/bi';
+import styled from 'styled-components';
 import Home from '../components/chat/Home';
-import Room from '../components/chat/Room';
 import Message from '../components/chat/Message';
+import Room from '../components/chat/Room';
 
 enum ChatNavType {
   Home,
@@ -50,19 +49,25 @@ const Nav = styled.nav`
   ul {
     display: flex;
     justify-content: space-between;
-    width: 50%;
+    width: 80%;
   }
 
   li {
     display: flex;
     align-items: center;
     flex-direction: column;
-    align-items: center;
     color: #655f5f;
+    outline: none;
+    cursor: pointer;
+    padding: 0 50px;
 
     span {
       margin-top: 3px;
-      font-size: 12px;
+      font-size: 13px;
+    }
+
+    &.active {
+      color: #f96324;
     }
   }
 `;
@@ -119,18 +124,16 @@ const Chat = () => {
         setBody(Room({ selectChatRoom: selectChatRoom }));
         break;
     }
-  }, [goToLogin, nav]);
+  }, [nav, goToLogin]);
 
   return (
-    <>
-      <ChatIconBox>
-        <img
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-          src="/src/assets/message.svg"
-          alt="채팅 버튼"
-        />
+    <div>
+      <ChatIconBox
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        <img src="/src/assets/message.svg" alt="채팅 버튼" />
       </ChatIconBox>
       {isOpen === true ? (
         <ChatBody>
@@ -140,19 +143,21 @@ const Chat = () => {
               <Nav>
                 <ul>
                   <li
+                    className={nav === ChatNavType.Home ? 'active' : ''}
                     onClick={() => {
                       setNav(ChatNavType.Home);
                     }}
                   >
-                    <AiFillHome />
+                    {nav === ChatNavType.Home ? <BiSolidHome /> : <BiHome />}
                     <span>홈</span>
                   </li>
                   <li
+                    className={nav === ChatNavType.Room ? 'active' : ''}
                     onClick={() => {
                       setNav(ChatNavType.Room);
                     }}
                   >
-                    <BiMessageRoundedDots />
+                    {nav === ChatNavType.Room ? <BiSolidMessageRoundedDots /> : <BiMessageRoundedDots />}
                     <span>채팅방</span>
                   </li>
                 </ul>
@@ -165,7 +170,7 @@ const Chat = () => {
       ) : (
         ''
       )}
-    </>
+    </div>
   );
 };
 
