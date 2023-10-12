@@ -220,6 +220,7 @@ export const Search = () => {
             $fontColor="#fff"
             $backgdColor={'#f96223'}
             $hoverBackgdColor={'#fb8958'}
+            $borderColor={'transparent'}
           >
             <Shortcuts>
               <div className="iconDiv">

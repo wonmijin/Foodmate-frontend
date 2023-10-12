@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { FaMedal } from 'react-icons/fa';
-import { rankingFoodData, rankingLikesData, rankingMeetingData, rankingStoreData } from '../../mocks/rankingData';
+import { rankingFoodData, rankingLikesData, rankingMeetingData } from '../../mocks/rankingData';
 import { rankingCategories, RankingType } from '../../constants/ranking';
+import Image from '../common/Image';
 
 const RankingContainer = styled.div`
   padding: var(--basic-padding);
@@ -12,9 +13,11 @@ const MainPageCommonTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .title-text {
     font-weight: bold;
     font-size: 24px;
+
     .point {
       display: inline-block;
       margin-right: 10px;
@@ -50,7 +53,7 @@ const Button = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${(props) => props.theme.color.YELLOW};
+    background-color: #ffcc0021;
   }
 
   &.active {
@@ -63,7 +66,7 @@ const RankingList = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  justify-content: center;
+  justify-content: space-between;
   margin: 0 auto;
 `;
 
@@ -75,19 +78,21 @@ const RankingItem = styled.div`
 
   .text {
     width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
   }
 
   .photo {
     width: 100px;
     height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #c0c0c0;
     border-radius: 8px;
-
-    img {
-      object-fit: cover;
-      width: 100px;
-      height: 100px;
-    }
+    overflow: hidden;
   }
 `;
 
@@ -126,15 +131,6 @@ const Ranking = () => {
             rank: index,
             photo: value.image,
             text: value.nickname,
-          });
-        });
-        break;
-      case RankingType.Place:
-        rankingStoreData.forEach((value, index) => {
-          newRankingList.push({
-            rank: index,
-            photo: value.address,
-            text: value.storeName,
           });
         });
         break;
@@ -198,7 +194,7 @@ const Ranking = () => {
             <RankingItem key={index}>
               {rankTag}
               <div className="photo">
-                <img src={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
+                <Image key={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
               </div>
               <span className="text">{item.text}</span>
             </RankingItem>
