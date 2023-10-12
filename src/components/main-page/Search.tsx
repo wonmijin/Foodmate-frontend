@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import mainbg from '../../assets/mainbg.png';
+import mainBg from '../../assets/main-background.png';
 import { BasicButton } from '../common/BasicButton';
 import { ImSearch } from 'react-icons/im';
 import useDebounce from '../../hooks/useDebounce';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const MainBg = styled.div`
   width: 100%;
   height: calc(100vh - 60px);
-  background: url(${mainbg}) no-repeat center;
+  background: url(${mainBg}) no-repeat center;
 
   .bg-filter {
     width: 100%;
