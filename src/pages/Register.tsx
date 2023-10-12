@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Food } from '../components/register/food';
+import { UserProfileImage } from '../components/register/UserProfileImage';
 
 interface RegisterForm {
   nickname: string;
@@ -31,6 +32,8 @@ export const Register = () => {
       <RegisterWrap>
         <RegisterTitle>회원가입</RegisterTitle>
         <form onSubmit={handleSubmit(onSubmitHandler)}>
+          <UserProfileImage />
+
           <hr></hr>
           <RegisterBox>
             <RegisterInBox>
