@@ -2,6 +2,11 @@ import styled from 'styled-components';
 import { NAV_MENUS } from '../../constants/nav-menus';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+interface SubMenuData {
+  title: string;
+  path?: string;
+}
+
 interface SideMenuListType {
   sideMenuList: {
     title: string;
@@ -17,8 +22,16 @@ export const SideMenu = (props: SideMenuListType) => {
   const { sideMenuList } = props;
 
   const getSubListPath = (submenu: string) => {
-    const subMenuData = NAV_MENUS[2].subList?.find((sub) => sub.title === submenu);
-    return '/' + subMenuData?.path || '';
+    let subMenuData: SubMenuData | undefined;
+    for (const navMenu of NAV_MENUS) {
+      if (navMenu.subList) {
+        subMenuData = navMenu.subList.find((sub) => sub.title === submenu);
+        if (subMenuData) {
+          return `/${subMenuData.path || ''}`;
+        }
+      }
+    }
+    return '';
   };
 
   const handleSideMenu = (subListPath: string) => {
