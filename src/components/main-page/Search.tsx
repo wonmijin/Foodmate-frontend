@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import mainBg from '../../assets/main-background.png';
 import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
-import { searchData } from '../../mocks/serchData';
+import { searchData } from '../../mocks/searchData';
 import { useNavigate } from 'react-router-dom';
 
 const MainBg = styled.div`
