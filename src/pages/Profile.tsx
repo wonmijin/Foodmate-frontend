@@ -4,6 +4,7 @@ import { MYPAGE_CATEGORY } from '../constants/mypage';
 import styled from 'styled-components';
 import { Food } from '../components/register/food';
 import { LoginButton } from '../components/common/LoginButton';
+import { UserProfileImage } from '../components/register/UserProfileImage';
 
 export const Profile = () => {
   return (
@@ -12,8 +13,10 @@ export const Profile = () => {
         <ProfileWrap>
           <SideMenu sideMenuList={MYPAGE_CATEGORY} navMenuIdx={3} />
           <ProfileBox>
-            <h3>프로필 수정</h3>
             <form>
+              <h3>프로필 수정</h3>
+              <UserProfileImage />
+
               <hr></hr>
               <ProfilePadding>
                 <ProfileInBox>
