@@ -12,6 +12,7 @@ import MainPage from './pages/MainPage';
 import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
 import { Neighborhood } from './pages/Neighborhood';
 import { Register } from './pages/Register';
+import Chat from './pages/Chat';
 
 import ScrollToTop from './utils/ScrollToTop';
 
@@ -35,6 +36,7 @@ export const App = (): JSX.Element => {
         <Route path="mypage/password" element={<Password />} />
         <Route path="mypage/quit" element={<Quit />} />
       </Routes>
+      <Chat />
     </>
   );
 };

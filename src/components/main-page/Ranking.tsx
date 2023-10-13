@@ -194,7 +194,7 @@ const Ranking = () => {
             <RankingItem key={index}>
               {rankTag}
               <div className="photo">
-                <Image key={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
+                <Image imageKey={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
               </div>
               <span className="text">{item.text}</span>
             </RankingItem>
