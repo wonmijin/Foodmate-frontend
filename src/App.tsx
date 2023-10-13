@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
 import { Neighborhood } from './pages/Neighborhood';
 import { Register } from './pages/Register';
+import Chat from './pages/Chat';
 
 export const App = (): JSX.Element => {
   return (
@@ -29,6 +30,7 @@ export const App = (): JSX.Element => {
         <Route path="meeting-info/history" element={<History />} />
         <Route path="meeting-info/inquiry" element={<Inquiry />} />
       </Routes>
+      <Chat />
       <Footer />
     </>
   );
