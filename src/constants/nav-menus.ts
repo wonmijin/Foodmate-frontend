@@ -17,9 +17,9 @@ export const NAV_MENUS: {
     path: 'mypage',
     title: '마이페이지',
     subList: [
-      { path: 'mypage/profile', title: '프로필 수정' },
-      { path: 'mypage/password', title: '비밀번호 변경' },
-      { path: 'mypage/quit', title: '회원 탈퇴' },
+      { path: 'mypage/modify-profile', title: '프로필 수정' },
+      { path: 'mypage/modify-password', title: '비밀번호 변경' },
+      { path: 'mypage/modify-quit', title: '회원 탈퇴' },
     ],
   },
 ];

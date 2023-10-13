@@ -32,9 +32,9 @@ export const App = (): JSX.Element => {
         <Route path="/register" element={<Register />} />
         <Route path="meeting-info/history" element={<History />} />
         <Route path="meeting-info/inquiry" element={<Inquiry />} />
-        <Route path="mypage/profile" element={<Profile />} />
-        <Route path="mypage/password" element={<Password />} />
-        <Route path="mypage/quit" element={<Quit />} />
+        <Route path="mypage/modify-profile" element={<Profile />} />
+        <Route path="mypage/modify-password" element={<Password />} />
+        <Route path="mypage/modify-quit" element={<Quit />} />
       </Routes>
       <Chat />
     </>
