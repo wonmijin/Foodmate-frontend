@@ -130,7 +130,7 @@ const Nav = () => {
   //   {
   //     children: <SubMenuTitle>마이페이지</SubMenuTitle>,
   //     onClick: () => {
-  //       navigate(`/mypage`);
+  //       navigate(`/mypage/profile`);
   //     },
   //   },
   //   {
@@ -188,7 +188,7 @@ const Nav = () => {
             })}
           </LinksContainer>
           <SignInUp>
-            <BasicButton $fontSize={'16px'} onClick={ () => navigate('/login')}>
+            <BasicButton $fontSize={'16px'} onClick={() => navigate('/login')}>
               <span>로그인</span>
             </BasicButton>
             <BasicButton $fontSize={'16px'} $backgdColor={'#fff'} $borderColor={'#FFCE00'}>

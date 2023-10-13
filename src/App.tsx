@@ -4,6 +4,9 @@ import { CreateGroupPost } from './pages/CreateGroupPost';
 import { FindFoodmate } from './pages/FindFoodmate';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
+import { Profile } from './pages/Profile';
+import { Password } from './pages/Password';
+import { Quit } from './pages/Quit';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
@@ -29,6 +32,9 @@ export const App = (): JSX.Element => {
         <Route path="/register" element={<Register />} />
         <Route path="meeting-info/history" element={<History />} />
         <Route path="meeting-info/inquiry" element={<Inquiry />} />
+        <Route path="mypage/modify-profile" element={<Profile />} />
+        <Route path="mypage/modify-password" element={<Password />} />
+        <Route path="mypage/modify-quit" element={<Quit />} />
       </Routes>
       <Chat />
     </>
