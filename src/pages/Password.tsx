@@ -113,7 +113,7 @@ export const Password = () => {
 
 const PasswordWrap = styled.div`
   display: flex;
-  margin: 120px 0;
+  margin: 120px 0 259px 0;
 `;
 
 const PasswordBox = styled.div`
