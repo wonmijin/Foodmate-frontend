@@ -3,15 +3,23 @@ export const NAV_MENUS: {
   title: string;
   subList?: { path: string; title: string }[];
 }[] = [
-  { path: 'search', title: '밥친구구해요' },
-  { path: 'neighborhood', title: '내근처모임' },
+  { path: 'findfoodmate', title: '밥 친구 구해요' },
+  { path: 'neighborhood', title: '내 근처 모임' },
   {
-    path: 'myapply',
-    title: '모임정보',
+    path: 'meeting-info',
+    title: '모임 정보',
     subList: [
-      { path: 'myapply', title: '나의 신청내역' },
-      { path: 'check', title: '모임 수락 / 거절' },
+      { path: 'meeting-info/history', title: '신청 내역' },
+      { path: 'meeting-info/inquiry', title: '요청 조회' },
     ],
   },
-  { path: 'mypage', title: '마이페이지' },
+  {
+    path: 'mypage',
+    title: '마이페이지',
+    subList: [
+      { path: 'mypage/modify-profile', title: '프로필 수정' },
+      { path: 'mypage/modify-password', title: '비밀번호 변경' },
+      { path: 'mypage/modify-quit', title: '회원 탈퇴' },
+    ],
+  },
 ];

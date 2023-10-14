@@ -5,8 +5,8 @@ import { PostCard } from './PostCard';
 export const PostCardsList = () => {
   return (
     <PostCardsListContainer>
-      {postCardData.map((card) => (
-        <PostCard cardData={card} key={card.id} />
+      {postCardData.map((card, idx) => (
+        <PostCard cardData={card} key={idx} />
       ))}
     </PostCardsListContainer>
   );
