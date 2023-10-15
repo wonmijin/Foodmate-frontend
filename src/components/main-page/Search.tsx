@@ -8,7 +8,7 @@ import { useQuickSearch } from '../../hooks/useQuickSearch';
 const MainBg = styled.div`
   width: 100%;
   height: calc(100vh - 60px);
-  background: url(${mainBg}) no-repeat center;
+  background: center / cover no-repeat url(${mainBg});
 
   .bg-filter {
     width: 100%;
@@ -129,11 +129,11 @@ export const Search = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [isOnSkeleton, setIsOnSkeleton] = useState<boolean>(false);
   const [isOpenSearchPopup, setIsOpenSearchPopup] = useState<boolean>(false);
-  const { data } = useQuickSearch(searchKeyword);
+  const { data: searchData } = useQuickSearch(searchKeyword);
 
   useEffect(() => {
     setSelectedGroupId(null);
-    if (data === undefined || data.content.length === 0) {
+    if (searchData === undefined || searchData.content.length === 0) {
       setSearchList([]);
       setIsOpenSearchPopup(false);
       return;
@@ -141,7 +141,7 @@ export const Search = () => {
 
     const newSearchList: SearchItem[] = [];
 
-    data.content.slice(0, 5).forEach((value) => {
+    searchData.content.slice(0, 5).forEach((value) => {
       newSearchList.push({
         groupId: value.groupId,
         postTitle: value.title,
@@ -152,12 +152,18 @@ export const Search = () => {
 
     setSearchList(newSearchList);
     setIsOnSkeleton(false);
-  }, [data]);
+  }, [searchData]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsOnSkeleton(true);
+    if (e.target.value.length === 0) {
+      setIsOnSkeleton(false);
+      setIsOpenSearchPopup(false);
+    } else {
+      setIsOnSkeleton(true);
+      setIsOpenSearchPopup(true);
+    }
+    
     setInputKeyword(e.target.value);
-    setIsOpenSearchPopup(true);
   };
 
   const selectGroup = (item: SearchItem, e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
