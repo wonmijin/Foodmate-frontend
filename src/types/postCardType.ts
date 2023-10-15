@@ -5,7 +5,7 @@ export interface PostCardType {
   image: string;
   title: string;
   name: string;
-  content: string;
+  content?: string;
   food: string;
   date: string;
   time: string;
@@ -13,10 +13,10 @@ export interface PostCardType {
   current: number;
   storeName: string;
   storeAddress: string;
-  latitude: string;
-  longitude: string;
+  latitude?: string;
+  longitude?: string;
   createdDate: string;
-  chatRoomId: number;
+  chatRoomId?: number;
 }
 
 export interface CommentsType {
