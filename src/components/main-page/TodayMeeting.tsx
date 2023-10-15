@@ -135,8 +135,9 @@ export const TodayMeeting = () => {
       newTodayMeetingList.push(...todayMeetingData.content);
       setTodayMeetingList(newTodayMeetingList);
 
+      //Slider의responsive 동작 시에 초기 데이터를 보여주지 못하는 이슈 대응
       if (page === 0) {
-        sliderRef?.slickGoTo(0); // 데이터를 가지고 온 상태에서 다시 UI를 그려야함
+        sliderRef?.slickGoTo(0);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

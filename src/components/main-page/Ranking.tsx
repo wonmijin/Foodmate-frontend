@@ -130,7 +130,7 @@ const Ranking = () => {
           });
         });
         break;
-      case RankingType?.MeetingKing:
+      case RankingType.MeetingKing:
         meetingRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
