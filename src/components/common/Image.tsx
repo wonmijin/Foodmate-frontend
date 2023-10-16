@@ -30,11 +30,11 @@ const ErrorImg = styled.img`
 const Image = ({ imageKey, alt, imageUrl, crossOrigin }: ImageProps) => {
   const [src, status] = useImage(imageUrl, crossOrigin);
 
-  if (status === Status.loading) {
+  if (imageUrl !== null && status === Status.loading) {
     return <Spinner src="src/assets/spinner.gif" />;
   }
 
-  return status === Status.failed ? (
+  return (status === Status.failed || imageUrl === null) ? (
     <ErrorImg src={defaultImg} />
   ) : (
     <Img src={src} crossOrigin={crossOrigin} key={imageKey} alt={alt} />

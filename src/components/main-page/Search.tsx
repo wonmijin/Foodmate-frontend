@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import mainBg from '../../assets/main-background.png';
 import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
-import { searchData } from '../../mocks/searchData';
 import { useNavigate } from 'react-router-dom';
+import { useQuickSearch } from '../../hooks/useQuickSearch';
 
 const MainBg = styled.div`
   width: 100%;
   height: calc(100vh - 60px);
-  background: url(${mainBg}) no-repeat center;
+  background: center / cover no-repeat url(${mainBg});
 
   .bg-filter {
     width: 100%;
@@ -118,7 +118,7 @@ const Skeleton = styled.img`
 type SearchItem = {
   groupId: number;
   postTitle: string;
-  groupName: string;
+  nickname: string;
   foodName: string;
 };
 
@@ -128,31 +128,41 @@ export const Search = () => {
   const [searchKeyword, inputKeyword, setInputKeyword] = useDebounce<string>('', 500);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [isOnSkeleton, setIsOnSkeleton] = useState<boolean>(false);
+  const [isOpenSearchPopup, setIsOpenSearchPopup] = useState<boolean>(false);
+  const { data: searchData } = useQuickSearch(searchKeyword);
 
   useEffect(() => {
     setSelectedGroupId(null);
-    if (searchKeyword.length === 0) {
+    if (searchData === undefined || searchData.content.length === 0) {
       setSearchList([]);
+      setIsOpenSearchPopup(false);
       return;
     }
 
     const newSearchList: SearchItem[] = [];
 
-    searchData[0].list2.slice(0, 5).forEach((value) => {
+    searchData.content.slice(0, 5).forEach((value) => {
       newSearchList.push({
         groupId: value.groupId,
         postTitle: value.title,
-        groupName: value.name,
+        nickname: value.nickname,
         foodName: value.food,
       });
     });
 
     setSearchList(newSearchList);
     setIsOnSkeleton(false);
-  }, [searchKeyword]);
+  }, [searchData]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsOnSkeleton(true);
+    if (e.target.value.length === 0) {
+      setIsOnSkeleton(false);
+      setIsOpenSearchPopup(false);
+    } else {
+      setIsOnSkeleton(true);
+      setIsOpenSearchPopup(true);
+    }
+    
     setInputKeyword(e.target.value);
   };
 
@@ -183,7 +193,7 @@ export const Search = () => {
               onChange={onChange}
               placeholder="원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
             />
-            {searchList.length === 0 ? (
+            {isOpenSearchPopup === false ? (
               ''
             ) : (
               <SearchPopup>
@@ -194,9 +204,9 @@ export const Search = () => {
                     {searchList.map((item, index) => {
                       return (
                         <li key={index} className="item-list" onClick={(e) => selectGroup(item, e)}>
-                          <span className="item-text">글제목: &nbsp;{item.postTitle}</span>
-                          <span className="item-text">모임명:&nbsp; {item.groupName}</span>
-                          <span className="item-text">음식명:&nbsp; {item.foodName}</span>
+                          <span className="item-text">글제목:&nbsp;{item.postTitle}</span>
+                          <span className="item-text">음식명:&nbsp;{item.foodName}</span>
+                          <span className="item-text">모임장 닉네임:&nbsp;{item.nickname}</span>
                         </li>
                       );
                     })}
