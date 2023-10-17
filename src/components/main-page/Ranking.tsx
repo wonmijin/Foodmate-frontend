@@ -68,7 +68,7 @@ const RankingList = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 80%;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin: 0 auto;
 `;
 
