@@ -3,9 +3,11 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import styled from 'styled-components';
-import { postCardData } from '../../mocks/postCardData';
 import { PostCard } from '../common/PostCard';
 import { Link } from 'react-router-dom';
+import { useTodayMeeting } from '../../hooks/useTodayMeeting';
+import { useEffect, useState } from 'react';
+import TodayMeetingType from '../../types/todayMeetingType';
 
 const TodayMeetingContainer = styled.div`
   padding: var(--basic-padding);
@@ -35,10 +37,13 @@ const ButtonArrow = styled.div`
     height: 100px;
     align-items: center;
     color: #a4a4a4;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 14px;
+
     a {
       color: #a4a4a4;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -71,42 +76,73 @@ const TodayCardContainer = styled.div`
 `;
 
 export const TodayMeeting = () => {
+  const [page, setPage] = useState<number>(0);
+  const [curSlidesToShow, setCurSlidesToShow] = useState<number>(4);
+  const { data: todayMeetingData } = useTodayMeeting(page);
+  const [todayMeetingList, setTodayMeetingList] = useState<TodayMeetingType[]>([]);
   let sliderRef: Slider | null;
+
   const settings = {
-    infinite: true,
-    speed: 500,
+    beforeChange: (currentSlide: number, nextSlide: number): void => {
+      setCurSlidesToShow(nextSlide - currentSlide); // 현재 화면에 보여지는 Slider의 개수를 계산 한다.
+    },
+    afterChange: (currentSlide: number): void => {
+      if (todayMeetingData === undefined) return;
+      if (page + 1 === todayMeetingData.totalPages) return;
+
+      // 데이터를 미리 가져오지 않을 경우, 슬라이더 페이지 전환이 동일하게 되지 않아, *2를 해서 미리 가져오도록 한다.
+      if (todayMeetingData.content.length <= currentSlide + curSlidesToShow * 2) {
+        setPage(page + 1);
+      }
+    },
+    infinite: false,
+    speed: 300,
     slidesToShow: 4,
     slidesToScroll: 4,
+    centerMode: false,
     arrows: true,
     dots: false,
     accessibility: true,
+    mobileFirst: true,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1280,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          infinite: true,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2,
         },
       },
       {
-        breakpoint: 480,
+        breakpoint: 800,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          initialSlide: 1,
         },
       },
     ],
   };
+
+  useEffect(() => {
+    if (todayMeetingData !== undefined) {
+      const newTodayMeetingList = [...todayMeetingList];
+      newTodayMeetingList.push(...todayMeetingData.content);
+      setTodayMeetingList(newTodayMeetingList);
+
+      //Slider의responsive 동작 시에 초기 데이터를 보여주지 못하는 이슈 대응
+      if (page === 0) {
+        sliderRef?.slickGoTo(0);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todayMeetingData]);
+
   return (
     <TodayMeetingContainer>
       <MainPageCommonTitle>
@@ -146,7 +182,7 @@ export const TodayMeeting = () => {
         }}
         {...settings}
       >
-        {postCardData.map((card) => {
+        {todayMeetingList.map((card) => {
           return (
             <TodayCardContainer key={card.groupId}>
               <PostCard cardData={card} key={card.groupId} />

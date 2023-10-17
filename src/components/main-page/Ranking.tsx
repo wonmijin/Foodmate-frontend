@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { FaMedal } from 'react-icons/fa';
-import { rankingFoodData, rankingLikesData, rankingMeetingData } from '../../mocks/rankingData';
 import { rankingCategories, RankingType } from '../../constants/ranking';
 import Image from '../common/Image';
+import { useMeetingRanking } from '../../hooks/useMeetingRanking';
+import { useLikesRanking } from '../../hooks/useLikesRanking';
+import { useFoodRanking } from '../../hooks/useFoodRanking';
 
 const RankingContainer = styled.div`
   padding: var(--basic-padding);
@@ -110,6 +112,9 @@ type RankingItem = {
 const Ranking = () => {
   const [rankingType, setRankingType] = useState<RankingType>(RankingType.Like);
   const [rankingList, setRankingList] = useState<RankingItem[]>([]);
+  const { data: likesRankingData } = useLikesRanking();
+  const { data: meetingRankingData } = useMeetingRanking();
+  const { data: foodRankingData } = useFoodRanking();
 
   useEffect(() => {
     const newRankingList: RankingItem[] = [];
@@ -117,7 +122,7 @@ const Ranking = () => {
     switch (rankingType) {
       default:
       case RankingType.Like:
-        rankingLikesData.forEach((value, index) => {
+        likesRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -126,7 +131,7 @@ const Ranking = () => {
         });
         break;
       case RankingType.MeetingKing:
-        rankingMeetingData.forEach((value, index) => {
+        meetingRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -135,7 +140,7 @@ const Ranking = () => {
         });
         break;
       case RankingType.Category:
-        rankingFoodData.forEach((value, index) => {
+        foodRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -146,7 +151,7 @@ const Ranking = () => {
     }
 
     setRankingList(newRankingList);
-  }, [rankingType]);
+  }, [foodRankingData, likesRankingData, meetingRankingData, rankingType]);
 
   return (
     <RankingContainer>
