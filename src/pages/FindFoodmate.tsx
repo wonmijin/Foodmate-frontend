@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { styled } from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicInput } from '../components/common/BasicInput';
@@ -6,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { MenuLabels } from '../components/findFoodmate/MenuLabels';
 import { PostCardsList } from '../components/common/PostCardsList';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import {
   getAllGroups,
   getCloseGroups,
@@ -18,7 +18,8 @@ import useCurrentLocation from '../hooks/useCurrentLocation';
 import { DatePickers } from '../components/findFoodmate/DatePickers';
 import { BsSearchHeart } from 'react-icons/bs';
 import { FiRefreshCcw } from 'react-icons/fi';
-
+import { GeocodeType } from '../types/mapType';
+import { useQuery } from '@tanstack/react-query';
 const categories = [
   { key: 'total', label: '전체' },
   { key: 'distance', label: '거리순' },
@@ -102,23 +103,34 @@ export const FindFoodmate = () => {
     setSearchText('');
   };
 
-  let categoryFunction;
-  if (selectedCategory === 'total') {
-    categoryFunction = getAllGroups;
-  } else if (selectedCategory === 'distance') {
-    categoryFunction = myLocation ? () => getCloseGroups(myLocation) : () => null;
-  } else if (selectedCategory === 'date' && selectedDates.length !== 0) {
-    categoryFunction = () => getDateSortedGroups(selectedDates[0], selectedDates[1]);
-  } else if (selectedCategory === 'menu' && selectedMenus.length !== 0) {
-    categoryFunction = () => getSelectedMenuGroups(selectedMenus);
-  }
+  const queryFetchGroups = async ({
+    queryKey,
+  }: {
+    queryKey: [string, string, string[], string[], GeocodeType | null];
+  }) => {
+    const [_, selectedCategory, selectedDates, selectedMenus, myLocation] = queryKey;
+
+    switch (selectedCategory) {
+      case 'total':
+        return getAllGroups(1);
+      case 'distance':
+        return myLocation ? getCloseGroups(myLocation, 1) : null;
+      case 'date':
+        return selectedDates.length ? getDateSortedGroups(selectedDates[0], selectedDates[1], 1) : null;
+      case 'menu':
+        return selectedMenus.length ? getSelectedMenuGroups(selectedMenus, 1) : null;
+      default:
+        return getAllGroups(1);
+    }
+  };
 
   const { data, error, isLoading } = useQuery(
-    ['getGroups', selectedCategory, selectedDates, selectedMenus],
-    categoryFunction || getAllGroups,
+    ['getGroups', selectedCategory, selectedDates, selectedMenus, myLocation],
+    queryFetchGroups,
   );
-  if (isLoading) return 'Loading...';
-  if (error) return 'error!';
+
+  if (isLoading) return '로딩 중...';
+  if (error) return '에러 발생!';
 
   return (
     <BasicPadding>
@@ -172,10 +184,10 @@ export const FindFoodmate = () => {
             )}
           </div>
         </div>
-        {data.content.length === 0 && !searchedData ? (
+        {data && data.content && data.content.length === 0 && !searchedData ? (
           <div>데이터가 없어요</div>
         ) : (
-          <PostCardsList groupsData={searchedData || data.content} />
+          <PostCardsList groupsData={searchedData || (data && data.content)} />
         )}
       </FindFoodmateContainer>
     </BasicPadding>
