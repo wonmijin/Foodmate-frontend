@@ -105,3 +105,4 @@ export const createGroup = async ({
   } catch (error) {
     console.error(error);
   }
+}
