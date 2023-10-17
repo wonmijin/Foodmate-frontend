@@ -9,19 +9,28 @@ import { useNavigate } from 'react-router-dom';
 import { getGeocode } from '../components/kakao/getGeocode';
 import { KakaoMap } from '../components/kakao/KakaoMap';
 import { GeocodeType } from '../types/mapType';
+import { removeDot } from '../utils/removeDot';
+import DatePicker from 'react-datepicker';
+import { createGroup } from '../api/groupApi';
 
 export const CreateGroupPost = () => {
   const navigation = useNavigate();
   const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
   const [content, setContent] = useState('');
+  const [time, setTime] = useState(new Date());
   const [groupData, setGroupData] = useState({
+    authorization:
+      // TODO : 임시 토큰값. 로그인 구현 후 수정해야 함
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTc1MjEwMzksImV4cCI6MTY5ODczMDYzOX0.2XzE7uIOj3ZRAhhQGtuVl_Oe5W0BUEpWcmWnITe2TjI',
     title: '',
-    groupName: '',
-    selectedMenu: '',
-    meetingDate: '',
-    maximum: '',
-    meetingAddress: '',
-    store: '',
+    name: '',
+    food: '',
+    date: '',
+    maximum: 2,
+    storeName: '',
+    storeAddress: '',
+    latitude: '',
+    longitude: '',
   });
 
   const handleContent = (content: string) => {
@@ -29,7 +38,8 @@ export const CreateGroupPost = () => {
   };
 
   const handleLabels = (menu: string) => {
-    setGroupData((prev) => ({ ...prev, selectedMenu: menu }));
+    const modifiedFood = removeDot(menu);
+    setGroupData((prev) => ({ ...prev, food: modifiedFood }));
   };
 
   const getAddress = () => {
@@ -37,11 +47,31 @@ export const CreateGroupPost = () => {
       oncomplete: async (data) => {
         const fullAddress = data.address;
         const extraAddress = '';
-        setGroupData((prev) => ({ ...prev, meetingAddress: fullAddress + ' ' + extraAddress }));
+        setGroupData((prev) => ({ ...prev, storeAddress: fullAddress + ' ' + extraAddress }));
         const geocode: GeocodeType = await getGeocode(fullAddress);
         setMeetingPlaceGeocode([geocode.La, geocode.Ma]);
+        setGroupData((prev) => ({ ...prev, latitude: geocode.La, longitude: geocode.Ma }));
       },
     }).open();
+  };
+
+  const handlePost = () => {
+    const result = createGroup({
+      authorization: groupData.authorization,
+      title: groupData.title,
+      name: groupData.name,
+      content,
+      food: groupData.food,
+      date: groupData.date,
+      time,
+      maximum: groupData.maximum,
+      storeName: groupData.storeName,
+      storeAddress: groupData.storeAddress,
+      latitude: groupData.latitude,
+      longitude: groupData.longitude,
+    });
+
+    console.log(result);
   };
 
   return (
@@ -70,7 +100,7 @@ export const CreateGroupPost = () => {
                 id="input-group-name"
                 type="text"
                 placeholder="모임명을 입력해 주세요"
-                onChange={(e) => setGroupData((prev) => ({ ...prev, groupName: e.target.value }))}
+                onChange={(e) => setGroupData((prev) => ({ ...prev, name: e.target.value }))}
               />
             </div>
           </div>
@@ -104,7 +134,24 @@ export const CreateGroupPost = () => {
               <input
                 type="date"
                 id="date-title"
-                onChange={(e) => setGroupData((prev) => ({ ...prev, meetingDate: e.target.value }))}
+                onChange={(e) => setGroupData((prev) => ({ ...prev, date: e.target.value }))}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="time-title" className="title">
+                모임 시간
+              </label>
+              <br />
+              <DatePicker
+                id="time-title"
+                selected={time}
+                onChange={(date) => date && setTime(date)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
               />
             </div>
 
@@ -120,7 +167,7 @@ export const CreateGroupPost = () => {
                   max={8}
                   min={2}
                   placeholder="2"
-                  onChange={(e) => setGroupData((prev) => ({ ...prev, maximum: e.target.value }))}
+                  onChange={(e) => setGroupData((prev) => ({ ...prev, maximum: parseInt(e.target.value) }))}
                 />
                 <span>명</span>
               </div>
@@ -129,22 +176,19 @@ export const CreateGroupPost = () => {
 
           <div>
             <div className="title">모임 장소</div>
+            <input type="text" onClick={getAddress} placeholder="주소를 입력해 주세요" value={groupData.storeAddress} />
             <input
               type="text"
-              onClick={getAddress}
-              placeholder="주소를 입력해 주세요"
-              value={groupData.meetingAddress}
-            />
-            <input
-              type="text"
+              onChange={(e) => setGroupData((prev) => ({ ...prev, storeName: e.target.value }))}
               placeholder="가게명을 입력해 주세요"
-              onChange={(e) => setGroupData((prev) => ({ ...prev, store: e.target.value }))}
             />
           </div>
           {meetingPlaceGeocode && <KakaoMap geoCode={meetingPlaceGeocode} />}
 
           <div className="buttons">
-            <BasicButton $fontSize="12px">작성하기</BasicButton>
+            <BasicButton $fontSize="12px" onClick={handlePost}>
+              작성하기
+            </BasicButton>
             <BasicButton
               $fontSize="12px"
               $backgdColor="#c0c0c0"
