@@ -1,9 +1,8 @@
 import styled from 'styled-components';
-import { AllPostCardType } from '../../types/postCardType';
 // import { BsStar, BsStarFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import TodayMeetingType from '../../types/todayMeetingType';
-
+import { PostCardType } from '../../types/postCardType';
 
 export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingType }) => {
   const navigation = useNavigate();
