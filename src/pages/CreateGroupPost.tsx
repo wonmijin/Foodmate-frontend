@@ -114,9 +114,10 @@ export const CreateGroupPost = () => {
             <div className="title">음식 선택</div>
             <div className="menu-labels">
               {LABELCOLOR.map((item, idx) => {
+                const isSelected = removeDot(groupData.food).includes(removeDot(item.menu));
                 return (
                   <div className="menu-label" key={idx}>
-                    <MenuLabel $menuColor={item.color} onClick={() => handleLabels(item.menu)}>
+                    <MenuLabel $menuColor={item.color} $isSelected={isSelected} onClick={() => handleLabels(item.menu)}>
                       {item.menu}
                     </MenuLabel>
                   </div>
