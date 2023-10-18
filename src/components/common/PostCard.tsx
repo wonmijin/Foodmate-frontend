@@ -1,8 +1,8 @@
 import styled from 'styled-components';
+import {  PostCardType } from '../../types/postCardType';
 // import { BsStar, BsStarFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import TodayMeetingType from '../../types/todayMeetingType';
-import { PostCardType } from '../../types/postCardType';
 
 export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingType }) => {
   const navigation = useNavigate();
@@ -13,10 +13,8 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
   return (
     <div>
       <PostCards onClick={postCardOnClickHandler}>
-        <RightAlign>
-          <div className="date">{cardData.date}</div>
-        </RightAlign>
         <LeftAlign>
+          <div className="date">{cardData.createdDate}</div>
           <div className="title">{cardData.title}</div>
           <div className="sub-title">모임명</div>
           <div className="input-text">{cardData.name}</div>
@@ -101,6 +99,13 @@ const LeftAlign = styled.div`
   .input-text {
     font-size: 11px;
   }
+
+  .date {
+    text-align: right;
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #999999;
+  }
 `;
 
 const RightAlign = styled.div`
@@ -108,9 +113,6 @@ const RightAlign = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
-  .date {
-    color: #999999;
-  }
 
   .participant {
     font-weight: 600;

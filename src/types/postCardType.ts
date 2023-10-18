@@ -38,21 +38,23 @@ export interface PostCardType {
 
 export interface CommentsType {
   commentId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
   content: string;
   createdDate: string;
+  image: string;
+  memberId: number;
+  nickname: string;
   replies?: ReplyType[];
+  updatedDate: string;
 }
 
 export interface ReplyType {
-  replyId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
   content: string;
   createdDate: string;
+  image: string;
+  memberId: number;
+  nickname: string;
+  replyId: number;
+  updatedDate: string;
 }
 
 export interface CreateGroupType {

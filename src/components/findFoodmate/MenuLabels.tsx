@@ -4,7 +4,6 @@ import { MenuLabel } from '../common/MenuLabel';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { LABELCOLOR } from '../../constants/menu';
 import { BasicButton } from '../common/BasicButton';
-import { removeDot } from '../../utils/removeDot';
 
 interface MenuLabelsPropsType {
   handleMenuLabelModal: (isOpen: boolean) => void;
@@ -22,7 +21,10 @@ export const MenuLabels = ({ handleMenuLabelModal, handleSelectedMenus }: MenuLa
   };
 
   const handleSelectComplete = () => {
-    const modifiedArr = selectedMenus.map(removeDot);
+    const modifiedArr = selectedMenus.map((item) => {
+      return item.replace(/·/g, '');
+    });
+
     handleSelectedMenus(modifiedArr);
     handleMenuLabelModal(false);
   };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { styled } from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicInput } from '../components/common/BasicInput';
@@ -6,7 +7,8 @@ import { useState, useEffect } from 'react';
 import { MenuLabels } from '../components/findFoodmate/MenuLabels';
 import { PostCardsList } from '../components/common/PostCardsList';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 import {
   getAllGroups,
   getCloseGroups,
@@ -18,6 +20,8 @@ import useCurrentLocation from '../hooks/useCurrentLocation';
 import { DatePickers } from '../components/findFoodmate/DatePickers';
 import { BsSearchHeart } from 'react-icons/bs';
 import { FiRefreshCcw } from 'react-icons/fi';
+import { GeocodeType } from '../types/mapType';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const categories = [
   { key: 'total', label: '전체' },
@@ -92,7 +96,7 @@ export const FindFoodmate = () => {
         const results = await getSearchGroups(searchText);
         setSearchedData(results.content);
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        console.error(error);
       }
     }
   };
@@ -102,22 +106,48 @@ export const FindFoodmate = () => {
     setSearchText('');
   };
 
-  let categoryFunction;
-  if (selectedCategory === 'total') {
-    categoryFunction = getAllGroups;
-  } else if (selectedCategory === 'distance') {
-    categoryFunction = myLocation ? () => getCloseGroups(myLocation) : () => null;
-  } else if (selectedCategory === 'date' && selectedDates.length !== 0) {
-    categoryFunction = () => getDateSortedGroups(selectedDates[0], selectedDates[1]);
-  } else if (selectedCategory === 'menu' && selectedMenus.length !== 0) {
-    categoryFunction = () => getSelectedMenuGroups(selectedMenus);
-  }
+  const queryFetchGroups = async (
+    {
+      queryKey,
+    }: {
+      queryKey: [string, string, string[], string[], GeocodeType | null];
+    },
+    page: number,
+  ) => {
+    const [_, selectedCategory, selectedDates, selectedMenus, myLocation] = queryKey;
 
-  const { data, error, isLoading } = useQuery(
-    ['getGroups', selectedCategory, selectedDates, selectedMenus],
-    categoryFunction || getAllGroups,
+    switch (selectedCategory) {
+      case 'total':
+        return getAllGroups(page);
+      case 'distance':
+        return myLocation ? getCloseGroups(myLocation, page) : null;
+      case 'date':
+        return selectedDates.length ? getDateSortedGroups(selectedDates[0], selectedDates[1], page) : null;
+      case 'menu':
+        return selectedMenus.length ? getSelectedMenuGroups(selectedMenus, page) : null;
+      default:
+        return getAllGroups(page);
+    }
+  };
+
+  const { data, error, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
+    ['getGroups', selectedCategory, selectedDates, selectedMenus, myLocation],
+    ({ pageParam = 0 }) =>
+      queryFetchGroups(
+        { queryKey: ['getGroups', selectedCategory, selectedDates, selectedMenus, myLocation] },
+        pageParam,
+      ),
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage && lastPage.content.length > 0) {
+          return lastPage.number + 1;
+        }
+        return undefined;
+      },
+    },
   );
-  if (isLoading) return 'Loading...';
+
+  if (isLoading) return 'loading...';
   if (error) return 'error!';
 
   return (
@@ -172,11 +202,24 @@ export const FindFoodmate = () => {
             )}
           </div>
         </div>
-        {data.content.length === 0 && !searchedData ? (
-          <div>데이터가 없어요</div>
-        ) : (
-          <PostCardsList groupsData={searchedData || data.content} />
-        )}
+        <InfiniteScroll
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr 1fr',
+            gap: '60px 16px',
+          }}
+          dataLength={(data && data.pages.length) || 0}
+          next={fetchNextPage}
+          hasMore={!!hasNextPage}
+          loader={<h4>Loading...</h4>}
+          endMessage={hasNextPage ? null : <NullBox>더 이상 모임이 없어요.</NullBox>}
+        >
+          {(data?.pages || [])
+            .flatMap((page) => page?.content || [])
+            .map((item, idx) => (
+              <div key={idx}>{item && <PostCardsList groupsData={searchedData ? searchedData : [item]} />}</div>
+            ))}
+        </InfiniteScroll>
       </FindFoodmateContainer>
     </BasicPadding>
   );
@@ -266,4 +309,14 @@ const FindFoodmateContainer = styled.div`
   .date-picker {
     bottom: -55px;
   }
+`;
+
+const NullBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #888;
 `;
