@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { CommentsList } from './CommentsList';
-import { commentsData } from '../../mocks/postCardData';
+import { CommentsType } from '../../types/postCardType';
 
-export const Comments = () => {
+export const Comments = ({ commentsData }: { commentsData: CommentsType[] }) => {
   return (
     <CommentsContainer>
       <div>
