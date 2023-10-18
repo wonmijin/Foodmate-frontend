@@ -3,6 +3,7 @@ import { GeocodeType } from '../types/mapType';
 import QuickSearchType from '../types/quickSearchType';
 import Pagination from '../types/pagination';
 import TodayMeetingType from '../types/todayMeetingType';
+import { CreateGroupType } from '../types/postCardType';
 
 export const quickSearchByKeyword = async (keyword: string): Promise<Pagination<QuickSearchType>> => {
   const { data } = await axios.get(`/api/group/search?keyword=${keyword}`);
@@ -81,6 +82,48 @@ export const getPostComments = async (groupId: number) => {
   try {
     const result = await axios.get(`/api/group/${groupId}/comment`);
     return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 모임 생성
+export const createGroup = async ({
+  authorization,
+  title,
+  name,
+  content,
+  food,
+  date,
+  time,
+  maximum,
+  storeName,
+  storeAddress,
+  latitude,
+  longitude,
+}: CreateGroupType) => {
+  const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  const requestData = {
+    title,
+    name,
+    content,
+    food,
+    date,
+    time: timeString,
+    maximum,
+    storeName,
+    storeAddress,
+    latitude,
+    longitude,
+  };
+
+  try {
+    const response = await axios.post('/api/group', requestData, {
+      headers: {
+        authorization: authorization,
+      },
+    });
+    return response.data;
   } catch (error) {
     console.error(error);
   }

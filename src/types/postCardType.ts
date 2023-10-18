@@ -56,3 +56,18 @@ export interface ReplyType {
   replyId: number;
   updatedDate: string;
 }
+
+export interface CreateGroupType {
+  authorization: string;
+  title: string;
+  name: string;
+  content: string;
+  food: string;
+  date: string;
+  time: Date;
+  maximum: number;
+  storeName: string;
+  storeAddress: string;
+  latitude: string;
+  longitude: string;
+}
