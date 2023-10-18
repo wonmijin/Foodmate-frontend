@@ -14,7 +14,6 @@ export const todayMeeting = async (page: number): Promise<Pagination<TodayMeetin
   return data;
 };
 
-
 // 전체 모임 리스트(최신순)
 export const getAllGroups = async (page: number) => {
   try {
@@ -60,9 +59,29 @@ export const getSelectedMenuGroups = async (foods: string[], page: number) => {
 // 검색 리스트
 export const getSearchGroups = async (keyword: string) => {
   try {
-    const result = await axios.get(`api/group/search?keyword=${keyword}`);
+    const result = await axios.get(`/api/group/search?keyword=${keyword}`);
     return result.data;
   } catch (error) {
     console.error(error);
   }
-}
+};
+
+// 특정 모임 상세 조회
+export const getDetailGroup = async (groupId: number) => {
+  try {
+    const result = await axios.get(`/api/group/${groupId}`);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//댓글, 대댓글 전체 조회
+export const getPostComments = async (groupId: number) => {
+  try {
+    const result = await axios.get(`/api/group/${groupId}/comment`);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
