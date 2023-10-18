@@ -256,7 +256,7 @@ const Nav = () => {
             <BasicButton $fontSize={'16px'} onClick={() => navigate('/login')}>
               <span>로그인</span>
             </BasicButton>
-            <BasicButton $fontSize={'16px'} $backgdColor={'#fff'} $borderColor={'#FFCE00'}>
+            <BasicButton $fontSize={'16px'} $backgdColor={'#fff'} $borderColor={'#FFCE00'} onClick={() => navigate('/register')}>
               <span>회원가입</span>
             </BasicButton>
           </SignInUp>
