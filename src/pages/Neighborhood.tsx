@@ -25,7 +25,7 @@ export const Neighborhood = () => {
           <h2>내 근처 모임</h2>
           <NeighborhoodContainer>
             <ListSection>
-              {!data.content ? (
+              {data && data.content && data.content.length > 0 ? (
                 <NeighborhoodCardList cardData={data.content} />
               ) : (
                 <div className="null-group">반경 5km내 모임이 없어요!</div>
