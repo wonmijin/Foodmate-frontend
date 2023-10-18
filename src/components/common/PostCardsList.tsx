@@ -1,19 +1,6 @@
-import styled from 'styled-components';
-import { postCardData } from '../../mocks/postCardData';
 import { PostCard } from './PostCard';
+import { AllPostCardType } from '../../types/postCardType';
 
-export const PostCardsList = () => {
-  return (
-    <PostCardsListContainer>
-      {postCardData.map((card, idx) => (
-        <PostCard cardData={card} key={idx} />
-      ))}
-    </PostCardsListContainer>
-  );
+export const PostCardsList = ({ groupsData }: { groupsData: AllPostCardType[] }) => {
+  return <div>{groupsData?.map((card: AllPostCardType, idx: number) => <PostCard cardData={card} key={idx} />)}</div>;
 };
-
-const PostCardsListContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 60px 16px;
-`;

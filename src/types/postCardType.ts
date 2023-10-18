@@ -1,3 +1,20 @@
+export interface AllPostCardType {
+  groupId: number;
+  memberId: number;
+  nickname: string;
+  image: string;
+  title: string;
+  name: string;
+  food: string;
+  date: string;
+  time: string;
+  maximum: number;
+  current: number;
+  storeName: string;
+  storeAddress: string;
+  createdDate: string;
+}
+
 export interface PostCardType {
   groupId: number;
   memberId: number;
@@ -21,19 +38,21 @@ export interface PostCardType {
 
 export interface CommentsType {
   commentId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
   content: string;
   createdDate: string;
+  image: string;
+  memberId: number;
+  nickname: string;
   replies?: ReplyType[];
+  updatedDate: string;
 }
 
 export interface ReplyType {
-  replyId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
   content: string;
   createdDate: string;
+  image: string;
+  memberId: number;
+  nickname: string;
+  replyId: number;
+  updatedDate: string;
 }

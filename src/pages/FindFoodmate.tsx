@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { styled } from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicInput } from '../components/common/BasicInput';
@@ -6,6 +7,21 @@ import { useState, useEffect } from 'react';
 import { MenuLabels } from '../components/findFoodmate/MenuLabels';
 import { PostCardsList } from '../components/common/PostCardsList';
 import { useNavigate } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+import {
+  getAllGroups,
+  getCloseGroups,
+  getDateSortedGroups,
+  getSearchGroups,
+  getSelectedMenuGroups,
+} from '../api/groupApi';
+import useCurrentLocation from '../hooks/useCurrentLocation';
+import { DatePickers } from '../components/findFoodmate/DatePickers';
+import { BsSearchHeart } from 'react-icons/bs';
+import { FiRefreshCcw } from 'react-icons/fi';
+import { GeocodeType } from '../types/mapType';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const categories = [
   { key: 'total', label: '전체' },
@@ -16,8 +32,14 @@ const categories = [
 
 export const FindFoodmate = () => {
   const navigation = useNavigate();
+  const myLocation = useCurrentLocation();
   const [selectedCategory, setSelectedCategory] = useState<string>('total');
   const [menuLabelModalOpened, setMenuLabelModalOpened] = useState<boolean>(false);
+  const [datePickerModalOpened, setDatePickerModalOpened] = useState<boolean>(false);
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [searchedData, setSearchedData] = useState(null);
 
   useEffect(() => {
     if (selectedCategory === 'menu') {
@@ -28,12 +50,105 @@ export const FindFoodmate = () => {
   }, [selectedCategory]);
 
   const handleCategories = (category: string) => {
+    if (selectedCategory !== 'date') {
+      setSelectedDates([]);
+    }
+
+    if (selectedCategory !== 'menu') {
+      setSelectedMenus([]);
+    }
+
+    if (category === 'menu') {
+      setMenuLabelModalOpened((prev) => !prev);
+    } else {
+      setMenuLabelModalOpened(false);
+    }
+
+    if (category === 'date') {
+      setDatePickerModalOpened((prev) => !prev);
+    } else {
+      setDatePickerModalOpened(false);
+    }
+
     setSelectedCategory(category);
   };
 
-  const handleMenuLabelModal = (bool: boolean) => {
-    setMenuLabelModalOpened(bool);
+  const handleMenuLabelModal = (isOpen: boolean) => {
+    setMenuLabelModalOpened(isOpen);
   };
+
+  const handleDatePickerModal = (isOpen: boolean) => {
+    setDatePickerModalOpened(isOpen);
+  };
+
+  const handleSelectedDates = (dates: string[]) => {
+    setSelectedDates(dates);
+  };
+
+  const handleSelectedMenus = (menu: string[]) => {
+    setSelectedMenus(menu);
+  };
+
+  const handleSearchClick = async () => {
+    setSearchText(searchText);
+    if (searchText) {
+      try {
+        const results = await getSearchGroups(searchText);
+        setSearchedData(results.content);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleRefresh = () => {
+    setSearchedData(null);
+    setSearchText('');
+  };
+
+  const queryFetchGroups = async (
+    {
+      queryKey,
+    }: {
+      queryKey: [string, string, string[], string[], GeocodeType | null];
+    },
+    page: number,
+  ) => {
+    const [_, selectedCategory, selectedDates, selectedMenus, myLocation] = queryKey;
+
+    switch (selectedCategory) {
+      case 'total':
+        return getAllGroups(page);
+      case 'distance':
+        return myLocation ? getCloseGroups(myLocation, page) : null;
+      case 'date':
+        return selectedDates.length ? getDateSortedGroups(selectedDates[0], selectedDates[1], page) : null;
+      case 'menu':
+        return selectedMenus.length ? getSelectedMenuGroups(selectedMenus, page) : null;
+      default:
+        return getAllGroups(page);
+    }
+  };
+
+  const { data, error, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery(
+    ['getGroups', selectedCategory, selectedDates, selectedMenus, myLocation],
+    ({ pageParam = 0 }) =>
+      queryFetchGroups(
+        { queryKey: ['getGroups', selectedCategory, selectedDates, selectedMenus, myLocation] },
+        pageParam,
+      ),
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage && lastPage.content.length > 0) {
+          return lastPage.number + 1;
+        }
+        return undefined;
+      },
+    },
+  );
+
+  if (isLoading) return 'loading...';
+  if (error) return 'error!';
 
   return (
     <BasicPadding>
@@ -41,7 +156,22 @@ export const FindFoodmate = () => {
         <div className="upper">
           <h2>밥 친구 구해요!</h2>
           <div className="input-button-container">
-            <BasicInput $backgdColor="#e8e8e8" placeholder="제목이나 닉네임을 입력하세요" />
+            <div className="input-box">
+              <BasicInput
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                $backgdColor="#e8e8e8"
+                placeholder="제목이나 닉네임을 입력하세요"
+              />
+              <div className="icon">
+                <div role="button" onClick={handleSearchClick}>
+                  <BsSearchHeart />
+                </div>
+                <div role="button" onClick={handleRefresh}>
+                  <FiRefreshCcw />
+                </div>
+              </div>
+            </div>
             <BasicButton $fontSize="12px" onClick={() => navigation('/findfoodmate/newpost')}>
               모임 만들기
             </BasicButton>
@@ -60,12 +190,36 @@ export const FindFoodmate = () => {
           <div className="menu-label">
             {menuLabelModalOpened && (
               <div>
-                <MenuLabels handleMenuLabelModal={handleMenuLabelModal} />
+                <MenuLabels handleMenuLabelModal={handleMenuLabelModal} handleSelectedMenus={handleSelectedMenus} />
+              </div>
+            )}
+          </div>
+          <div className="date-picker">
+            {datePickerModalOpened && (
+              <div>
+                <DatePickers handleDatePickerModal={handleDatePickerModal} handleSelectedDates={handleSelectedDates} />
               </div>
             )}
           </div>
         </div>
-        <PostCardsList />
+        <InfiniteScroll
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr 1fr',
+            gap: '60px 16px',
+          }}
+          dataLength={(data && data.pages.length) || 0}
+          next={fetchNextPage}
+          hasMore={!!hasNextPage}
+          loader={<h4>Loading...</h4>}
+          endMessage={hasNextPage ? null : <NullBox>더 이상 모임이 없어요.</NullBox>}
+        >
+          {(data?.pages || [])
+            .flatMap((page) => page?.content || [])
+            .map((item, idx) => (
+              <div key={idx}>{item && <PostCardsList groupsData={searchedData ? searchedData : [item]} />}</div>
+            ))}
+        </InfiniteScroll>
       </FindFoodmateContainer>
     </BasicPadding>
   );
@@ -85,6 +239,28 @@ const FindFoodmateContainer = styled.div`
     display: flex;
     gap: 12px;
     margin-top: 24px;
+
+    .input-box {
+      position: relative;
+
+      .icon {
+        position: absolute;
+        right: 16px;
+        top: 6px;
+        display: flex;
+        gap: 12px;
+        font-size: 19px;
+
+        div {
+          cursor: pointer;
+          transition: 0.3s;
+
+          &:hover {
+            color: ${(props) => props.theme.color.ORANGE};
+          }
+        }
+      }
+    }
   }
 
   .filters {
@@ -123,9 +299,24 @@ const FindFoodmateContainer = styled.div`
     }
   }
 
-  .menu-label {
+  .menu-label,
+  .date-picker {
     background-color: #fff;
     position: absolute;
-    bottom: -100px;
+    bottom: -150px;
   }
+
+  .date-picker {
+    bottom: -55px;
+  }
+`;
+
+const NullBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 18px;
+  color: #888;
 `;
