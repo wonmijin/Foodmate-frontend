@@ -1,25 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { styled } from 'styled-components';
+import useCurrentLocation from '../../hooks/useCurrentLocation';
 const { kakao } = window;
 
 export const CurrentLocation = () => {
-  const [myLocation, setMyLocation] = useState('');
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-          const userLocation = new kakao.maps.LatLng(userLat, userLng);
-          setMyLocation(userLocation);
-        },
-        (error) => {
-          console.error('Error getting user location:', error);
-        },
-      );
-    }
-  }, []);
+  const myLocation = useCurrentLocation();
 
   useEffect(() => {
     if (myLocation) {
