@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import drawerState from '../../store/drawer';
-import FoodMateLogo from '../../assets/logo2.png';
+import Logo from '../../assets/logo2.png';
 import { NAV_MENUS } from '../../constants/nav-menus';
 import { Link, useLocation } from 'react-router-dom';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -169,7 +169,7 @@ export const Drawer = () => {
         <Header>
           <h1>
             <Link to="/">
-              <img src={FoodMateLogo} alt="foodmate" />
+              <img src={Logo} alt="푸드메이트 로고" />
             </Link>
           </h1>
           <CloseButton onClick={() => setIsOpen(false)}>
