@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Home from '../components/chat/Home';
 import Message from '../components/chat/Message';
 import Room from '../components/chat/Room';
+import MessageBtn from '../assets/message.svg';
 
 enum ChatNavType {
   Home,
@@ -21,10 +22,16 @@ const ChatIconBox = styled.button`
     rgba(0, 0, 0, 0.1) 0px 4px 6px,
     rgba(0, 0, 0, 0.15) 0px 8px 30px;
   position: fixed;
-  right: 23px;
-  bottom: 42px;
+  right: 2%;
+  bottom: 4%;
 
   z-index: 10;
+
+  @media only screen and (max-width: 414px) {
+    position: fixed;
+    bottom: 83px;
+    right: 8px;
+  }
 
   img {
     width: 25px;
@@ -33,18 +40,17 @@ const ChatIconBox = styled.button`
 `;
 
 const Nav = styled.nav`
-  position: absolute;
-  bottom: 0;
-  right: 0;
   min-width: 390px;
   background-color: #fff;
   border-top: 1px solid #f2f2f2;
-  height: 60px;
+  padding: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0 0 20px 20px;
   box-shadow: 0px 0px 70px 0px rgba(0, 0, 0, 0.05);
+  position: absolute;
+  bottom: 0;
 
   ul {
     display: flex;
@@ -75,10 +81,11 @@ const Nav = styled.nav`
 const ChatBody = styled.div`
   min-width: 390px;
   max-width: 390px;
-  min-height: 520px;
+  height: 76%;
+  max-height: 690px;
   position: fixed;
-  right: 23px;
-  bottom: 114px;
+  right: 2%;
+  bottom: 98px;
   z-index: 99;
   border-radius: 24px;
   background-color: #fff;
@@ -86,6 +93,10 @@ const ChatBody = styled.div`
     rgba(255, 255, 255, 0.12) 0px 0px 0px 14px inset,
     rgba(0, 0, 0, 0.03) 0px 0px 12px 0px,
     rgba(0, 0, 0, 0.2) 0px 11px 18px;
+
+  @media only screen and (max-width: 414px) {
+    bottom: 151px;
+  }
 `;
 
 const Chat = () => {
@@ -133,7 +144,7 @@ const Chat = () => {
           setIsOpen(!isOpen);
         }}
       >
-        <img src="/src/assets/message.svg" alt="채팅 버튼" />
+        <img src={MessageBtn} alt="채팅 버튼" />
       </ChatIconBox>
       {isOpen === true ? (
         <ChatBody>
