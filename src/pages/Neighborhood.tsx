@@ -16,7 +16,7 @@ export const Neighborhood = () => {
   if (isLoading) return '...loading';
   if (error) return '...error';
 
-  console.log(data);
+  console.log(data.content);
 
   return (
     <>
@@ -62,7 +62,7 @@ const NeighborhoodContainer = styled.div`
   height: 100vh;
   padding: 32px 24px;
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 450px 1fr;
   gap: 12px;
 `;
 
