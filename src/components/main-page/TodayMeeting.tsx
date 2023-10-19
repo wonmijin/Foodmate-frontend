@@ -8,13 +8,24 @@ import { Link } from 'react-router-dom';
 import { useTodayMeeting } from '../../hooks/useTodayMeeting';
 import { useEffect, useState } from 'react';
 import TodayMeetingType from '../../types/todayMeetingType';
+import LeftArrowBtn from '../../assets/button-arrow-left.svg';
+import RightArrowBtn from '../../assets/button-arrow-right.svg';
 
 const TodayMeetingContainer = styled.div`
   padding: var(--basic-padding);
 
+  @media only screen and (max-width: 992px) {
+    padding: 0 10px;
+  }
+
   .title-text {
     font-weight: bold;
     font-size: 24px;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1.438rem;
+    }
+
     .point {
       display: inline-block;
       margin-right: 10px;
@@ -45,6 +56,10 @@ const ButtonArrow = styled.div`
       display: flex;
       align-items: center;
     }
+
+    @media only screen and (max-width: 768px) {
+      font-size: 0.75rem;
+    }
   }
 
   img {
@@ -65,6 +80,10 @@ const ButtonArrow = styled.div`
     margin-left: 20px;
     display: flex;
     gap: 10px;
+
+    @media only screen and (max-width: 768px) {
+      margin-left: 10px;
+    }
   }
 `;
 
@@ -100,7 +119,7 @@ export const TodayMeeting = () => {
     slidesToShow: 4,
     slidesToScroll: 4,
     centerMode: false,
-    arrows: true,
+    arrows: false,
     dots: false,
     accessibility: true,
     mobileFirst: true,
@@ -159,18 +178,18 @@ export const TodayMeeting = () => {
           </div>
           <div className="btn-container">
             <img
-              src="src/assets/button-arrow-left.svg"
+              src={LeftArrowBtn}
               onClick={() => {
                 sliderRef?.slickPrev();
               }}
-              alt=""
+              alt="이전버튼"
             />
             <img
-              src="src/assets/button-arrow-right.svg"
+              src={RightArrowBtn}
               onClick={() => {
                 sliderRef?.slickNext();
               }}
-              alt=""
+              alt="다음버튼"
             />
           </div>
         </ButtonArrow>

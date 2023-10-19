@@ -4,6 +4,7 @@ import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuickSearch } from '../../hooks/useQuickSearch';
+import { useMediaQuery } from 'react-responsive';
 
 const MainBg = styled.div`
   width: 100%;
@@ -20,11 +21,20 @@ const MainBg = styled.div`
 
 const MainText = styled.h2`
   color: #fff;
-  font-size: 50px;
+  font-size: 2.68rem;
   width: 100%;
   text-align: center;
+
   > span {
     color: #ffe782;
+  }
+
+  @media only screen and (max-width: 768px) {
+    font-size: 2.37rem;
+  }
+
+  @media only screen and (max-width: 414px) {
+    font-size: 2.18rem;
   }
 `;
 
@@ -37,6 +47,22 @@ const MainSearchContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
+
+  @media only screen and (max-width: 1200px) {
+    width: 65%;
+  }
+
+  @media only screen and (max-width: 992px) {
+    width: 70%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 75%;
+  }
+
+  @media only screen and (max-width: 414px) {
+    padding: 11px;
+  }
 `;
 
 const SearchInputContainer = styled.div`
@@ -57,15 +83,20 @@ const SearchPopup = styled.div`
   .item-list {
     display: flex;
     align-items: center;
-    padding: 5px 24px 5px 16px;
+    padding: 5px 16px;
     height: 40px;
     background-color: #fff;
     color: ${(props) => props.theme.color.BLACK};
     cursor: pointer;
+    font-size: 0.813rem;
 
     &:hover {
       background-color: #eee;
       font-weight: bold;
+    }
+
+    @media only screen and (max-width: 414px) {
+      padding: 5px 8px;
     }
 
     .item-text {
@@ -78,11 +109,17 @@ const SearchPopup = styled.div`
       border-right: 1px solid #ccc;
       margin-right: 15px;
       padding-right: 5px;
+
+      @media only screen and (max-width: 768px) {
+        margin-right: 0;
+        text-align: center;
+      }
     }
   }
 
   .item-list .item-text:last-child {
     border-right: none;
+    padding-right: 0px;
   }
 `;
 
@@ -93,6 +130,15 @@ const SearchInput = styled.input`
   border: none;
   width: 98%;
   border-radius: 8px;
+
+  @media only screen and (max-width: 768px) {
+    padding: 13px;
+  }
+
+  @media only screen and (max-width: 414px) {
+    padding: 6px;
+    font-size: 0.625rem;
+  }
 
   &:focus {
     outline: none;
@@ -162,7 +208,7 @@ export const Search = () => {
       setIsOnSkeleton(true);
       setIsOpenSearchPopup(true);
     }
-    
+
     setInputKeyword(e.target.value);
   };
 
@@ -178,12 +224,22 @@ export const Search = () => {
     if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
   };
 
+  const isPC = useMediaQuery({ query: '(min-width : 992px)' });
+
   return (
     <MainBg>
       <div className="bg-filter"></div>
       <MainContentsContainer>
         <MainText>
-          당신의 <span>Food Mate</span>를 찾아보세요
+          {isPC ? (
+            <>
+              당신의 <span>Food Mate</span>를 찾아보세요
+            </>
+          ) : (
+            <>
+              당신의 <span>Food Mate</span>를<br /> 찾아보세요
+            </>
+          )}
         </MainText>
         <MainSearchContainer>
           <SearchInputContainer>
@@ -191,7 +247,7 @@ export const Search = () => {
               autoFocus
               value={inputKeyword}
               onChange={onChange}
-              placeholder="원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
+              placeholder="원하는 음식으로 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
             />
             {isOpenSearchPopup === false ? (
               ''
@@ -204,9 +260,19 @@ export const Search = () => {
                     {searchList.map((item, index) => {
                       return (
                         <li key={index} className="item-list" onClick={(e) => selectGroup(item, e)}>
-                          <span className="item-text">글제목:&nbsp;{item.postTitle}</span>
-                          <span className="item-text">음식명:&nbsp;{item.foodName}</span>
-                          <span className="item-text">모임장 닉네임:&nbsp;{item.nickname}</span>
+                          {isPC ? (
+                            <>
+                              <span className="item-text">글제목:&nbsp;{item.postTitle}</span>
+                              <span className="item-text">음식명:&nbsp;{item.foodName}</span>
+                              <span className="item-text">모임장 닉네임:&nbsp;{item.nickname}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="item-text">{item.postTitle}</span>
+                              <span className="item-text">{item.foodName}</span>
+                              <span className="item-text">{item.nickname}</span>
+                            </>
+                          )}
                         </li>
                       );
                     })}
