@@ -12,6 +12,8 @@ import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { deletePost, getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
+import { useRecoilValue } from 'recoil';
+import { signedUserInfo } from '../store/groupAtoms';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
@@ -22,6 +24,7 @@ export const MeetingPostDetailView = () => {
     question: '',
     func: (() => {}) as () => void,
   });
+  const signedInUserInfo = useRecoilValue(signedUserInfo);
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -142,14 +145,16 @@ export const MeetingPostDetailView = () => {
               <span>명</span>
             </div>
 
-            <div>
-              <SmallGrayButton
-                onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
-              >
-                수정
-              </SmallGrayButton>{' '}
-              <SmallGrayButton onClick={handleDelete}>삭제</SmallGrayButton>
-            </div>
+            {signedInUserInfo.nickname === postData.nickname && (
+              <div>
+                <SmallGrayButton
+                  onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
+                >
+                  수정
+                </SmallGrayButton>{' '}
+                <SmallGrayButton onClick={handleDelete}>삭제</SmallGrayButton>
+              </div>
+            )}
           </RightAlign>
         </div>
         <Comments commentsData={commentsData.content} />
