@@ -14,7 +14,6 @@ import DatePicker from 'react-datepicker';
 import { createGroup } from '../api/groupApi';
 
 export const CreateGroupPost = () => {
-  const token = sessionStorage.getItem('accessToken');
   const navigation = useNavigate();
   const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
   const [content, setContent] = useState('');
@@ -56,7 +55,6 @@ export const CreateGroupPost = () => {
   const handlePost = async () => {
     if (confirm('글을 작성할까요?')) {
       await createGroup({
-        authorization: String(token),
         title: groupData.title,
         name: groupData.name,
         content,
