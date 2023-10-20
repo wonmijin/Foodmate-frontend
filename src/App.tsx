@@ -30,7 +30,7 @@ export const App = (): JSX.Element => {
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />
-        <Route path="/findfoodmate/modify" element={<ModifyPost />} />
+        <Route path="/findfoodmate/modify/:groupId" element={<ModifyPost />} />
         <Route path="/neighborhood" element={<Neighborhood />} />
         <Route path="/register" element={<Register />} />
         <Route path="meeting-info/history" element={<History />} />
