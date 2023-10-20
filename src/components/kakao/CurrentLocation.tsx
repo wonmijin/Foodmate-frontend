@@ -3,7 +3,12 @@ import { styled } from 'styled-components';
 import useCurrentLocation from '../../hooks/useCurrentLocation';
 const { kakao } = window;
 
-export const CurrentLocation = () => {
+interface geoCodeArrType {
+  latitude: string;
+  longitude: string;
+}
+
+export const CurrentLocation = ({ geoCodeArr }: { geoCodeArr: geoCodeArrType[] }) => {
   const myLocation = useCurrentLocation();
 
   useEffect(() => {
@@ -42,8 +47,17 @@ export const CurrentLocation = () => {
       };
       const circle = new kakao.maps.Circle(circleOptions);
       circle.setMap(map);
+
+      // 모임 마커 표시
+      geoCodeArr.forEach(({ latitude, longitude }) => {
+        const markerPosition = new kakao.maps.LatLng(Number(latitude), Number(longitude));
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+        });
+        marker.setMap(map);
+      });
     }
-  }, [myLocation]);
+  }, [myLocation, geoCodeArr]);
 
   return (
     <>
