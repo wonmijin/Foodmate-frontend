@@ -178,7 +178,13 @@ export const CreateGroupPost = () => {
 
           <div>
             <div className="title">모임 장소</div>
-            <input type="text" onClick={getAddress} placeholder="주소를 입력해 주세요" value={groupData.storeAddress} />
+            <input
+              type="text"
+              readOnly
+              onClick={getAddress}
+              placeholder="주소를 입력해 주세요"
+              value={groupData.storeAddress}
+            />
             <input
               type="text"
               onChange={(e) => setGroupData((prev) => ({ ...prev, storeName: e.target.value }))}
