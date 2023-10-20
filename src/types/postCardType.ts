@@ -58,7 +58,6 @@ export interface ReplyType {
 }
 
 export interface CreateGroupType {
-  authorization: string;
   title: string;
   name: string;
   content: string;
