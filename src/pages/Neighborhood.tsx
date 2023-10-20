@@ -1,11 +1,28 @@
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
-import { BasicInput } from '../components/common/BasicInput';
 import { NeighborhoodCardList } from '../components/neighborhood/NeighborhoodCardList';
 import { CurrentLocation } from '../components/kakao/CurrentLocation';
+import useCurrentLocation from '../hooks/useCurrentLocation';
+import { useQuery } from '@tanstack/react-query';
+import { getNearGroups } from '../api/groupApi';
 
 export const Neighborhood = () => {
-  //CurrentLocation에서 내 위치를 보내고 데이터를 받은 후, 리스트를 뿌려줘야 함
+  const myLocation = useCurrentLocation();
+  const geoCodeArr = [];
+
+  const { data, isLoading, error } = useQuery(
+    ['nearGroups', myLocation],
+    () => myLocation && getNearGroups(myLocation),
+  );
+  if (isLoading) return '...loading';
+  if (error) return '...error';
+
+  if (data) {
+    for (const obj of data.content) {
+      const { latitude, longitude } = obj;
+      geoCodeArr.push({ latitude, longitude });
+    }
+  }
 
   return (
     <>
@@ -14,15 +31,14 @@ export const Neighborhood = () => {
           <h2>내 근처 모임</h2>
           <NeighborhoodContainer>
             <ListSection>
-              <div>
-                <div className="input-wrap">
-                  <BasicInput $backgdColor="#fff" placeholder="제목이나 닉네임을 입력하세요" />
-                </div>
-                <NeighborhoodCardList />
-              </div>
+              {data && data.content && data.content.length > 0 ? (
+                <NeighborhoodCardList cardData={data.content} />
+              ) : (
+                <div className="null-group">반경 5km내 모임이 없어요!</div>
+              )}
             </ListSection>
             <MapSection>
-              <CurrentLocation />
+              <CurrentLocation geoCodeArr={geoCodeArr} />
             </MapSection>
           </NeighborhoodContainer>
         </NeighborhoodWrap>
@@ -36,28 +52,30 @@ const NeighborhoodWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .null-group {
+    padding: 24px 0;
+    text-align: center;
+    margin-top: 36px;
+    margin-left: 8px;
+    background-color: #fff;
+    border-radius: 12px;
+  }
 `;
 
 const NeighborhoodContainer = styled.div`
   width: 100%;
   height: 100vh;
-  border-radius: 12px;
   padding: 32px 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 450px 1fr;
   gap: 12px;
 `;
 
 const ListSection = styled.div`
   background-color: ${(props) => props.theme.color.LIGHT_GRAY};
-  padding: 24px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
+  padding: 12px;
   overflow-y: scroll;
-
-  .input-wrap {
-    margin-bottom: 12px;
-  }
 
   &::-webkit-scrollbar {
     width: 10px;
@@ -65,12 +83,12 @@ const ListSection = styled.div`
 
   &::-webkit-scrollbar-thumb {
     height: 30%;
-    background: ${(props) => props.theme.color.ORANGE};
+    background: ${(props) => props.theme.color.GRAY};
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.color.ORANGE}10;
+    background: ${(props) => props.theme.color.GRAY}10;
   }
 `;
 

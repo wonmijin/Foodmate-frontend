@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { postCardData } from '../../mocks/postCardData';
 import { NeighborhoodCard } from './NeighborhoodCard';
+import { AllPostCardType } from '../../types/postCardType';
 
-export const NeighborhoodCardList = () => {
+export const NeighborhoodCardList = ({ cardData }: { cardData: AllPostCardType[] }) => {
   return (
     <PostCardsListContainer>
-      {postCardData.map((card, idx) => (
+      {cardData.map((card, idx) => (
         <NeighborhoodCard cardData={card} key={idx} />
       ))}
     </PostCardsListContainer>

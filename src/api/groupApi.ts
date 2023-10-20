@@ -128,3 +128,13 @@ export const createGroup = async ({
     console.error(error);
   }
 };
+
+//내 위치 반경 5km 내 모임 조회
+export const getNearGroups = async (location: GeocodeType) => {
+  try {
+    const result = await axios.get(`/api/group/near?latitude=${location.Ma}&longitude=${location.La}`);
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
