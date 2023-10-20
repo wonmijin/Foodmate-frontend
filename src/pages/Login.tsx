@@ -2,11 +2,13 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { styled } from 'styled-components';
 import kakao from '../assets/kakao_login.png';
-import { onSignIn } from '../api/memberApi';
+import { kakaoSignIn, onSignIn, signedMemberInfo } from '../api/memberApi';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { signedUserInfo } from '../store/groupAtoms';
 
 const LoginWrap = styled.div`
   margin: 150px auto 0;
@@ -116,18 +118,30 @@ export type FormValues = {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const setSignedUserInfo = useSetRecoilState(signedUserInfo);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
   const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
+    const tokens = await onSignIn(data.email, data.password);
+    successSignIn(tokens.refreshToken, tokens.accessToken);
+  };
+
+  const successSignIn = async (refreshToken: string, accessToken: string) => {
     try {
-      const result = await onSignIn(data.email, data.password);
-      // const refreshToken = result.refreshToken;
-      const accessToken = result.accessToken;
-      localStorage.setItem('accessToken', accessToken);
-      axios.defaults.headers.common['Authorization'] = `${accessToken}`;
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 30);
+      (document.cookie = `refreshToken=${refreshToken}; expires=${expirationDate.toUTCString()}; path=/;`), [];
+
+      sessionStorage.setItem('accessToken', accessToken);
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+      const userInfo = await signedMemberInfo();
+      setSignedUserInfo(userInfo);
+
       alert('로그인 되었습니다.');
       navigate('/');
     } catch (error) {
@@ -138,6 +152,12 @@ const Login: React.FC = () => {
         console.log('서버 응답 없음');
       }
     }
+  };
+
+  //TODO : CORS 에러 해결 후 테스트 요망
+  const handleKakaoSignIn = async () => {
+    const tokens = await kakaoSignIn();
+    successSignIn(tokens.refreshToken, tokens.accessToken);
   };
 
   return (
@@ -172,7 +192,7 @@ const Login: React.FC = () => {
           <span>간편로그인</span>
           <hr></hr>
         </SimpleWrap>
-        <Kakao></Kakao>
+        <Kakao onClick={handleKakaoSignIn}></Kakao>
         <PasswordFind href="#">비밀번호 찾기</PasswordFind>
       </form>
     </LoginWrap>
