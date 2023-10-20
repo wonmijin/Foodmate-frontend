@@ -6,8 +6,8 @@ interface ButtonPropsType {
   onClick: () => void;
 }
 
-export const SmallGrayButton = ({ children }: ButtonPropsType) => {
-  return <Button>{children}</Button>;
+export const SmallGrayButton = ({ children, onClick }: ButtonPropsType) => {
+  return <Button onClick={onClick}>{children}</Button>;
 };
 const Button = styled.button`
   background-color: #d8d8d8;
