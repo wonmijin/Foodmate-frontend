@@ -18,7 +18,7 @@ export const ProfileModal = ({ userInfo }: { userInfo: UserInfoType }) => {
           <span className="icon">
             <GoHeart />
           </span>
-          <span className="like">{userInfo.like}</span>
+          <span className="like">{userInfo.likes}</span>
         </div>
         <div className="nickname-email-wrap">
           <div>{userInfo.nickname}</div>
