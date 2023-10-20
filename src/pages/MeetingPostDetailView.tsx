@@ -17,7 +17,6 @@ import { signedUserInfo } from '../store/groupAtoms';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
-  const token = sessionStorage.getItem('accessToken');
   const { groupId } = useParams();
   const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState({
@@ -45,8 +44,8 @@ export const MeetingPostDetailView = () => {
   };
 
   const handleDelete = async () => {
-    if (confirm('정말 삭제할까요?') && groupId && token) {
-      await deletePost(parseInt(groupId), token);
+    if (confirm('정말 삭제할까요?') && groupId) {
+      await deletePost(parseInt(groupId));
       navigation('/findfoodmate');
     } else {
       return;

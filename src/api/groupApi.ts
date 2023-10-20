@@ -89,7 +89,6 @@ export const getPostComments = async (groupId: number) => {
 
 // 모임 생성
 export const createGroup = async ({
-  authorization,
   title,
   name,
   content,
@@ -118,11 +117,7 @@ export const createGroup = async ({
   };
 
   try {
-    const result = await axios.post('/api/group', requestData, {
-      headers: {
-        authorization: `Bearer ${authorization}`,
-      },
-    });
+    const result = await axios.post('/api/group', requestData);
     return result.data;
   } catch (error) {
     console.error(error);
@@ -131,7 +126,6 @@ export const createGroup = async ({
 
 // 모임 수정
 export const modifyPostInfo = async ({
-  authorization,
   groupId,
   title,
   name,
@@ -161,11 +155,7 @@ export const modifyPostInfo = async ({
   };
 
   try {
-    const result = await axios.put(`/api/group/${groupId}`, requestData, {
-      headers: {
-        authorization: `Bearer ${authorization}`,
-      },
-    });
+    const result = await axios.put(`/api/group/${groupId}`, requestData);
     return result.data;
   } catch (error) {
     console.error(error);
@@ -173,13 +163,9 @@ export const modifyPostInfo = async ({
 };
 
 //모임 삭제
-export const deletePost = async (groupId: number, authorization: string) => {
+export const deletePost = async (groupId: number) => {
   try {
-    const result = await axios.delete(`/api/group/${groupId}`, {
-      headers: {
-        authorization: `Bearer ${authorization}`,
-      },
-    });
+    const result = await axios.delete(`/api/group/${groupId}`);
     return result.data;
   } catch (error) {
     console.error(error);

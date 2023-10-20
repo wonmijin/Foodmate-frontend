@@ -17,7 +17,6 @@ import { modifyPostInfo } from '../api/groupApi';
 export const ModifyPost = () => {
   const navigation = useNavigate();
   const location = useLocation();
-  const token = sessionStorage.getItem('accessToken');
   const postData = location.state?.postData;
 
   const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState([postData.latitude, postData.longitude]);
@@ -60,7 +59,6 @@ export const ModifyPost = () => {
   const handleModify = async () => {
     if (confirm('글을 수정할까요?')) {
       await modifyPostInfo({
-        authorization: String(token),
         groupId: parseInt(postData.groupId),
         title: groupData.title,
         name: groupData.name,
