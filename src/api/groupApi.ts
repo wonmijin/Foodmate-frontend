@@ -120,7 +120,7 @@ export const createGroup = async ({
   try {
     const response = await axios.post('/api/group', requestData, {
       headers: {
-        authorization: authorization,
+        authorization: `Bearer ${authorization}`,
       },
     });
     return response.data;
