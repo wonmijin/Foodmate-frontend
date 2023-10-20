@@ -132,7 +132,7 @@ const Login: React.FC = () => {
   const successSignIn = async (refreshToken: string, accessToken: string) => {
     try {
       const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + 30);
+      expirationDate.setDate(expirationDate.getDate() + 14);
       (document.cookie = `refreshToken=${refreshToken}; expires=${expirationDate.toUTCString()}; path=/;`), [];
 
       sessionStorage.setItem('accessToken', accessToken);
