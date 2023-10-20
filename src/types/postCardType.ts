@@ -71,3 +71,7 @@ export interface CreateGroupType {
   latitude: string;
   longitude: string;
 }
+
+export interface ModifyGroupType extends CreateGroupType {
+  groupId: number;
+}
