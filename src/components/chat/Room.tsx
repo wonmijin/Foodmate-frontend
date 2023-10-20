@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { LuDot } from 'react-icons/lu';
-
+import MessageSvg from '../../assets/message.svg';
 
 interface RoomProps {
   selectChatRoom: (chatRoomId: number) => void;
@@ -74,7 +74,7 @@ const Room = ({ selectChatRoom }: RoomProps) => {
       <ChatRoomMain>
         <ChatRoomMessage onClick={() => selectChatRoom(1)}>
           <div className="default-chat-profile">
-            <img src="/src/assets/message.svg" alt="푸드메이트 채팅 프로필 사진" />
+            <img src={MessageSvg} alt="푸드메이트 채팅 프로필 사진" />
           </div>
           <div className="default-chat-message">
             안녕하세요. 푸드메이트 채널톡입니다. 주변의 활성화된 모임에 참여
@@ -88,7 +88,7 @@ const Room = ({ selectChatRoom }: RoomProps) => {
         </ChatRoomMessage>
         <ChatRoomMessage onClick={() => selectChatRoom(2)}>
           <div className="default-chat-profile">
-            <img src="/src/assets/message.svg" alt="푸드메이트 채팅 프로필 사진" />
+            <img src={MessageSvg} alt="푸드메이트 채팅 프로필 사진" />
           </div>
           <div className="default-chat-message">
             안녕하세요. 푸드메이트 채널톡입니다. 주변의 활성화된 모임에 참여

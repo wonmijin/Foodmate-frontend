@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import FoodMateLogo from '../../assets/logo2.png';
+import Logo from '../../assets/logo2.png';
 import { NAV_MENUS } from '../../constants/nav-menus';
 import Dropdown, { MenuItem } from './Dropdown';
 import { BasicButton } from './BasicButton';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { useRecoilState } from 'recoil';
 import drawerState from '../../store/drawer';
+import { useMediaQuery } from 'react-responsive';
 
 // TODO: 로그인 후 필요한 아이콘
 // import { BsPersonFill } from 'react-icons/bs';
@@ -34,7 +35,7 @@ const StyledNavContainer = styled.div`
   }
 
   @media only screen and (max-width: 992px) {
-    padding: 0 24px;
+    padding: 0 10px;
   }
 `;
 
@@ -65,6 +66,10 @@ const NavLeftContent = styled.div`
       display: block;
       height: 2.65rem;
       margin: auto;
+
+      @media only screen and (max-width: 768px) {
+        height: 2rem;
+      }
     }
   }
 `;
@@ -88,13 +93,8 @@ const LinksContainer = styled.ul`
     text-align: center;
   }
 
-  > a {
-    cursor: pointer;
-    font-size: 1rem;
-  }
-
   span {
-    font-size: 1rem;
+    font-size: 15px;
   }
 `;
 
@@ -112,6 +112,8 @@ const Hamburger = styled.button`
     justify-content: space-around;
     border-radius: 8px;
     border: 1px solid #ffce00;
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
@@ -119,7 +121,7 @@ const Hamburger = styled.button`
 const SignInUp = styled.div`
   display: flex;
   white-space: nowrap;
-  
+
   button:first-child {
     margin-right: 10px;
 
@@ -139,6 +141,7 @@ const MenuTitle = styled.span`
   justify-content: center;
   align-items: center;
   font-weight: 400;
+  font-size: 14px;
 
   &:hover {
     color: #f96223;
@@ -184,6 +187,7 @@ const SubMenuTitle = styled.a`
 const Nav = () => {
   const navigate = useNavigate();
   const setIsOpen = useRecoilState<boolean>(drawerState)[1];
+  const isTablet = useMediaQuery({ query: '(max-width : 768px)' });
 
   //TODO: 로그인 이후, 프로필 드롭메뉴
   // const myProfileDropMenu = [
@@ -225,7 +229,7 @@ const Nav = () => {
           <NavLeftContent>
             <h1>
               <Link to="/">
-                <img src={FoodMateLogo} alt="foodmate" />
+                <img src={Logo} alt="푸드메이트 로고" />
               </Link>
             </h1>
             <LinksContainer>
@@ -253,10 +257,15 @@ const Nav = () => {
             </LinksContainer>
           </NavLeftContent>
           <SignInUp>
-            <BasicButton $fontSize={'16px'} onClick={() => navigate('/login')}>
+            <BasicButton $fontSize={isTablet ? '12px' : '13px'} onClick={() => navigate('/login')}>
               <span>로그인</span>
             </BasicButton>
-            <BasicButton $fontSize={'16px'} $backgdColor={'#fff'} $borderColor={'#FFCE00'}>
+            <BasicButton
+              $fontSize={isTablet ? '12px' : '13px'}
+              $backgdColor={'#fff'}
+              $borderColor={'#FFCE00'}
+              onClick={() => navigate('/register')}
+            >
               <span>회원가입</span>
             </BasicButton>
           </SignInUp>

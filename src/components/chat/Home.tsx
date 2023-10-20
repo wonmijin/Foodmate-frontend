@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { MdArrowForwardIos } from 'react-icons/md';
+import MessageSvg from '../../assets/message.svg';
+import Logo from '../../assets/logo2.png';
 
 interface HomeProps {
   goToLogin: () => void;
@@ -22,7 +24,9 @@ const ChatHomeHeader = styled.header`
 
 const ChatHomeMain = styled.main`
   background: linear-gradient(180deg, #ffce00 0%, #ffdc4b 10.42%, #fff 35.34%);
-  padding: 30px 9px;
+  padding: 10px 9px;
+  border-radius: 0 0 24px 24px;
+  min-height: 300px;
 
   .mini-message-icon {
     border-radius: 24px;
@@ -52,7 +56,6 @@ const ChatHomeMain = styled.main`
       background-color: #f5f5f5;
     }
 
-
     > p {
       font-weight: bold;
     }
@@ -67,8 +70,7 @@ const ChatHomeMain = styled.main`
   .go-to-login-btn {
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
-    padding-bottom: 100px;
+    margin-top: 13px;
   }
 `;
 
@@ -83,7 +85,7 @@ const Home = ({ goToLogin, goToRoom }: HomeProps) => {
   return (
     <>
       <ChatHomeHeader>
-        <img src="/src/assets/logo2.png" />
+        <img src={Logo} alt="푸드메이트 로고" />
       </ChatHomeHeader>
       <ChatHomeMain>
         <div className="styled-intro-message">
@@ -91,7 +93,7 @@ const Home = ({ goToLogin, goToRoom }: HomeProps) => {
             <p>Recent message</p>
             <IntroMessage>
               <div className="mini-message-icon">
-                <img src="/src/assets/message.svg" alt="" />
+                <img src={MessageSvg} alt="" />
               </div>
               <div className="intro-basic-message">
                 안녕하세요. 푸드메이트 채널톡입니다. <br />

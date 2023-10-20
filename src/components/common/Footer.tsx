@@ -2,18 +2,30 @@ import styled from 'styled-components';
 
 const FooterContainer = styled.footer`
   width: 100%;
-  height: 50px;
   background-color: #4f4f4f;
   color: #fff;
+
+  @media only screen and (max-width: 992px) {
+    padding-bottom: 8px;
+  }
 `;
 
 const FooterLinksContainer = styled.div`
-  width: 50%;
-  height: 50px;
-  margin: 0 auto;
+  padding: var(--basic-padding);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media only screen and (max-width: 992px) {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  @media only screen and (max-width: 768px) {
+    padding: 10px;
+    justify-content: center;
+  }
 
   a {
     color: #fff;
@@ -30,42 +42,69 @@ const FooterLinksContainer = styled.div`
   }
 `;
 
-const VerticalLine = styled.div`
-  border-right: 2px solid rgba(255, 255, 255, 0.2);
-  height: 25%;
+const FooterContents = styled.ul`
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+
+  @media only screen and (min-width: 992px) {
+    width: 66.66666664%;
+  }
+  @media only screen and (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+
+  > li:not(:last-child) {
+    margin-right: 1rem;
+  }
+`;
+
+const CopyRight = styled.div`
+  font-size: 10px;
 `;
 
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterLinksContainer>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          회사소개
-        </a>
-        <VerticalLine></VerticalLine>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          인재채용
-        </a>
-        <VerticalLine></VerticalLine>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          제휴제안
-        </a>
-        <VerticalLine></VerticalLine>
-        <a className="privacy" href="https://github.com/withfoodmate" target="_blank">
-          개인정보처리방침
-        </a>
-        <VerticalLine></VerticalLine>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          이용약관
-        </a>
-        <VerticalLine></VerticalLine>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          고객센터
-        </a>
-        <VerticalLine></VerticalLine>
-        <a href="https://github.com/withfoodmate" target="_blank">
-          ⓒFoodMate Corp.
-        </a>
+        <FooterContents>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              회사소개
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              인재채용
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              제휴제안
+            </a>
+          </li>
+          <li>
+            <a className="privacy" href="https://github.com/withfoodmate" target="_blank">
+              개인정보처리방침
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              이용약관
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              고객센터
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/withfoodmate" target="_blank">
+              이메일 무단수집 거부
+            </a>
+          </li>
+        </FooterContents>
+        <CopyRight>ⓒFoodMate Corp.</CopyRight>
       </FooterLinksContainer>
     </FooterContainer>
   );
