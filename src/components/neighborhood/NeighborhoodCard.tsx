@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { PostCardType } from '../../types/postCardType';
 // import { BsStar, BsStarFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { AllPostCardType } from '../../types/postCardType';
 
-export const NeighborhoodCard = ({ cardData }: { cardData: PostCardType }) => {
+export const NeighborhoodCard = ({ cardData }: { cardData: AllPostCardType }) => {
   const navigation = useNavigate();
   const postCardOnClickHandler = () => {
     navigation(`/findfoodmate/${cardData.groupId}`);

@@ -1,18 +1,16 @@
 import { styled } from 'styled-components';
-import { BsSearchHeart } from 'react-icons/bs';
 
 interface BasicInputPropsType {
   placeholder?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   $backgdColor: string;
+  value?: string;
 }
 
-export const BasicInput = ({ placeholder, $backgdColor }: BasicInputPropsType) => {
+export const BasicInput = ({ placeholder, $backgdColor, onChange, value }: BasicInputPropsType) => {
   return (
     <InputContainer $backgdColor={$backgdColor}>
-      <input type="text" placeholder={placeholder} />
-      <div className="icon">
-        <BsSearchHeart />
-      </div>
+      <input type="text" placeholder={placeholder} onChange={onChange} value={value} />
     </InputContainer>
   );
 };
@@ -28,19 +26,5 @@ const InputContainer = styled.div<BasicInputPropsType>`
     border: none;
     border-radius: 8px;
     background-color: ${(props) => props.$backgdColor};
-  }
-
-  .icon {
-    font-size: 24px;
-    position: absolute;
-    right: 8px;
-    top: 4px;
-    color: #000;
-    cursor: pointer;
-    transition: all 0.3s;
-
-    &:hover {
-      color: ${(props) => props.theme.color.ORANGE};
-    }
   }
 `;

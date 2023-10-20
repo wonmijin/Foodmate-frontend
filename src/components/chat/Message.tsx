@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CiClock2 } from 'react-icons/ci';
 import { MdArrowForwardIos } from 'react-icons/md';
-import React, { useState } from 'react';
+import DefaultProfile from '../../assets/chat-foodmate-default-profile.svg';
+import DefaultUserProfile from '../../assets/default-chat-user-profile.svg';
 
 interface MessageProps {
   chatRoomId: number | null;
@@ -78,6 +80,7 @@ const ChatPersonInfo = styled.div`
 
 const ChatMessageMain = styled.main`
   padding: 20px 24px;
+  min-height: 300px;
 `;
 
 const ChatSenderContents = styled.div`
@@ -169,10 +172,10 @@ const Message = ({ chatRoomId, closeMessage }: MessageProps) => {
         <ChatPersonInfo>
           <ChatMessageProfile>
             <div className="Chat-message-profile">
-              <img src="/src/assets/chat-foodmate-default-profile.svg" />
+              <img src={DefaultProfile} alt="푸드메이트 프로필 사진" />
             </div>
             <div className="Chat-message-profile">
-              <img src="/src/assets/default-chat-user-profile.svg"></img>
+              <img src={DefaultUserProfile} alt="사용자 프로필 사진"></img>
             </div>
           </ChatMessageProfile>
           <span>2</span>
@@ -180,7 +183,7 @@ const Message = ({ chatRoomId, closeMessage }: MessageProps) => {
       </ChatMessageHeader>
       <ChatMessageMain>
         <ChatSenderContents>
-          <img src="/src/assets/chat-foodmate-default-profile.svg" alt="푸드메이트 채팅 프로필 사진" />
+          <img src={DefaultProfile} alt="푸드메이트 프로필 사진" />
           <div className="text-message-container">
             <div className="text-message">
               안녕하세요. 푸드메이트 채널톡입니다. <br />

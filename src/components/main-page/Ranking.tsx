@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { FaMedal } from 'react-icons/fa';
-import { rankingFoodData, rankingLikesData, rankingMeetingData } from '../../mocks/rankingData';
 import { rankingCategories, RankingType } from '../../constants/ranking';
 import Image from '../common/Image';
+import { useMeetingRanking } from '../../hooks/useMeetingRanking';
+import { useLikesRanking } from '../../hooks/useLikesRanking';
+import { useFoodRanking } from '../../hooks/useFoodRanking';
 
 const RankingContainer = styled.div`
   padding: var(--basic-padding);
+
+  @media only screen and (max-width: 992px) {
+    padding: 0 10px;
+  }
 `;
 
 const MainPageCommonTitle = styled.div`
@@ -17,6 +23,10 @@ const MainPageCommonTitle = styled.div`
   .title-text {
     font-weight: bold;
     font-size: 24px;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1.438rem;
+    }
 
     .point {
       display: inline-block;
@@ -30,6 +40,10 @@ const ButtonGroup = styled.div`
   padding: 12px 0 48px 0;
   display: flex;
   justify-content: center;
+
+  @media only screen and (max-width: 768px) {
+    padding: 24px 0 36px 0;
+  }
 
   > button {
     &:first-child {
@@ -64,17 +78,28 @@ const Button = styled.button`
 
 const RankingList = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  width: 80%;
-  justify-content: space-between;
-  margin: 0 auto;
+  justify-content: center;
+
+  > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    @media only screen and (max-width: 992px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media only screen and (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
 `;
 
 const RankingItem = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  margin: 0 30px 30px;
+  margin: 0 0 30px;
+  font-size: 14px;
 
   .text {
     width: 100px;
@@ -82,6 +107,7 @@ const RankingItem = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: break-all;
+    text-align: center;
   }
 
   .photo {
@@ -110,6 +136,9 @@ type RankingItem = {
 const Ranking = () => {
   const [rankingType, setRankingType] = useState<RankingType>(RankingType.Like);
   const [rankingList, setRankingList] = useState<RankingItem[]>([]);
+  const { data: likesRankingData } = useLikesRanking();
+  const { data: meetingRankingData } = useMeetingRanking();
+  const { data: foodRankingData } = useFoodRanking();
 
   useEffect(() => {
     const newRankingList: RankingItem[] = [];
@@ -117,7 +146,7 @@ const Ranking = () => {
     switch (rankingType) {
       default:
       case RankingType.Like:
-        rankingLikesData.forEach((value, index) => {
+        likesRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -126,7 +155,7 @@ const Ranking = () => {
         });
         break;
       case RankingType.MeetingKing:
-        rankingMeetingData.forEach((value, index) => {
+        meetingRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -135,7 +164,7 @@ const Ranking = () => {
         });
         break;
       case RankingType.Category:
-        rankingFoodData.forEach((value, index) => {
+        foodRankingData?.forEach((value, index) => {
           newRankingList.push({
             rank: index,
             photo: value.image,
@@ -146,7 +175,7 @@ const Ranking = () => {
     }
 
     setRankingList(newRankingList);
-  }, [rankingType]);
+  }, [foodRankingData, likesRankingData, meetingRankingData, rankingType]);
 
   return (
     <RankingContainer>
@@ -171,35 +200,37 @@ const Ranking = () => {
         ))}
       </ButtonGroup>
       <RankingList>
-        {rankingList.map((item, index) => {
-          let rankTag: React.ReactElement<typeof FaMedal> | React.ReactElement<typeof RankNumber>;
+        <div>
+          {rankingList.map((item, index) => {
+            let rankTag: React.ReactElement<typeof FaMedal> | React.ReactElement<typeof RankNumber>;
 
-          switch (item.rank) {
-            case 0:
-              rankTag = <FaMedal color="#FFD05B" size="30" />;
-              break;
-            case 1:
-              rankTag = <FaMedal color="#9B9797" size="30" />;
-              break;
-            case 2:
-              rankTag = <FaMedal color="#D67F4B" size="30" />;
-              break;
+            switch (item.rank) {
+              case 0:
+                rankTag = <FaMedal color="#FFD05B" size="30" />;
+                break;
+              case 1:
+                rankTag = <FaMedal color="#9B9797" size="30" />;
+                break;
+              case 2:
+                rankTag = <FaMedal color="#D67F4B" size="30" />;
+                break;
 
-            default:
-              rankTag = <RankNumber>{item.rank + 1}</RankNumber>;
-              break;
-          }
+              default:
+                rankTag = <RankNumber>{item.rank + 1}</RankNumber>;
+                break;
+            }
 
-          return (
-            <RankingItem key={index}>
-              {rankTag}
-              <div className="photo">
-                <Image imageKey={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
-              </div>
-              <span className="text">{item.text}</span>
-            </RankingItem>
-          );
-        })}
+            return (
+              <RankingItem key={index}>
+                {rankTag}
+                <div className="photo">
+                  <Image imageKey={item.photo} imageUrl={item.photo} alt={`랭킹 ${item.rank + 1}위 사진`} />
+                </div>
+                <span className="text">{item.text}</span>
+              </RankingItem>
+            );
+          })}
+        </div>
       </RankingList>
     </RankingContainer>
   );

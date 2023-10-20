@@ -1,20 +1,21 @@
 import { Route, Routes } from 'react-router-dom';
-import Nav from './components/common/Nav';
-import ScrollToTop from './utils/ScrollToTop';
+import { Drawer } from './components/common/Drawer';
 import Footer from './components/common/Footer';
-import MainPage from './pages/MainPage';
+import Nav from './components/common/Nav';
+import Chat from './pages/Chat';
 import { CreateGroupPost } from './pages/CreateGroupPost';
 import { FindFoodmate } from './pages/FindFoodmate';
 import { History } from './pages/History';
 import { Inquiry } from './pages/Inquiry';
-import { Profile } from './pages/Profile';
-import { Password } from './pages/Password';
-import { Quit } from './pages/Quit';
 import Login from './pages/Login';
+import MainPage from './pages/MainPage';
 import { MeetingPostDetailView } from './pages/MeetingPostDetailView';
 import { Neighborhood } from './pages/Neighborhood';
+import { Password } from './pages/Password';
+import { Profile } from './pages/Profile';
+import { Quit } from './pages/Quit';
 import { Register } from './pages/Register';
-import Chat from './pages/Chat';
+import ScrollToTop from './utils/ScrollToTop';
 
 export const App = (): JSX.Element => {
   return (
@@ -38,6 +39,7 @@ export const App = (): JSX.Element => {
       </Routes>
       <Chat />
       <Footer />
+      <Drawer />
     </>
   );
 };
