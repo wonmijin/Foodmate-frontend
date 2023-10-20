@@ -8,6 +8,7 @@ import { getNearGroups } from '../api/groupApi';
 
 export const Neighborhood = () => {
   const myLocation = useCurrentLocation();
+  const geoCodeArr = [];
 
   const { data, isLoading, error } = useQuery(
     ['nearGroups', myLocation],
@@ -16,7 +17,12 @@ export const Neighborhood = () => {
   if (isLoading) return '...loading';
   if (error) return '...error';
 
-  console.log(data.content);
+  if (data) {
+    for (const obj of data.content) {
+      const { latitude, longitude } = obj;
+      geoCodeArr.push({ latitude, longitude });
+    }
+  }
 
   return (
     <>
@@ -32,7 +38,7 @@ export const Neighborhood = () => {
               )}
             </ListSection>
             <MapSection>
-              <CurrentLocation />
+              <CurrentLocation geoCodeArr={geoCodeArr} />
             </MapSection>
           </NeighborhoodContainer>
         </NeighborhoodWrap>
