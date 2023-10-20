@@ -98,7 +98,8 @@ const RankingItem = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  margin: 0 30px 30px;
+  margin: 0 0 30px;
+  font-size: 14px;
 
   .text {
     width: 100px;

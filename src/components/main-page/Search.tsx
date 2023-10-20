@@ -11,17 +11,26 @@ const MainBg = styled.div`
   height: calc(100vh - 60px);
   background: center / cover no-repeat url(${mainBg});
 
+  @media only screen and (max-width: 1200px) {
+    height: 413px;
+  }
+
   .bg-filter {
     width: 100%;
     height: calc(100vh - 60px);
     position: absolute;
     background-color: rgb(130, 130, 130, 0.5);
+
+    @media only screen and (max-width: 1200px) {
+      height: 413px;
+    }
   }
 `;
 
 const MainText = styled.h2`
   color: #fff;
-  font-size: 2.68rem;
+  font-size: 2.25rem;
+  line-height: 3rem;
   width: 100%;
   text-align: center;
 
@@ -30,11 +39,8 @@ const MainText = styled.h2`
   }
 
   @media only screen and (max-width: 768px) {
-    font-size: 2.37rem;
-  }
-
-  @media only screen and (max-width: 414px) {
-    font-size: 2.18rem;
+    font-size: 2rem;
+    line-height: 2.75rem;
   }
 `;
 
@@ -50,6 +56,7 @@ const MainSearchContainer = styled.div`
 
   @media only screen and (max-width: 1200px) {
     width: 65%;
+    padding: 14px;
   }
 
   @media only screen and (max-width: 992px) {
@@ -125,18 +132,18 @@ const SearchPopup = styled.div`
 
 const SearchInput = styled.input`
   display: inline-block;
-  padding: 14px;
+  padding: 11px;
   background-color: #f5f5f5;
   border: none;
   width: 98%;
   border-radius: 8px;
 
   @media only screen and (max-width: 768px) {
-    padding: 13px;
+    padding: 11px;
   }
 
   @media only screen and (max-width: 414px) {
-    padding: 6px;
+    padding: 10px;
     font-size: 0.625rem;
   }
 
