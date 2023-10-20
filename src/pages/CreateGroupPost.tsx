@@ -14,14 +14,12 @@ import DatePicker from 'react-datepicker';
 import { createGroup } from '../api/groupApi';
 
 export const CreateGroupPost = () => {
+  const token = sessionStorage.getItem('accessToken');
   const navigation = useNavigate();
   const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
   const [content, setContent] = useState('');
   const [time, setTime] = useState(new Date());
   const [groupData, setGroupData] = useState({
-    authorization:
-      // TODO : 임시 토큰값. 로그인 구현 후 수정해야 함
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2OTc1MjEwMzksImV4cCI6MTY5ODczMDYzOX0.2XzE7uIOj3ZRAhhQGtuVl_Oe5W0BUEpWcmWnITe2TjI',
     title: '',
     name: '',
     food: '',
@@ -55,23 +53,26 @@ export const CreateGroupPost = () => {
     }).open();
   };
 
-  const handlePost = () => {
-    const result = createGroup({
-      authorization: groupData.authorization,
-      title: groupData.title,
-      name: groupData.name,
-      content,
-      food: groupData.food,
-      date: groupData.date,
-      time,
-      maximum: groupData.maximum,
-      storeName: groupData.storeName,
-      storeAddress: groupData.storeAddress,
-      latitude: groupData.latitude,
-      longitude: groupData.longitude,
-    });
-
-    console.log(result);
+  const handlePost = async () => {
+    if (confirm('글을 작성할까요?')) {
+      await createGroup({
+        authorization: String(token),
+        title: groupData.title,
+        name: groupData.name,
+        content,
+        food: groupData.food,
+        date: groupData.date,
+        time,
+        maximum: groupData.maximum,
+        storeName: groupData.storeName,
+        storeAddress: groupData.storeAddress,
+        latitude: groupData.latitude,
+        longitude: groupData.longitude,
+      });
+      navigation('/findfoodmate');
+    } else {
+      return;
+    }
   };
 
   return (
