@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { useEffect, useState } from 'react';
-import { signedMemberInfo } from '../../api/memberApi';
 import { fetchCall } from '../../api/fetchCall';
 
 export const CreateComment = ({ groupId }: { groupId: number }) => {
@@ -10,7 +9,7 @@ export const CreateComment = ({ groupId }: { groupId: number }) => {
 
   useEffect(() => {
     (async () => {
-      const info = await signedMemberInfo();
+      const info = await fetchCall('get', '/member');
       setProfileImage(info.image);
     })();
   }, []);
