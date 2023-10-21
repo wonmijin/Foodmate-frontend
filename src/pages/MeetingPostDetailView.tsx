@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicButton } from '../components/common/BasicButton';
@@ -8,17 +10,18 @@ import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
-import { getDetailGroup, getPostComments } from '../api/groupApi';
-import { useState } from 'react';
+import { deletePost, getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 
 export const MeetingPostDetailView = () => {
+  const navigation = useNavigate();
   const { groupId } = useParams();
   const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState({
     question: '',
     func: (() => {}) as () => void,
   });
+  const signedInUserInfo = sessionStorage.getItem('nickname');
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -35,6 +38,15 @@ export const MeetingPostDetailView = () => {
       setAlertModalContent((prev) => ({ ...prev, func: joinedMeeting }));
     } else if (event === '대화') {
       setAlertModalContent((prev) => ({ ...prev, func: joinedChat }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (confirm('정말 삭제할까요?') && groupId) {
+      await deletePost(parseInt(groupId));
+      navigation('/findfoodmate');
+    } else {
+      return;
     }
   };
 
@@ -130,10 +142,16 @@ export const MeetingPostDetailView = () => {
               <span>명</span>
             </div>
 
-            <div>
-              <SmallGrayButton onClick={() => ''}>수정</SmallGrayButton>
-              <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
-            </div>
+            {signedInUserInfo === postData.nickname && (
+              <div>
+                <SmallGrayButton
+                  onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
+                >
+                  수정
+                </SmallGrayButton>{' '}
+                <SmallGrayButton onClick={handleDelete}>삭제</SmallGrayButton>
+              </div>
+            )}
           </RightAlign>
         </div>
         <Comments commentsData={commentsData.content} />

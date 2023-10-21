@@ -6,8 +6,8 @@ interface ButtonPropsType {
   onClick: () => void;
 }
 
-export const SmallGrayButton = ({ children }: ButtonPropsType) => {
-  return <Button>{children}</Button>;
+export const SmallGrayButton = ({ children, onClick }: ButtonPropsType) => {
+  return <Button onClick={onClick}>{children}</Button>;
 };
 const Button = styled.button`
   background-color: #d8d8d8;
@@ -15,7 +15,7 @@ const Button = styled.button`
   padding: 4px 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 12px;
   transition: all 0.4s;
 
   &:hover {

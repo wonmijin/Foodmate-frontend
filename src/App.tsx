@@ -16,6 +16,7 @@ import { Profile } from './pages/Profile';
 import { Quit } from './pages/Quit';
 import { Register } from './pages/Register';
 import ScrollToTop from './utils/ScrollToTop';
+import { ModifyPost } from './pages/ModifyPost';
 
 export const App = (): JSX.Element => {
   return (
@@ -29,6 +30,7 @@ export const App = (): JSX.Element => {
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />
+        <Route path="/findfoodmate/modify/:groupId" element={<ModifyPost />} />
         <Route path="/neighborhood" element={<Neighborhood />} />
         <Route path="/register" element={<Register />} />
         <Route path="meeting-info/history" element={<History />} />
