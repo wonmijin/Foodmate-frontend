@@ -3,7 +3,6 @@ import { GeocodeType } from '../types/mapType';
 import QuickSearchType from '../types/quickSearchType';
 import Pagination from '../types/pagination';
 import TodayMeetingType from '../types/todayMeetingType';
-import { CreateGroupType, ModifyGroupType } from '../types/postCardType';
 
 export const quickSearchByKeyword = async (keyword: string): Promise<Pagination<QuickSearchType>> => {
   const { data } = await axios.get(`/api/group/search?keyword=${keyword}`);
@@ -81,91 +80,6 @@ export const getDetailGroup = async (groupId: number) => {
 export const getPostComments = async (groupId: number) => {
   try {
     const result = await axios.get(`/api/group/${groupId}/comment`);
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// 모임 생성
-export const createGroup = async ({
-  title,
-  name,
-  content,
-  food,
-  date,
-  time,
-  maximum,
-  storeName,
-  storeAddress,
-  latitude,
-  longitude,
-}: CreateGroupType) => {
-  const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-  const requestData = {
-    title,
-    name,
-    content,
-    food,
-    date,
-    time: timeString,
-    maximum,
-    storeName,
-    storeAddress,
-    latitude,
-    longitude,
-  };
-
-  try {
-    const result = await axios.post('/api/group', requestData);
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-// 모임 수정
-export const modifyPostInfo = async ({
-  groupId,
-  title,
-  name,
-  content,
-  food,
-  date,
-  time,
-  maximum,
-  storeName,
-  storeAddress,
-  latitude,
-  longitude,
-}: ModifyGroupType) => {
-  const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-  const requestData = {
-    title,
-    name,
-    content,
-    food,
-    date,
-    time: timeString,
-    maximum,
-    storeName,
-    storeAddress,
-    latitude,
-    longitude,
-  };
-
-  try {
-    const result = await axios.put(`/api/group/${groupId}`, requestData);
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-//모임 삭제
-export const deletePost = async (groupId: number) => {
-  try {
-    const result = await axios.delete(`/api/group/${groupId}`);
     return result.data;
   } catch (error) {
     console.error(error);

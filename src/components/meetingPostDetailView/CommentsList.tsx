@@ -2,11 +2,18 @@ import styled from 'styled-components';
 import { SmallGrayButton } from '../common/SmallGrayButton';
 import { CommentsType } from '../../types/postCardType';
 import { RepliesList } from './RepliesList';
+import { useState } from 'react';
 
 export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] }) => {
+  const [comments, setComments] = useState(commentsData);
+
+  useState(() => {
+    setComments(commentsData);
+  });
+
   return (
     <CommentsListContainer>
-      {commentsData.map((item: CommentsType) => {
+      {comments.map((item: CommentsType) => {
         return (
           <div key={item.commentId}>
             <div className="profile">
