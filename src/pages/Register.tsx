@@ -14,7 +14,7 @@ interface RegisterForm {
   passwordConfirm: string;
   extraError?: string;
   image: object;
-  food: object;
+  food: string[];
 }
 
 export const Register = () => {
@@ -48,9 +48,8 @@ export const Register = () => {
   };
 
   // 이메일 중복확인
-  const onEmailConfirm = async (data: RegisterForm) => {
+  const onEmailConfirm = async (email: string) => {
     try {
-      const { email } = data;
       const response = await emailConfirm({ email });
       if (response == true) {
         console.log('중복되지 않은 이메일입니다.');
@@ -64,10 +63,14 @@ export const Register = () => {
     }
   };
 
+  const emailCheck = () => {
+    const email = watch('email');
+    onEmailConfirm(email);
+  };
+
   // 닉네임 중복확인
-  const onNicknameConfirm = async (data: RegisterForm) => {
+  const onNicknameConfirm = async (nickname: string) => {
     try {
-      const { nickname } = data;
       const response = await nicknameConfirm({ nickname });
       if (response == true) {
         console.log('중복되지 않은 닉네임입니다.');
@@ -79,6 +82,11 @@ export const Register = () => {
     } catch {
       setExtraError('닉네임 중복확인 오류');
     }
+  };
+
+  const nicknameCheck = () => {
+    const nickname = watch('nickname');
+    onNicknameConfirm(nickname);
   };
 
   return (
@@ -107,7 +115,7 @@ export const Register = () => {
                     />
                     <p>{errors?.email?.message}</p>
                   </div>
-                  <ConfirmButton type="button" onClick={handleSubmit(onEmailConfirm)}>
+                  <ConfirmButton type="button" onClick={() => emailCheck()}>
                     중복확인
                   </ConfirmButton>
                 </InputBoxWrap>
@@ -174,7 +182,7 @@ export const Register = () => {
                     />
                     <p>{errors?.nickname?.message}</p>
                   </div>
-                  <ConfirmButton type="button" onClick={handleSubmit(onNicknameConfirm)}>
+                  <ConfirmButton type="button" onClick={() => nicknameCheck()}>
                     중복확인
                   </ConfirmButton>
                 </InputBoxWrap>
