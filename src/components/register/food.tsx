@@ -7,10 +7,14 @@ export const Food = () => {
   const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
 
   const handleLabels = (menu: string) => {
-    const updatedSelectedMenus = selectedMenus.includes(menu)
-      ? selectedMenus.filter((selectedMenu) => selectedMenu !== menu)
-      : [...selectedMenus, menu];
-    setSelectedMenus(updatedSelectedMenus);
+    if (selectedMenus.length < 3 || selectedMenus.includes(menu)) {
+      const updatedSelectedMenus = selectedMenus.includes(menu)
+        ? selectedMenus.filter((selectedMenu) => selectedMenu !== menu)
+        : [...selectedMenus, menu];
+      setSelectedMenus(updatedSelectedMenus);
+    } else {
+      alert('메뉴 중복선택은 최대 3개까지 가능합니다.');
+    }
   };
 
   return (
