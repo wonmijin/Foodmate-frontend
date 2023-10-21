@@ -56,6 +56,7 @@ export const registerMember = async ({ email, nickname, password, image, food }:
 export const emailConfirm = async ({ email }: emailType) => {
   try {
     const response = await axios.get('/api/member/email', { params: { email } });
+    console.log('response>>>>>>>>>>>>>>' + response.data);
     return response.data;
   } catch (error) {
     console.error(error);
