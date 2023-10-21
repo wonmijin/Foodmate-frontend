@@ -11,7 +11,8 @@ import { KakaoMap } from '../components/kakao/KakaoMap';
 import { GeocodeType } from '../types/mapType';
 import { removeDot } from '../utils/removeDot';
 import DatePicker from 'react-datepicker';
-import { createGroup } from '../api/groupApi';
+import { fetchCall } from '../api/fetchCall';
+// import { createGroup } from '../api/groupApi';
 
 export const CreateGroupPost = () => {
   const navigation = useNavigate();
@@ -53,14 +54,15 @@ export const CreateGroupPost = () => {
   };
 
   const handlePost = async () => {
+    const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
     if (confirm('글을 작성할까요?')) {
-      await createGroup({
+      await fetchCall('post', '/group', {
         title: groupData.title,
         name: groupData.name,
         content,
         food: groupData.food,
         date: groupData.date,
-        time,
+        time: timeString,
         maximum: groupData.maximum,
         storeName: groupData.storeName,
         storeAddress: groupData.storeAddress,

@@ -12,7 +12,7 @@ import { KakaoMap } from '../components/kakao/KakaoMap';
 import { GeocodeType } from '../types/mapType';
 import { removeDot } from '../utils/removeDot';
 import DatePicker from 'react-datepicker';
-import { modifyPostInfo } from '../api/groupApi';
+import { fetchCall } from '../api/fetchCall';
 
 export const ModifyPost = () => {
   const navigation = useNavigate();
@@ -57,15 +57,15 @@ export const ModifyPost = () => {
   };
 
   const handleModify = async () => {
+    const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
     if (confirm('글을 수정할까요?')) {
-      await modifyPostInfo({
-        groupId: parseInt(postData.groupId),
+      await fetchCall('put', `/group/${postData.groupId}`, {
         title: groupData.title,
         name: groupData.name,
         content,
         food: groupData.food,
         date: groupData.date,
-        time,
+        time: timeString,
         maximum: groupData.maximum,
         storeName: groupData.storeName,
         storeAddress: groupData.storeAddress,

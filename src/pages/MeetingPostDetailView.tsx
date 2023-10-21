@@ -10,8 +10,10 @@ import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
-import { deletePost, getDetailGroup, getPostComments } from '../api/groupApi';
+import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
+import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
+import { fetchCall } from '../api/fetchCall';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
@@ -43,7 +45,7 @@ export const MeetingPostDetailView = () => {
 
   const handleDelete = async () => {
     if (confirm('정말 삭제할까요?') && groupId) {
-      await deletePost(parseInt(groupId));
+      await fetchCall('delete', `/group/${groupId}`);
       navigation('/findfoodmate');
     } else {
       return;
@@ -154,6 +156,7 @@ export const MeetingPostDetailView = () => {
             )}
           </RightAlign>
         </div>
+        <CreateComment groupId={Number(groupId)} />
         <Comments commentsData={commentsData.content} />
 
         {isOpenedAlertModal && (
