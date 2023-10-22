@@ -16,7 +16,9 @@ function getRefreshTokenCookie() {
 export const refreshTokens = async () => {
   try {
     const response = await axios.post('/member', {
-      refreshToken: getRefreshTokenCookie(),
+      headers: {
+        refreshToken: getRefreshTokenCookie(),
+      },
     });
     return response.data;
   } catch (error) {
