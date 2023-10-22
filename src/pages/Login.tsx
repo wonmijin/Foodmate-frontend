@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { fetchCall } from '../api/fetchCall';
+import { refreshTokens } from '../utils/getRefreshTokenCookie';
 
 const LoginWrap = styled.div`
   margin: 150px auto 0;
@@ -115,6 +116,11 @@ export type FormValues = {
   password: string;
 };
 
+interface ErrorResponse {
+  error: string;
+  message: string;
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const {
@@ -133,18 +139,27 @@ const Login: React.FC = () => {
       expirationDate.setDate(expirationDate.getDate() + 14);
       (document.cookie = `refreshToken=${refreshToken}; expires=${expirationDate.toUTCString()}; path=/;`), [];
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      sessionStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
 
       const userInfo = await fetchCall('get', '/member');
       sessionStorage.setItem('nickname', userInfo.nickname);
-      sessionStorage.setItem('accessToken', accessToken);
 
       alert('로그인 되었습니다.');
       navigate('/');
     } catch (error) {
-      const axiosError = error as AxiosError;
+      const axiosError = error as AxiosError<ErrorResponse>;
       if (axiosError.response) {
-        alert(axiosError.response.data);
+        if (axiosError.response.status === 401 && axiosError.response.data.error === 'TOKEN_INVALID') {
+          const newTokens = await refreshTokens();
+          if (newTokens) {
+            successSignIn(newTokens.refreshToken, newTokens.accessToken);
+          } else {
+            console.log('재발급 실패');
+          }
+        } else {
+          alert(axiosError.response.data);
+        }
       } else {
         console.log('서버 응답 없음');
       }
