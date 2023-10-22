@@ -1,16 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { SideMenu } from '../components/common/SideMenu';
 import { MEETING_INFO_MENU } from '../constants/menu';
 import { MeetingInfoRequestCardList } from '../components/meetingInfo/MeetingInfoRequestCardList';
+import { fetchCall } from '../api/fetchCall';
+import { useQuery } from '@tanstack/react-query';
+import { MeetingRequestDataType } from '../types/postCardType';
+import { useSetRecoilState } from 'recoil';
+import { requestCategory } from '../store/meetingInfo';
 
 export const Inquiry = () => {
   const [selectedCategory, setSelectedCategory] = useState('받은 요청');
+  const [decision, setDecision] = useState('unprocessed');
+  const [currentData, setCurrentData] = useState<MeetingRequestDataType[]>();
+  const setRequestCategory = useSetRecoilState(requestCategory);
 
   const handleCategory = (category: string) => {
     setSelectedCategory(category);
+    if (category === '받은 요청') {
+      setDecision('unprocessed');
+      setRequestCategory('받은 요청');
+    } else {
+      setDecision('processed');
+      setRequestCategory('수락한 요청');
+    }
   };
+
+  const { data } = useQuery(['requestData', selectedCategory], () =>
+    fetchCall('get', `/enrollment/receive?decision=${decision}`),
+  );
+
+  useEffect(() => {
+    if (data) {
+      setCurrentData(data.content);
+    }
+  }, [currentData, data]);
 
   return (
     <BasicPadding>
@@ -28,20 +53,16 @@ export const Inquiry = () => {
                   받은 요청
                 </div>
                 <div
-                  onClick={() => handleCategory('처리된 요청')}
-                  className={selectedCategory === '처리된 요청' ? 'selected-category' : ''}
+                  onClick={() => handleCategory('수락한 요청')}
+                  className={selectedCategory === '수락한 요청' ? 'selected-category' : ''}
                 >
-                  처리된 요청
+                  수락한 요청
                 </div>
               </div>
             </div>
-
             <hr />
-
             <p>3개월 이내의 신청 내역까지 확인할 수 있어요.</p>
-
-            {/* inquiry에서 분기처리 후 데이터를 해당 컴포넌트에 내려줘야 함 */}
-            <MeetingInfoRequestCardList />
+            <MeetingInfoRequestCardList requestData={currentData} />
           </Contents>
         </div>
       </InquiryContainer>
@@ -56,7 +77,6 @@ const InquiryContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 500px;
 
   .contents-box {
     width: 100%;
