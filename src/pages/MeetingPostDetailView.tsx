@@ -23,7 +23,7 @@ export const MeetingPostDetailView = () => {
     question: '',
     func: (() => {}) as () => void,
   });
-  const signedInUserInfo = sessionStorage.getItem('nickname');
+  const signedInUserNickname = sessionStorage.getItem('nickname');
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -144,7 +144,7 @@ export const MeetingPostDetailView = () => {
               <span>명</span>
             </div>
 
-            {signedInUserInfo === postData.nickname && (
+            {signedInUserNickname === postData.nickname && (
               <div>
                 <SmallGrayButton
                   onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
