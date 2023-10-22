@@ -33,10 +33,22 @@ export const Register = () => {
 
   // 회원가입 폼
   const [extraError, setExtraError] = useState<string>('');
+  const [selectedFood, setSelectedFood] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const handleSelectedFood = (selectedFood) => {
+    setSelectedFood(selectedFood);
+  };
+
+  const handleSelectedImage = (selectedImage) => {
+    setSelectedImage(selectedImage);
+  };
 
   const onSubmitHandler: SubmitHandler<RegisterForm> = async (data) => {
     try {
-      const { email, nickname, password, image, food } = data;
+      const { email, nickname, password } = data;
+      const food = selectedFood;
+      const image = selectedImage;
       const response = await registerMember({ email, nickname, password, image, food });
       console.log(response);
       alert('회원가입이 완료되었습니다.');
@@ -95,7 +107,7 @@ export const Register = () => {
         <RegisterWrap>
           <RegisterTitle>회원가입</RegisterTitle>
           <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <UserProfileImage />
+            <UserProfileImage onImageSelect={handleSelectedImage} />
 
             <hr></hr>
             <RegisterBox>
@@ -197,7 +209,7 @@ export const Register = () => {
                     (최대 3개)
                   </span>
                 </p>
-                <Food />
+                <Food onFoodSelection={handleSelectedFood} />
               </RegisterInBox>
             </RegisterBox>
 

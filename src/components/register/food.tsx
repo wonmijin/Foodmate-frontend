@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { LABELCOLOR } from '../../constants/menu';
 import { MenuLabel } from '../common/MenuLabel';
 
-export const Food = () => {
+export const Food = ({ onFoodSelection }) => {
   const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
 
   const handleLabels = (menu: string) => {
@@ -16,6 +16,10 @@ export const Food = () => {
       alert('메뉴 중복선택은 최대 3개까지 가능합니다.');
     }
   };
+
+  useEffect(() => {
+    onFoodSelection(selectedMenus);
+  }, [selectedMenus, onFoodSelection]);
 
   return (
     <MenuLabelsContainer>
