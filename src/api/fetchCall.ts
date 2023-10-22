@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchCall = async (
-  method: 'get' | 'post' | 'put' | 'delete',
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
   url: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any,
