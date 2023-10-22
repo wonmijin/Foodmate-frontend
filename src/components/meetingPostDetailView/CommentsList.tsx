@@ -2,28 +2,37 @@ import styled from 'styled-components';
 import { SmallGrayButton } from '../common/SmallGrayButton';
 import { CommentsType } from '../../types/postCardType';
 import { RepliesList } from './RepliesList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchCall } from '../../api/fetchCall';
 import { useParams } from 'react-router-dom';
 
 export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] }) => {
   const [comments, setComments] = useState(commentsData);
-  const [newComment, setNewComment] = useState('');
+  const [content, setContent] = useState('');
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
-  const groupId = useParams();
+  const { groupId } = useParams();
+  const signedInUserNickname = sessionStorage.getItem('nickname');
 
-  useState(() => {
+  useEffect(() => {
     setComments(commentsData);
-  });
+  }, [commentsData, comments, content]);
 
   const handleEdit = (commentId: number, content: string) => {
     setEditCommentId(commentId);
-    setNewComment(content);
+    setContent(content);
   };
 
-  const handleModifyComment = (commentId: number) => {
-    const result = fetchCall('put', `/group/${groupId}/comment/${commentId}`);
-    console.log(result);
+  const handleModifyComment = async (commentId: number) => {
+    await fetchCall('put', `/group/${groupId}/comment/${commentId}`, content);
+    setEditCommentId(null);
+  };
+
+  const handleDelete = async (commentId: number) => {
+    if (confirm('정말 삭제할까요?')) {
+      await fetchCall('delete', `/group/${groupId}/comment/${commentId}`);
+    } else {
+      return;
+    }
   };
 
   return (
@@ -39,9 +48,9 @@ export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] })
             </div>
             {editCommentId === item.commentId ? (
               <>
-                <EditBox value={newComment} onChange={(e) => setNewComment(e.target.value)}></EditBox>
+                <EditBox value={content} onChange={(e) => setContent(e.target.value)}></EditBox>
                 <div className="buttons-wrap">
-                  <SmallGrayButton onClick={() => () => handleModifyComment(item.commentId)}>완료</SmallGrayButton>
+                  <SmallGrayButton onClick={() => handleModifyComment(item.commentId)}>완료</SmallGrayButton>
                   <SmallGrayButton onClick={() => setEditCommentId(null)}>취소</SmallGrayButton>
                 </div>
               </>
@@ -49,10 +58,12 @@ export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] })
               <>
                 <div className="contents">{item.content}</div>
 
-                <div className="buttons-wrap">
-                  <SmallGrayButton onClick={() => handleEdit(item.commentId, item.content)}>수정</SmallGrayButton>
-                  <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
-                </div>
+                {signedInUserNickname === item.nickname && (
+                  <div className="buttons-wrap">
+                    <SmallGrayButton onClick={() => handleEdit(item.commentId, item.content)}>수정</SmallGrayButton>
+                    <SmallGrayButton onClick={() => handleDelete(item.commentId)}>삭제</SmallGrayButton>
+                  </div>
+                )}
               </>
             )}
             {item.replies && item.replies.length > 0 && <RepliesList repliesData={item.replies} />}
