@@ -164,7 +164,9 @@ export const FindFoodmate = () => {
     <BasicPadding>
       <FindFoodmateContainer>
         <div className="upper">
-          <h2>밥 친구 구해요!</h2>
+          <h2>
+            <span>#</span> Food Mate 구해요!
+          </h2>
           <div className="input-button-container">
             <div className="input-box">
               <BasicInput
@@ -237,6 +239,10 @@ export const FindFoodmate = () => {
 
 const FindFoodmateContainer = styled.div`
   margin: 120px 0;
+
+  h2 > span {
+    color: ${(props) => props.theme.color.ORANGE};
+  }
 
   .upper {
     display: flex;

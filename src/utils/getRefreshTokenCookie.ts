@@ -15,9 +15,10 @@ function getRefreshTokenCookie() {
 
 export const refreshTokens = async () => {
   try {
-    const response = await axios.post('/member', {
+    const response = await axios.get('/member', {
       headers: {
-        refreshToken: getRefreshTokenCookie(),
+        'Authorization-refresh': `Bearer ${getRefreshTokenCookie()}`,
+
       },
     });
     return response.data;

@@ -19,7 +19,7 @@ export const AlertModal = (props: AlertModalType) => {
     <>
       <Overlay onClick={() => handleAlertModal(false)} />
       <AlertModalContainer>
-        <p>
+        <p className="question">
           <span className="icon">
             <AiFillAlert />
           </span>
@@ -74,7 +74,7 @@ const AlertModalContainer = styled.div`
     font-size: 24px;
   }
 
-  p {
+  .question {
     display: flex;
     align-items: center;
     gap: 6px;

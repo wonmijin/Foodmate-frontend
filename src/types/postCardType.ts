@@ -74,3 +74,18 @@ export interface CreateGroupType {
 export interface ModifyGroupType extends CreateGroupType {
   groupId: number;
 }
+
+export interface MeetingRequestDataType {
+  enrollmentId: number;
+  groupId: number;
+  memberId: number;
+  nickname: string;
+  image: string;
+  title: string;
+  name: string;
+  food: string;
+  foodGroupGroupDateTime: string;
+  maximum: number;
+  storeName: string;
+  storeAddress: string;
+}
