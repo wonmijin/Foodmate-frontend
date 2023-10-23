@@ -1,11 +1,22 @@
-import styled from 'styled-components';
-import { MdArrowForwardIos } from 'react-icons/md';
+import dayjs from 'dayjs';
 import { LuDot } from 'react-icons/lu';
-import MessageSvg from '../../assets/message.svg';
+import { MdArrowForwardIos } from 'react-icons/md';
+import styled from 'styled-components';
+import ChatroomSkeleton from '../../assets/chatroom-skeleton.webp';
+import { useChatroomList } from '../../hooks/useChatroomList';
+import { ChatroomType } from '../../types/chatroomType';
+import MemberThumbnail from './MemberThumbnail';
 
 interface RoomProps {
-  selectChatRoom: (chatRoomId: number) => void;
+  selectChatRoom: (chatRoom: ChatroomType) => void;
 }
+
+const ChatRoomContainer = styled.div`
+  height: calc(100% - 63px);
+  width: 100%;
+  display: grid;
+  grid-template-rows: 70px 1fr;
+`;
 
 const ChatRoomHeader = styled.header`
   background-color: #fff;
@@ -17,21 +28,6 @@ const ChatRoomHeader = styled.header`
 
 const ChatRoomMain = styled.main`
   padding: 8px 9px;
-
-  .default-chat-profile {
-    width: 35px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    background-color: ${(props) => props.theme.color.ORANGE};
-    text-align: center;
-
-    img {
-      vertical-align: middle;
-      width: 40%;
-      height: 40%;
-    }
-  }
 `;
 
 const ChatRoomMessage = styled.div`
@@ -66,42 +62,40 @@ const ChatRoomMessage = styled.div`
 `;
 
 const Room = ({ selectChatRoom }: RoomProps) => {
+  const { data: chatroomList, status } = useChatroomList();
+
   return (
-    <>
+    <ChatRoomContainer>
       <ChatRoomHeader>
         <div>대화</div>
       </ChatRoomHeader>
       <ChatRoomMain>
-        <ChatRoomMessage onClick={() => selectChatRoom(1)}>
-          <div className="default-chat-profile">
-            <img src={MessageSvg} alt="푸드메이트 채팅 프로필 사진" />
-          </div>
-          <div className="default-chat-message">
-            안녕하세요. 푸드메이트 채널톡입니다. 주변의 활성화된 모임에 참여
-            <div className="chat-room-state">
-              <span>푸드메이트</span>
-              <LuDot />
-              <span>방금</span>
-            </div>
-          </div>
-          <MdArrowForwardIos color="#F96223" />
-        </ChatRoomMessage>
-        <ChatRoomMessage onClick={() => selectChatRoom(2)}>
-          <div className="default-chat-profile">
-            <img src={MessageSvg} alt="푸드메이트 채팅 프로필 사진" />
-          </div>
-          <div className="default-chat-message">
-            안녕하세요. 푸드메이트 채널톡입니다. 주변의 활성화된 모임에 참여
-            <div className="chat-room-state">
-              <span>푸드메이트</span>
-              <LuDot />
-              <span>방금</span>
-            </div>
-          </div>
-          <MdArrowForwardIos color="#F96223" />
-        </ChatRoomMessage>
+        {status === 'loading' ? (
+          <img src={ChatroomSkeleton} />
+        ) : (
+          <>
+            {chatroomList?.map((chatroom: ChatroomType, index: number) => {
+              return (
+                <ChatRoomMessage key={index} onClick={() => selectChatRoom(chatroom)}>
+                  <div>
+                    <MemberThumbnail chatMembers={chatroom.chatMembers} />
+                  </div>
+                  <div className="default-chat-message">
+                    {chatroom.lastMessage}
+                    <div className="chat-room-state">
+                      <span>{chatroom.chatRoomName}</span>
+                      <LuDot />
+                      <span>{dayjs(chatroom.lastMessageTime, 'YYYY-MM-DD HH:mm:ss').format('MM월 DD일')}</span>
+                    </div>
+                  </div>
+                  <MdArrowForwardIos color="#F96223" />
+                </ChatRoomMessage>
+              );
+            })}
+          </>
+        )}
       </ChatRoomMain>
-    </>
+    </ChatRoomContainer>
   );
 };
 
