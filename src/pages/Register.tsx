@@ -40,7 +40,7 @@ export const Register = () => {
     setSelectedFood(selectedFood);
   };
 
-  const handleSelectedImage = (selectedImage) => {
+  const handleSelectedImage = (selectedImage: File | null) => {
     setSelectedImage(selectedImage);
   };
 
@@ -49,6 +49,13 @@ export const Register = () => {
       const { email, nickname, password } = data;
       const food = selectedFood;
       const image = selectedImage;
+
+      if (food.length < 1) {
+        setExtraError('적어도 1개 이상의 음식을 선택해야 합니다.');
+        alert('한개 이상의 메뉴를 선택해 주세요.');
+        return;
+      }
+
       const response = await registerMember({ email, nickname, password, image, food });
       console.log(response);
       alert('회원가입이 완료되었습니다.');
