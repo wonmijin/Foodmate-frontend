@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { AlertModal } from '../common/AlertModal';
@@ -15,10 +15,6 @@ export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: M
   });
   const currentCategory = useRecoilValue(requestCategory);
 
-  useEffect(() => {
-    console.log(meetingInfoData);
-  }, []);
-
   const handleAccept = () => {
     alert('수락했어요!');
   };
@@ -32,12 +28,10 @@ export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: M
 
     if (result === '수락') {
       setAlertModalContent((prev) => ({ ...prev, func: handleAccept }));
-      const result = await fetchCall('patch', `/enrollment/${enrollmentId}/accept`);
-      console.log(result);
+      await fetchCall('patch', `/enrollment/${enrollmentId}/accept`);
     } else if (result === '거절') {
       setAlertModalContent((prev) => ({ ...prev, func: handleRefuse }));
-      const result = await fetchCall('patch', `/enrollment/${enrollmentId}/refuse`);
-      console.log(result);
+      await fetchCall('patch', `/enrollment/${enrollmentId}/refuse`);
     }
   };
 
