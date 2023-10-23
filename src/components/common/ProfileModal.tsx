@@ -6,7 +6,6 @@ import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
 import { fetchCall } from '../../api/fetchCall';
 import { useEffect, useState } from 'react';
-import { userProfileView } from '../../api/memberApi';
 
 interface ProfileModalProps {
   userInfo: UserInfoType;
@@ -31,7 +30,7 @@ export const ProfileModal = ({ userInfo, handleProfileModal, setSelectedUserInfo
 
   const handleCloseModal = async (isOpen: boolean) => {
     handleProfileModal(isOpen);
-    const selectedUser = await userProfileView(userInfo.nickname);
+    const selectedUser = await fetchCall('get', `/member/${userInfo.nickname}`);
     setSelectedUserInfo(selectedUser);
   };
 

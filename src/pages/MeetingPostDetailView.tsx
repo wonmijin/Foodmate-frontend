@@ -14,7 +14,6 @@ import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
 import { fetchCall } from '../api/fetchCall';
-import { userProfileView } from '../api/memberApi';
 import { UserInfoType } from '../types/userInfoType';
 import { ProfileModal } from '../components/common/ProfileModal';
 import { useRecoilState } from 'recoil';
@@ -60,7 +59,7 @@ export const MeetingPostDetailView = () => {
   };
 
   const handleProfileImage = async (nickname: string) => {
-    const selectedUser = await userProfileView(nickname);
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
     setSelectedUserInfo(selectedUser);
     setIsProfileModalOpen(true);
   };

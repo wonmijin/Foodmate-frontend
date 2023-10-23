@@ -5,7 +5,6 @@ import { RepliesList } from './RepliesList';
 import { useEffect, useState } from 'react';
 import { fetchCall } from '../../api/fetchCall';
 import { useParams } from 'react-router-dom';
-import { userProfileView } from '../../api/memberApi';
 import { CommentsProps } from './Comments';
 
 export const CommentsList = ({ commentsData, setSelectedUserInfo, handleProfileModal }: CommentsProps) => {
@@ -38,7 +37,7 @@ export const CommentsList = ({ commentsData, setSelectedUserInfo, handleProfileM
   };
 
   const handleProfileImage = async (nickname: string) => {
-    const selectedUser = await userProfileView(nickname);
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
     setSelectedUserInfo(selectedUser);
     handleProfileModal(true);
   };
