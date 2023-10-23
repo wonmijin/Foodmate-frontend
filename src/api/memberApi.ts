@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { ErrorResponse } from 'react-router-dom';
 
 // 로그인
 export const onSignIn = async (email: string, password: string) => {
@@ -9,18 +10,12 @@ export const onSignIn = async (email: string, password: string) => {
     });
     return result.data;
   } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-// 로그인된 유저 프로필
-export const signedMemberInfo = async () => {
-  try {
-    const result = await axios.get('/api/member');
-    return result.data;
-  } catch (error) {
-    console.error(error);
+    const axiosError = error as AxiosError<ErrorResponse>;
+    if (axiosError.response) {
+      alert(axiosError.response.data);
+    } else {
+      console.error('서버 응답 없음');
+    }
   }
 };
 

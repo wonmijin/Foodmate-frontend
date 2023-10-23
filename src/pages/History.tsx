@@ -36,10 +36,12 @@ export const History = () => {
     <>
       <BasicPadding>
         <HistoryContainer>
-          <h2>모임 정보 - 신청 내역</h2>
           <div className="contents-box">
             <SideMenu sideMenuList={MEETING_INFO_MENU} navMenuIdx={2} />
             <Contents>
+              <h2>
+                <span>#</span> 모임 정보 - 신청 내역
+              </h2>
               <div className="category">
                 <div className="category-list">
                   <div
@@ -105,6 +107,14 @@ const Contents = styled.div`
       display: flex;
       gap: 26px;
       cursor: pointer;
+    }
+  }
+
+  h2 {
+    margin-bottom: 24px;
+
+    span {
+      color: ${(props) => props.theme.color.ORANGE};
     }
   }
 
