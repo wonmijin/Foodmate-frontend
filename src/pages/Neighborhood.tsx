@@ -28,7 +28,9 @@ export const Neighborhood = () => {
     <>
       <BasicPadding>
         <NeighborhoodWrap>
-          <h2>내 근처 모임</h2>
+          <h2>
+            <span>#</span> 내 근처 모임
+          </h2>
           <NeighborhoodContainer>
             <ListSection>
               {data && data.content && data.content.length > 0 ? (
@@ -60,6 +62,10 @@ const NeighborhoodWrap = styled.div`
     margin-left: 8px;
     background-color: #fff;
     border-radius: 12px;
+  }
+
+  h2 > span {
+    color: ${(props) => props.theme.color.ORANGE};
   }
 `;
 
