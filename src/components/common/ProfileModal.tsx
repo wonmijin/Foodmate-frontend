@@ -42,9 +42,6 @@ export const ProfileModal = ({ userInfo, handleProfileModal }: ProfileModalProps
             })}
           </div>
           <div className="buttons-wrap">
-            <BasicButton $fontSize="12px" $fontColor="#fff">
-              1:1 대화 요청
-            </BasicButton>
             <BasicButton
               onClick={() => handleProfileModal(false)}
               $fontSize="12px"
