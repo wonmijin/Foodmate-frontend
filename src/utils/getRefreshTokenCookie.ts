@@ -18,6 +18,7 @@ export const refreshTokens = async () => {
     const response = await axios.get('/member', {
       headers: {
         'Authorization-refresh': `Bearer ${getRefreshTokenCookie()}`,
+
       },
     });
     return response.data;
