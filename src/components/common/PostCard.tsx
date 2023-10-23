@@ -70,7 +70,11 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
         </div>
       </WriterInfo>
       {isProfileModalOpened && selectedUserInfo && (
-        <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+        <ProfileModal
+          userInfo={selectedUserInfo}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
       )}
     </div>
   );

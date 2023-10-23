@@ -1,31 +1,58 @@
 import styled from 'styled-components';
 import { UserInfoType } from '../../types/userInfoType';
-import { GoHeart } from 'react-icons/go';
+import { GoHeart, GoHeartFill } from 'react-icons/go';
 import { BasicButton } from './BasicButton';
 import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
+import { fetchCall } from '../../api/fetchCall';
+import { useState } from 'react';
+import { userProfileView } from '../../api/memberApi';
 
 interface ProfileModalProps {
   userInfo: UserInfoType;
   handleProfileModal: (value: boolean) => void;
+  setSelectedUserInfo: (userInfo: UserInfoType) => void;
 }
 
-export const ProfileModal = ({ userInfo, handleProfileModal }: ProfileModalProps) => {
+export const ProfileModal = ({ userInfo, handleProfileModal, setSelectedUserInfo }: ProfileModalProps) => {
   const favoriteFoods = LABELCOLOR.filter((item) => userInfo.food.includes(item.menu));
+  const [currentLikes, setCurrentLikes] = useState(userInfo.likes);
+  const [heartState, setHeartState] = useState(false);
+  //heartState 의 초기값을, 어떻게 해야 할까?
+
+  const handleLike = async (memberId: number) => {
+    const result = await fetchCall('post', `/member/${memberId}/likes`);
+    console.log('좋아요 API 응답값', result);
+    console.log('현재 유저 정보', userInfo.likes);
+
+    if (result >= userInfo.likes) {
+      setHeartState(true);
+    } else {
+      setHeartState(false);
+    }
+
+    setCurrentLikes(result);
+  };
+
+  const handleCloseModal = async (isOpen: boolean) => {
+    handleProfileModal(isOpen);
+    const selectedUser = await userProfileView(userInfo.nickname);
+    setSelectedUserInfo(selectedUser);
+  };
 
   return (
     <>
-      <Overlay onClick={() => handleProfileModal(false)} />
+      <Overlay onClick={() => handleCloseModal(false)} />
       <ProfileModalContainer>
         <Modal>
           <div className="photo">
             <img src={userInfo.image} alt="프로필사진" />
           </div>
           <div className="like-box">
-            <span className="icon">
-              <GoHeart />
+            <span className="icon" onClick={() => handleLike(userInfo.memberId)}>
+              {heartState ? <GoHeartFill /> : <GoHeart />}
             </span>
-            <span className="like">{userInfo.likes}</span>
+            <span className="like">{currentLikes}</span>
           </div>
           <div className="nickname-email-wrap">
             <div>{userInfo.nickname}</div>
@@ -46,7 +73,7 @@ export const ProfileModal = ({ userInfo, handleProfileModal }: ProfileModalProps
               1:1 대화 요청
             </BasicButton>
             <BasicButton
-              onClick={() => handleProfileModal(false)}
+              onClick={() => handleCloseModal(false)}
               $fontSize="12px"
               $backgdColor="#c0c0c0"
               $hoverBackgdColor="#a1a1a1"
@@ -120,8 +147,10 @@ const Modal = styled.div`
     gap: 4px;
 
     .icon {
-      font-size: 25px;
+      height: 30px;
+      font-size: 28px;
       color: #e30000;
+      cursor: pointer;
     }
 
     .like {

@@ -79,9 +79,10 @@ export const MeetingPostDetailView = () => {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
-  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)), {
+  } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
+    refetchOnMount: false,
     onSuccess() {
-      queryClient.invalidateQueries(['comments']);
+      queryClient.invalidateQueries(['comments', groupId]);
     },
   });
 
@@ -189,7 +190,11 @@ export const MeetingPostDetailView = () => {
         )}
 
         {isProfileModalOpened && selectedUserInfo && (
-          <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+          <ProfileModal
+            userInfo={selectedUserInfo}
+            setSelectedUserInfo={setSelectedUserInfo}
+            handleProfileModal={setIsProfileModalOpen}
+          />
         )}
       </BasicPadding>
     </PostContainer>
