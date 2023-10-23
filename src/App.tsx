@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Drawer } from './components/common/Drawer';
 import Footer from './components/common/Footer';
@@ -20,7 +21,10 @@ import { ModifyPost } from './pages/ModifyPost';
 import { PrivateRoute } from './components/common/PrivateRoute';
 
 export const App = (): JSX.Element => {
-  const isSignedIn = !!sessionStorage.getItem('nickname');
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  useEffect(() => {
+    setIsSignedIn(!!sessionStorage.getItem('nickname'));
+  }, []);
 
   return (
     <>

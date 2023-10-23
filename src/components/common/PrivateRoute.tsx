@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 interface PrivateRouteProps {
   isSignedIn: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: React.FunctionComponent<any> | React.ComponentClass<any>; // 클래스 컴포넌트도 허용
+  component: React.FunctionComponent<any> | React.ComponentClass<any>;
 }
 
 export const PrivateRoute = ({ isSignedIn, component: Component }: PrivateRouteProps) => {

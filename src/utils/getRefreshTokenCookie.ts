@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-function getRefreshTokenCookie() {
+const getRefreshTokenCookie = () => {
   const cookies = document.cookie.split('; ');
   for (let i = 0; i < cookies.length; i++) {
     const parts = cookies[i].split('=');
@@ -11,14 +11,13 @@ function getRefreshTokenCookie() {
     }
   }
   return null;
-}
+};
 
 export const refreshTokens = async () => {
   try {
-    const response = await axios.get('/member', {
+    const response = await axios.get('/api/group/all', {
       headers: {
-        'Authorization-refresh': `Bearer ${getRefreshTokenCookie()}`,
-
+        'Authorization-Refresh': `Bearer ${getRefreshTokenCookie()}`,
       },
     });
     return response.data;
