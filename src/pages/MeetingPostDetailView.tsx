@@ -162,7 +162,7 @@ export const MeetingPostDetailView = () => {
             )}
           </RightAlign>
         </div>
-        <CreateComment groupId={Number(groupId)} />
+        {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
         <Comments commentsData={commentsData.content} />
 
         {isOpenedAlertModal && (
