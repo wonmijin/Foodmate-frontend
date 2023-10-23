@@ -7,8 +7,6 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { signedUserInfo } from '../store/groupAtoms';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { PasswordModal } from '../components/login/passwordModal';
 
