@@ -81,7 +81,7 @@ export const Quit = () => {
 
 const QuitWrap = styled.div`
   display: flex;
-  margin: 120px 0;
+  margin: 120px 0 263px 0;
 `;
 
 const QuitBox = styled.div`
