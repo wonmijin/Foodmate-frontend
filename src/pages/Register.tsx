@@ -13,7 +13,7 @@ interface RegisterForm {
   password: string;
   passwordConfirm: string;
   extraError?: string;
-  image: object;
+  image: File | null;
   food: string[];
 }
 
@@ -77,7 +77,9 @@ export const Register = () => {
 
   const emailCheck = () => {
     const email = watch('email');
-    onEmailConfirm(email);
+    if (email) {
+      onEmailConfirm(email);
+    }
   };
 
   // 닉네임 중복확인
@@ -98,7 +100,9 @@ export const Register = () => {
 
   const nicknameCheck = () => {
     const nickname = watch('nickname');
-    onNicknameConfirm(nickname);
+    if (nickname) {
+      onNicknameConfirm(nickname);
+    }
   };
 
   return (
