@@ -58,7 +58,6 @@ export interface ReplyType {
 }
 
 export interface CreateGroupType {
-  authorization: string;
   title: string;
   name: string;
   content: string;
@@ -70,4 +69,8 @@ export interface CreateGroupType {
   storeAddress: string;
   latitude: string;
   longitude: string;
+}
+
+export interface ModifyGroupType extends CreateGroupType {
+  groupId: number;
 }

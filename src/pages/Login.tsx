@@ -123,7 +123,6 @@ export type FormValues = {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const setSignedUserInfo = useSetRecoilState(signedUserInfo);
   const {
     register,
     handleSubmit,
@@ -140,12 +139,11 @@ const Login: React.FC = () => {
       expirationDate.setDate(expirationDate.getDate() + 14);
       (document.cookie = `refreshToken=${refreshToken}; expires=${expirationDate.toUTCString()}; path=/;`), [];
 
-      sessionStorage.setItem('accessToken', accessToken);
-
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
       const userInfo = await signedMemberInfo();
-      setSignedUserInfo(userInfo);
+      sessionStorage.setItem('nickname', userInfo.nickname);
+      sessionStorage.setItem('accessToken', accessToken);
 
       alert('로그인 되었습니다.');
       navigate('/');

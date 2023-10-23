@@ -33,6 +33,8 @@ const categories = [
 export const FindFoodmate = () => {
   const navigation = useNavigate();
   const myLocation = useCurrentLocation();
+  const token = sessionStorage.getItem('accessToken');
+
   const [selectedCategory, setSelectedCategory] = useState<string>('total');
   const [menuLabelModalOpened, setMenuLabelModalOpened] = useState<boolean>(false);
   const [datePickerModalOpened, setDatePickerModalOpened] = useState<boolean>(false);
@@ -106,6 +108,14 @@ export const FindFoodmate = () => {
     setSearchText('');
   };
 
+  const handlePost = () => {
+    if (token) {
+      navigation('/findfoodmate/newpost');
+    } else {
+      alert('로그인이 필요합니다.');
+    }
+  };
+
   const queryFetchGroups = async (
     {
       queryKey,
@@ -172,7 +182,7 @@ export const FindFoodmate = () => {
                 </div>
               </div>
             </div>
-            <BasicButton $fontSize="12px" onClick={() => navigation('/findfoodmate/newpost')}>
+            <BasicButton $fontSize="12px" onClick={handlePost}>
               모임 만들기
             </BasicButton>
           </div>

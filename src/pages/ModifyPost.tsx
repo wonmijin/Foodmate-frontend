@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { TinyEditor } from '../components/groupPost/TinyEditor';
@@ -12,23 +13,25 @@ import { GeocodeType } from '../types/mapType';
 import { removeDot } from '../utils/removeDot';
 import DatePicker from 'react-datepicker';
 import { fetchCall } from '../api/fetchCall';
-// import { createGroup } from '../api/groupApi';
 
-export const CreateGroupPost = () => {
+export const ModifyPost = () => {
   const navigation = useNavigate();
-  const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
-  const [content, setContent] = useState('');
+  const location = useLocation();
+  const postData = location.state?.postData;
+
+  const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState([postData.latitude, postData.longitude]);
+  const [content, setContent] = useState(postData.content);
   const [time, setTime] = useState(new Date());
   const [groupData, setGroupData] = useState({
-    title: '',
-    name: '',
-    food: '',
-    date: '',
-    maximum: 2,
-    storeName: '',
-    storeAddress: '',
-    latitude: '',
-    longitude: '',
+    title: postData.title,
+    name: postData.name,
+    food: postData.food,
+    date: postData.date,
+    maximum: postData.maximum,
+    storeName: postData.storeName,
+    storeAddress: postData.storeAddress,
+    latitude: postData.latitude,
+    longitude: postData.longitude,
   });
 
   const handleContent = (content: string) => {
@@ -53,10 +56,10 @@ export const CreateGroupPost = () => {
     }).open();
   };
 
-  const handlePost = async () => {
+  const handleModify = async () => {
     const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-    if (confirm('글을 작성할까요?')) {
-      await fetchCall('post', '/group', {
+    if (confirm('글을 수정할까요?')) {
+      await fetchCall('put', `/group/${postData.groupId}`, {
         title: groupData.title,
         name: groupData.name,
         content,
@@ -69,7 +72,7 @@ export const CreateGroupPost = () => {
         latitude: groupData.latitude,
         longitude: groupData.longitude,
       });
-      navigation('/findfoodmate');
+      navigation(`/findfoodmate/${postData.groupId}`);
     } else {
       return;
     }
@@ -86,6 +89,7 @@ export const CreateGroupPost = () => {
               </label>
               <br />
               <input
+                value={groupData.title}
                 id="input-title"
                 type="text"
                 placeholder="제목을 입력해 주세요"
@@ -98,6 +102,7 @@ export const CreateGroupPost = () => {
               </label>
               <br />
               <input
+                value={groupData.name}
                 id="input-group-name"
                 type="text"
                 placeholder="모임명을 입력해 주세요"
@@ -134,6 +139,7 @@ export const CreateGroupPost = () => {
               </label>
               <br />
               <input
+                value={groupData.date}
                 type="date"
                 id="date-title"
                 onChange={(e) => setGroupData((prev) => ({ ...prev, date: e.target.value }))}
@@ -164,6 +170,7 @@ export const CreateGroupPost = () => {
               <br />
               <div className="recruite">
                 <input
+                  value={groupData.maximum}
                   id="input-maximum"
                   type="number"
                   max={8}
@@ -186,6 +193,7 @@ export const CreateGroupPost = () => {
               value={groupData.storeAddress}
             />
             <input
+              value={groupData.storeName}
               type="text"
               onChange={(e) => setGroupData((prev) => ({ ...prev, storeName: e.target.value }))}
               placeholder="가게명을 입력해 주세요"
@@ -194,8 +202,8 @@ export const CreateGroupPost = () => {
           {meetingPlaceGeocode && <KakaoMap geoCode={meetingPlaceGeocode} />}
 
           <div className="buttons">
-            <BasicButton $fontSize="12px" onClick={handlePost}>
-              작성하기
+            <BasicButton $fontSize="12px" onClick={handleModify}>
+              수정하기
             </BasicButton>
             <BasicButton
               $fontSize="12px"
