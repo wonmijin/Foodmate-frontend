@@ -14,16 +14,6 @@ export const onSignIn = async (email: string, password: string) => {
   }
 };
 
-// 로그인된 유저 프로필
-export const signedMemberInfo = async () => {
-  try {
-    const result = await axios.get('/api/member');
-    return result.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 // 카카오로 로그인
 export const kakaoSignIn = async () => {
   try {

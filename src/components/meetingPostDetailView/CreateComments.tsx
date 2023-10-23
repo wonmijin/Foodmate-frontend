@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { useEffect, useState } from 'react';
-import { signedMemberInfo } from '../../api/memberApi';
 import { fetchCall } from '../../api/fetchCall';
 
 export const CreateComment = ({ groupId }: { groupId: number }) => {
@@ -10,7 +9,7 @@ export const CreateComment = ({ groupId }: { groupId: number }) => {
 
   useEffect(() => {
     (async () => {
-      const info = await signedMemberInfo();
+      const info = await fetchCall('get', '/member');
       setProfileImage(info.image);
     })();
   }, []);
@@ -18,6 +17,7 @@ export const CreateComment = ({ groupId }: { groupId: number }) => {
   const handleRegist = async () => {
     if (confirm('댓글을 등록할까요?')) {
       await fetchCall('post', `group/${groupId}/comment`, content);
+      setContent('');
     } else {
       return;
     }
@@ -29,7 +29,12 @@ export const CreateComment = ({ groupId }: { groupId: number }) => {
         <div className="photo">
           <img src={profileImage} alt="프로필" />
         </div>
-        <textarea rows={4} placeholder="댓글을 입력하세요" onChange={(e) => setContent(e.target.value)} />
+        <textarea
+          value={content}
+          rows={4}
+          placeholder="댓글을 입력하세요"
+          onChange={(e) => setContent(e.target.value)}
+        />
       </div>
       <div className="submit-button">
         <BasicButton $fontSize="10px" onClick={handleRegist}>

@@ -9,7 +9,7 @@ import { KakaoMap } from '../components/kakao/KakaoMap';
 import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
@@ -23,7 +23,7 @@ export const MeetingPostDetailView = () => {
     question: '',
     func: (() => {}) as () => void,
   });
-  const signedInUserInfo = sessionStorage.getItem('nickname');
+  const signedInUserNickname = sessionStorage.getItem('nickname');
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -60,11 +60,17 @@ export const MeetingPostDetailView = () => {
     enabled: !!groupId,
   });
 
+  const queryClient = useQueryClient();
+
   const {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
-  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)));
+  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)), {
+    onSuccess() {
+      queryClient.invalidateQueries(['comments']);
+    },
+  });
 
   if (commentsLoading) return '댓글 로딩중...';
   if (commentsError) return '댓글 에러';
@@ -144,7 +150,7 @@ export const MeetingPostDetailView = () => {
               <span>명</span>
             </div>
 
-            {signedInUserInfo === postData.nickname && (
+            {signedInUserNickname === postData.nickname && (
               <div>
                 <SmallGrayButton
                   onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
