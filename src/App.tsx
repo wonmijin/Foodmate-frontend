@@ -17,8 +17,11 @@ import { Quit } from './pages/Quit';
 import { Register } from './pages/Register';
 import ScrollToTop from './utils/ScrollToTop';
 import { ModifyPost } from './pages/ModifyPost';
+import { PrivateRoute } from './components/common/PrivateRoute';
 
 export const App = (): JSX.Element => {
+  const isSignedIn = !!sessionStorage.getItem('nickname');
+
   return (
     <>
       <Nav />
@@ -26,18 +29,17 @@ export const App = (): JSX.Element => {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<Login />} />
         <Route path="/findfoodmate" element={<FindFoodmate />} />
         <Route path="/findfoodmate/:groupId" element={<MeetingPostDetailView />} />
         <Route path="/findfoodmate/newpost" element={<CreateGroupPost />} />
         <Route path="/findfoodmate/modify/:groupId" element={<ModifyPost />} />
         <Route path="/neighborhood" element={<Neighborhood />} />
         <Route path="/register" element={<Register />} />
-        <Route path="meeting-info/history" element={<History />} />
-        <Route path="meeting-info/inquiry" element={<Inquiry />} />
-        <Route path="mypage/modify-profile" element={<Profile />} />
-        <Route path="mypage/modify-password" element={<Password />} />
-        <Route path="mypage/modify-quit" element={<Quit />} />
+        <Route path="meeting-info/history" element={<PrivateRoute component={History} isSignedIn={isSignedIn} />} />
+        <Route path="meeting-info/inquiry" element={<PrivateRoute component={Inquiry} isSignedIn={isSignedIn} />} />
+        <Route path="mypage/modify-profile" element={<PrivateRoute component={Profile} isSignedIn={isSignedIn} />} />
+        <Route path="mypage/modify-password" element={<PrivateRoute component={Password} isSignedIn={isSignedIn} />} />
+        <Route path="mypage/modify-quit" element={<PrivateRoute component={Quit} isSignedIn={isSignedIn} />} />
       </Routes>
       <Chat />
       <Footer />
