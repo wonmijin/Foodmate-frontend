@@ -52,11 +52,9 @@ const ChatHomeMain = styled.main`
   );
   padding: 10px 9px;
   border-radius: 0 0 24px 24px;
-  /* min-height: 300px; */
 
   .mini-message-icon {
     border-radius: 24px;
-    background-color: ${(props) => props.theme.color.ORANGE};
     width: 35px;
     height: 35px;
     display: flex;
@@ -189,6 +187,7 @@ const RecentChatroomMessage = ({ selectChatRoom }: RecentChatroomMessageProps) =
     });
 
     setRecentChatroom(chatroomList[0]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatroomList]);
 
   if (recentChatroom === null) {

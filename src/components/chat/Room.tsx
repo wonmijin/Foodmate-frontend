@@ -13,7 +13,6 @@ interface RoomProps {
 
 const ChatRoomContainer = styled.div`
   height: calc(100% - 63px);
-  width: 100%;
   display: grid;
   grid-template-rows: 70px 1fr;
 `;
@@ -47,7 +46,7 @@ const ChatRoomMessage = styled.div`
     border-radius: 12px;
     margin-left: 10px;
     margin-right: 20px;
-    width: 314px;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
