@@ -9,6 +9,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { fetchCall } from '../api/fetchCall';
 import { refreshTokens } from '../utils/getRefreshTokenCookie';
+import { useSetRecoilState } from 'recoil';
+import { isSignenIn } from '../store/login';
 
 const LoginWrap = styled.div`
   margin: 150px auto 0;
@@ -123,6 +125,7 @@ interface ErrorResponse {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const setIsSignenIn = useSetRecoilState(isSignenIn);
   const {
     register,
     handleSubmit,
@@ -144,6 +147,7 @@ const Login: React.FC = () => {
 
       const userInfo = await fetchCall('get', '/member');
       sessionStorage.setItem('nickname', userInfo.nickname);
+      setIsSignenIn(true);
 
       alert('로그인 되었습니다.');
       navigate('/');
