@@ -115,6 +115,7 @@ const Modal = styled.div`
   .like-box {
     display: flex;
     gap: 4px;
+    margin-top: 4px;
 
     .icon {
       font-size: 25px;
@@ -131,11 +132,13 @@ const Modal = styled.div`
     text-align: center;
 
     & > div:first-child {
+      font-size: 18px;
       font-weight: 900;
+      padding: 4px 0;
     }
 
     & > div:last-child {
-      font-size: 12px;
+      font-size: 14px;
       color: #858585;
     }
   }
