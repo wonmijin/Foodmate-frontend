@@ -5,4 +5,5 @@ export interface UserInfoType {
   image: string;
   likes: number;
   food: string[];
+  status: boolean;
 }

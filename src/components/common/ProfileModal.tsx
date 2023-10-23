@@ -5,7 +5,7 @@ import { BasicButton } from './BasicButton';
 import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
 import { fetchCall } from '../../api/fetchCall';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { userProfileView } from '../../api/memberApi';
 
 interface ProfileModalProps {
@@ -18,19 +18,14 @@ export const ProfileModal = ({ userInfo, handleProfileModal, setSelectedUserInfo
   const favoriteFoods = LABELCOLOR.filter((item) => userInfo.food.includes(item.menu));
   const [currentLikes, setCurrentLikes] = useState(userInfo.likes);
   const [heartState, setHeartState] = useState(false);
-  //heartState 의 초기값을, 어떻게 해야 할까?
+
+  useEffect(() => {
+    setHeartState(userInfo.status);
+  }, []);
 
   const handleLike = async (memberId: number) => {
     const result = await fetchCall('post', `/member/${memberId}/likes`);
-    console.log('좋아요 API 응답값', result);
-    console.log('현재 유저 정보', userInfo.likes);
-
-    if (result >= userInfo.likes) {
-      setHeartState(true);
-    } else {
-      setHeartState(false);
-    }
-
+    setHeartState((prev) => !prev);
     setCurrentLikes(result);
   };
 
