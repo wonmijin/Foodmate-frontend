@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
+import { MenuLabel } from '../common/MenuLabel';
 
 export const Food = () => {
   const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
@@ -37,4 +37,15 @@ const MenuLabelsContainer = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 4px;
+
+  span {
+    display: flex;
+    padding: 6px 12px;
+    width: 140px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 16px;
+    cursor: pointer;
+    justify-content: center;
+  }
 `;

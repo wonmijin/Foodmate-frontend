@@ -2,29 +2,18 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { BasicButton } from '../common/BasicButton';
 import { AlertModal } from '../common/AlertModal';
+import { MeetingRequestDataType } from '../../types/postCardType';
+import { useRecoilValue } from 'recoil';
+import { requestCategory } from '../../store/meetingInfo';
+import { fetchCall } from '../../api/fetchCall';
 
-interface MeetingInfoDataType {
-  enrollmentId: number;
-  groupId: number;
-  memberId: number;
-  nickname: string;
-  image: string;
-  title: string;
-  name: string;
-  food: string;
-  date: string;
-  time: string;
-  maximum: number;
-  storeName: string;
-  storeAddress: string;
-}
-
-export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: MeetingInfoDataType }) => {
+export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: MeetingRequestDataType }) => {
   const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState({
     question: '',
     func: (() => {}) as () => void,
   });
+  const currentCategory = useRecoilValue(requestCategory);
 
   const handleAccept = () => {
     alert('수락했어요!');
@@ -33,14 +22,16 @@ export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: M
     alert('거절했어요!');
   };
 
-  const handelButtons = (result: string, question: string) => {
+  const handelButtons = async (result: string, question: string, enrollmentId: number) => {
     setIsOpenedAlertModal(true);
     setAlertModalContent((prev) => ({ ...prev, question: question }));
 
     if (result === '수락') {
       setAlertModalContent((prev) => ({ ...prev, func: handleAccept }));
+      await fetchCall('patch', `/enrollment/${enrollmentId}/accept`);
     } else if (result === '거절') {
       setAlertModalContent((prev) => ({ ...prev, func: handleRefuse }));
+      await fetchCall('patch', `/enrollment/${enrollmentId}/refuse`);
     }
   };
 
@@ -58,21 +49,26 @@ export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: M
           </div>
         </div>
       </LeftSection>
-      <RightSection>
-        <BasicButton $fontSize="14px" onClick={() => handelButtons('수락', '모임에 참여 시킬까요?')}>
-          수락
-        </BasicButton>
-        <BasicButton
-          $fontSize="14px"
-          $backgdColor="inherit"
-          $borderColor="#9c9c9c"
-          $fontColor="#9c9c9c"
-          $hoverBackgdColor="#9c9c9c30"
-          onClick={() => handelButtons('거절', '정말 거절할까요?')}
-        >
-          거절
-        </BasicButton>
-      </RightSection>
+      {currentCategory === '받은 요청' && (
+        <RightSection>
+          <BasicButton
+            $fontSize="14px"
+            onClick={() => handelButtons('수락', '모임에 참여 시킬까요?', meetingInfoData.enrollmentId)}
+          >
+            수락
+          </BasicButton>
+          <BasicButton
+            $fontSize="14px"
+            $backgdColor="inherit"
+            $borderColor="#9c9c9c"
+            $fontColor="#9c9c9c"
+            $hoverBackgdColor="#9c9c9c30"
+            onClick={() => handelButtons('거절', '정말 거절할까요?', meetingInfoData.enrollmentId)}
+          >
+            거절
+          </BasicButton>
+        </RightSection>
+      )}
 
       {isOpenedAlertModal && (
         <AlertModal handleYesClick={alertModalContent.func} handleAlertModal={setIsOpenedAlertModal}>

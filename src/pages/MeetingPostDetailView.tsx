@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicButton } from '../components/common/BasicButton';
@@ -6,51 +8,104 @@ import { LABELCOLOR } from '../constants/menu';
 import { KakaoMap } from '../components/kakao/KakaoMap';
 import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
-import { PostCardType } from '../types/postCardType';
+import { useParams } from 'react-router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getDetailGroup, getPostComments } from '../api/groupApi';
+import { AlertModal } from '../components/common/AlertModal';
+import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
+import { fetchCall } from '../api/fetchCall';
+import { userProfileView } from '../api/memberApi';
+import { UserInfoType } from '../types/userInfoType';
+import { ProfileModal } from '../components/common/ProfileModal';
+import { useRecoilState } from 'recoil';
+import { profileModalIsOpened } from '../store/userInfo';
 
 export const MeetingPostDetailView = () => {
-  //   const { groupId } = useParams();
-  // groupId로 특정 모임 상세 조회 API 요청 후 뿌리기
-  // 아래는 임시 더미 데이터
-  const postDetailInfo: PostCardType = {
-    groupId: 1,
-    memberId: 1,
-    nickname: '띠띠',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM4vHdExU4YJF6ejyLvoWb5Ojt1QcmM8d7BiXtalvKeQxvXRnTSampcNTMuciVrZzoazY&usqp=CAU',
-    title: '치킨 먹을 사람',
-    name: '수료시켜조',
-    content: '오늘 치맥 한잔 하러 갈 사람 모여라!!',
-    food: '치킨',
-    date: '2023-09-25',
-    time: '18:30',
-    maximum: 8,
-    current: 5,
-    storeName: 'BBQ 홍대점',
-    storeAddress: '서울 마포구 연희로 3',
-    latitude: '37.55917',
-    longitude: '126.92612',
-    createdDate: '2023-09-12T12:34:56Z',
-    chatRoomId: 1,
+  const navigation = useNavigate();
+  const { groupId } = useParams();
+  const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
+  const [alertModalContent, setAlertModalContent] = useState({
+    question: '',
+    func: (() => {}) as () => void,
+  });
+  const signedInUserNickname = sessionStorage.getItem('nickname');
+  const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
+  const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
+
+  const joinedMeeting = () => {
+    alert('모임에 참여했어요!');
+  };
+  const joinedChat = () => {
+    alert('대화에 참여했어요!');
   };
 
-  const selectedFoods = LABELCOLOR.find((item) => postDetailInfo.food.includes(item.menu)) || { menu: '', color: '' };
+  const handleAttend = (event: string, question: string) => {
+    setIsOpenedAlertModal(true);
+    setAlertModalContent((prev) => ({ ...prev, question: question }));
 
-  const geoCode = [postDetailInfo.latitude, postDetailInfo.longitude];
+    if (event === '모임') {
+      setAlertModalContent((prev) => ({ ...prev, func: joinedMeeting }));
+    } else if (event === '대화') {
+      setAlertModalContent((prev) => ({ ...prev, func: joinedChat }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (confirm('정말 삭제할까요?') && groupId) {
+      await fetchCall('delete', `/group/${groupId}`);
+      navigation('/findfoodmate');
+    } else {
+      return;
+    }
+  };
+
+  const handleProfileImage = async (nickname: string) => {
+    const selectedUser = await userProfileView(nickname);
+    setSelectedUserInfo(selectedUser);
+    setIsProfileModalOpen(true);
+  };
+
+  const {
+    data: postData,
+    isLoading: postDataLoading,
+    error: postDataError,
+  } = useQuery(['detailGroup'], () => groupId && getDetailGroup(parseInt(groupId)), {
+    enabled: !!groupId,
+  });
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: commentsData,
+    isLoading: commentsLoading,
+    error: commentsError,
+  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)), {
+    onSuccess() {
+      queryClient.invalidateQueries(['comments']);
+    },
+  });
+
+  if (commentsLoading) return '댓글 로딩중...';
+  if (commentsError) return '댓글 에러';
+  if (postDataLoading) return '모임글 로딩중...';
+  if (postDataError) return '모임글 에러';
+
+  const selectedFoods = LABELCOLOR.find((item) => postData.food.includes(item.menu)) || { menu: '', color: '' };
+  const geoCode = [postData.latitude, postData.longitude];
 
   return (
     <PostContainer>
       <BasicPadding>
         <div className="post-box">
-          <h2>{postDetailInfo.title}</h2>
+          <h2>{postData.title}</h2>
           <div className="user-menu-wrap">
             <div className="user-info">
-              <div className="photo">
-                <img src={postDetailInfo.image} />
+              <div className="photo" onClick={() => handleProfileImage(postData.nickname)}>
+                <img src={postData.image} alt="프로필" />
               </div>
               <div>
-                <div className="nickname">{postDetailInfo.nickname}</div>
-                <div className="created-date">{postDetailInfo.createdDate}</div>
+                <div className="nickname">{postData.nickname}</div>
+                <div className="created-date">{postData.createdDate}</div>
               </div>
             </div>
             <div>
@@ -63,24 +118,24 @@ export const MeetingPostDetailView = () => {
           <div
             className="description"
             dangerouslySetInnerHTML={{
-              __html: postDetailInfo.content,
+              __html: postData.content,
             }}
           ></div>
           <MeetingInfoGrid>
             <div className="meeting-name">
               <div className="sub-title">모임명</div>
-              <div>{postDetailInfo.name}</div>
+              <div>{postData.name}</div>
             </div>
             <div className="where">
               <div className="sub-title">어디서?</div>
               <div>
-                <strong>{postDetailInfo.storeName}</strong>
+                <strong>{postData.storeName}</strong>
               </div>
-              <div>{postDetailInfo.storeAddress}</div>
+              <div>{postData.storeAddress}</div>
             </div>
             <div className="when">
               <div className="sub-title">언제?</div>
-              <div>{postDetailInfo.date}</div>
+              <div>{postData.date}</div>
             </div>
           </MeetingInfoGrid>
 
@@ -89,25 +144,53 @@ export const MeetingPostDetailView = () => {
           </MapContainer>
 
           <div className="basic-buttons-wrap">
-            <BasicButton $fontSize="12px">모임 참여</BasicButton>
-            <BasicButton $fontSize="12px" $backgdColor="#c0c0c0" $hoverBackgdColor="#b6b6b6">
+            <BasicButton $fontSize="12px" onClick={() => handleAttend('모임', '모임에 참여할까요?')}>
+              모임 참여
+            </BasicButton>
+            <BasicButton
+              $fontSize="12px"
+              onClick={() => handleAttend('대화', '대화에 참여할까요?')}
+              $backgdColor="#c0c0c0"
+              $hoverBackgdColor="#b6b6b6"
+            >
               대화 참여
             </BasicButton>
           </div>
 
           <RightAlign>
             <div className="personnel">
-              {postDetailInfo.current} / {postDetailInfo.maximum}
+              {postData.current} / {postData.maximum}
               <span>명</span>
             </div>
 
-            <div>
-              <SmallGrayButton onClick={() => ''}>수정</SmallGrayButton>
-              <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
-            </div>
+            {signedInUserNickname === postData.nickname && (
+              <div>
+                <SmallGrayButton
+                  onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
+                >
+                  수정
+                </SmallGrayButton>{' '}
+                <SmallGrayButton onClick={handleDelete}>삭제</SmallGrayButton>
+              </div>
+            )}
           </RightAlign>
         </div>
-        <Comments />
+        {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
+        <Comments
+          commentsData={commentsData.content}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
+
+        {isOpenedAlertModal && (
+          <AlertModal handleYesClick={alertModalContent.func} handleAlertModal={setIsOpenedAlertModal}>
+            {alertModalContent.question}
+          </AlertModal>
+        )}
+
+        {isProfileModalOpened && selectedUserInfo && (
+          <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+        )}
       </BasicPadding>
     </PostContainer>
   );

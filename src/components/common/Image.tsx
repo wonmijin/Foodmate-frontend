@@ -3,7 +3,7 @@ import defaultImg from '../../assets/error.png';
 import styled from 'styled-components';
 
 interface ImageProps {
-  key: string;
+  imageKey: string;
   alt: string;
   imageUrl: string;
   crossOrigin?: 'anonymous' | 'use-credentials' | '';
@@ -27,17 +27,17 @@ const ErrorImg = styled.img`
   height: 60%;
 `;
 
-const Image = ({ key, alt, imageUrl, crossOrigin }: ImageProps) => {
+const Image = ({ imageKey, alt, imageUrl, crossOrigin }: ImageProps) => {
   const [src, status] = useImage(imageUrl, crossOrigin);
 
-  if (status === Status.loading) {
+  if (imageUrl !== null && status === Status.loading) {
     return <Spinner src="src/assets/spinner.gif" />;
   }
 
-  return status === Status.failed ? (
+  return (status === Status.failed || imageUrl === null) ? (
     <ErrorImg src={defaultImg} />
   ) : (
-    <Img src={src} crossOrigin={crossOrigin} key={key} alt={alt} />
+    <Img src={src} crossOrigin={crossOrigin} key={imageKey} alt={alt} />
   );
 };
 

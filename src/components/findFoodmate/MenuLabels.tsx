@@ -3,19 +3,30 @@ import styled from 'styled-components';
 import { MenuLabel } from '../common/MenuLabel';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { LABELCOLOR } from '../../constants/menu';
+import { BasicButton } from '../common/BasicButton';
 
 interface MenuLabelsPropsType {
-  handleMenuLabelModal?: (isOpen: boolean) => void;
+  handleMenuLabelModal: (isOpen: boolean) => void;
+  handleSelectedMenus: (menu: string[]) => void;
 }
 
-export const MenuLabels = ({ handleMenuLabelModal }: MenuLabelsPropsType) => {
+export const MenuLabels = ({ handleMenuLabelModal, handleSelectedMenus }: MenuLabelsPropsType) => {
   const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
 
   const handleLabels = (menu: string) => {
     const updatedSelectedMenus = selectedMenus.includes(menu)
       ? selectedMenus.filter((selectedMenu) => selectedMenu !== menu)
-      : [...selectedMenus, menu];
+      : [...new Set([...selectedMenus, menu])];
     setSelectedMenus(updatedSelectedMenus);
+  };
+
+  const handleSelectComplete = () => {
+    const modifiedArr = selectedMenus.map((item) => {
+      return item.replace(/·/g, '');
+    });
+
+    handleSelectedMenus(modifiedArr);
+    handleMenuLabelModal(false);
   };
 
   return (
@@ -32,6 +43,15 @@ export const MenuLabels = ({ handleMenuLabelModal }: MenuLabelsPropsType) => {
       <div className="close-button" onClick={() => handleMenuLabelModal && handleMenuLabelModal(false)}>
         <AiFillCloseCircle />
       </div>
+      <BasicButton
+        onClick={handleSelectComplete}
+        $fontSize="12px"
+        $backgdColor="#acacac"
+        $fontColor="#fff"
+        $hoverBackgdColor="#8c8c8c"
+      >
+        선택 완료
+      </BasicButton>
     </MenuLabelsContainer>
   );
 };
@@ -61,5 +81,10 @@ const MenuLabelsContainer = styled.div`
     &:hover {
       color: ${(props) => props.theme.color.ORANGE};
     }
+  }
+
+  & > button {
+    width: 20%;
+    margin-top: 12px;
   }
 `;

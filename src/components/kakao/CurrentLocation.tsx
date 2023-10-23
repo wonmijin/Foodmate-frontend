@@ -1,25 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { styled } from 'styled-components';
+import useCurrentLocation from '../../hooks/useCurrentLocation';
 const { kakao } = window;
 
-export const CurrentLocation = () => {
-  const [myLocation, setMyLocation] = useState('');
+interface geoCodeArrType {
+  latitude: string;
+  longitude: string;
+}
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-          const userLocation = new kakao.maps.LatLng(userLat, userLng);
-          setMyLocation(userLocation);
-        },
-        (error) => {
-          console.error('Error getting user location:', error);
-        },
-      );
-    }
-  }, []);
+export const CurrentLocation = ({ geoCodeArr }: { geoCodeArr: geoCodeArrType[] }) => {
+  const myLocation = useCurrentLocation();
 
   useEffect(() => {
     if (myLocation) {
@@ -57,8 +47,17 @@ export const CurrentLocation = () => {
       };
       const circle = new kakao.maps.Circle(circleOptions);
       circle.setMap(map);
+
+      // 모임 마커 표시
+      geoCodeArr.forEach(({ latitude, longitude }) => {
+        const markerPosition = new kakao.maps.LatLng(Number(latitude), Number(longitude));
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+        });
+        marker.setMap(map);
+      });
     }
-  }, [myLocation]);
+  }, [myLocation, geoCodeArr]);
 
   return (
     <>

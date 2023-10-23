@@ -1,32 +1,46 @@
 import styled from 'styled-components';
-import mainbg from '../../assets/mainbg.png';
-import { BasicButton } from '../common/BasicButton';
-import { ImSearch } from 'react-icons/im';
+import mainBg from '../../assets/main-background.png';
 import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
-import { searchData } from '../../mocks/serchData';
 import { useNavigate } from 'react-router-dom';
+import { useQuickSearch } from '../../hooks/useQuickSearch';
+import { useMediaQuery } from 'react-responsive';
 
 const MainBg = styled.div`
   width: 100%;
   height: calc(100vh - 60px);
-  background: url(${mainbg}) no-repeat center;
+  background: center / cover no-repeat url(${mainBg});
+
+  @media only screen and (max-width: 1200px) {
+    height: 413px;
+  }
 
   .bg-filter {
     width: 100%;
     height: calc(100vh - 60px);
     position: absolute;
     background-color: rgb(130, 130, 130, 0.5);
+
+    @media only screen and (max-width: 1200px) {
+      height: 413px;
+    }
   }
 `;
 
 const MainText = styled.h2`
   color: #fff;
-  font-size: 50px;
+  font-size: 2.25rem;
+  line-height: 3rem;
   width: 100%;
   text-align: center;
+
   > span {
     color: #ffe782;
+  }
+
+  @media only screen and (max-width: 768px) {
+    font-size: 2rem;
+    line-height: 2.75rem;
   }
 `;
 
@@ -39,6 +53,23 @@ const MainSearchContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
+
+  @media only screen and (max-width: 1200px) {
+    width: 65%;
+    padding: 14px;
+  }
+
+  @media only screen and (max-width: 992px) {
+    width: 70%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 75%;
+  }
+
+  @media only screen and (max-width: 414px) {
+    padding: 11px;
+  }
 `;
 
 const SearchInputContainer = styled.div`
@@ -59,23 +90,25 @@ const SearchPopup = styled.div`
   .item-list {
     display: flex;
     align-items: center;
-    padding: 5px 24px 5px 16px;
+    padding: 5px 16px;
     height: 40px;
     background-color: #fff;
     color: ${(props) => props.theme.color.BLACK};
+    cursor: pointer;
+    font-size: 0.813rem;
 
     &:hover {
       background-color: #eee;
+      font-weight: bold;
     }
 
-    &.active {
-      background-color: #ffcc0021;
-      font-weight: bold;
+    @media only screen and (max-width: 414px) {
+      padding: 5px 8px;
     }
 
     .item-text {
       display: inline-block;
-      width: 118px;
+      width: 200px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -83,17 +116,40 @@ const SearchPopup = styled.div`
       border-right: 1px solid #ccc;
       margin-right: 15px;
       padding-right: 5px;
+
+      @media only screen and (max-width: 768px) {
+        margin-right: 0;
+        text-align: center;
+      }
     }
+  }
+
+  .item-list .item-text:last-child {
+    border-right: none;
+    padding-right: 0px;
   }
 `;
 
 const SearchInput = styled.input`
   display: inline-block;
-  padding: 14px;
+  padding: 11px;
   background-color: #f5f5f5;
   border: none;
   width: 98%;
   border-radius: 8px;
+
+  @media only screen and (max-width: 768px) {
+    padding: 11px;
+  }
+
+  @media only screen and (max-width: 414px) {
+    padding: 10px;
+    font-size: 0.625rem;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const MainContentsContainer = styled.div`
@@ -108,18 +164,6 @@ const MainContentsContainer = styled.div`
   align-items: center;
 `;
 
-const Shortcuts = styled.div`
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  white-space: nowrap;
-  .iconDiv {
-    margin-right: 10px;
-    font-size: 12px;
-  }
-`;
-
 const Skeleton = styled.img`
   width: 100%;
 `;
@@ -127,7 +171,7 @@ const Skeleton = styled.img`
 type SearchItem = {
   groupId: number;
   postTitle: string;
-  groupName: string;
+  nickname: string;
   foodName: string;
 };
 
@@ -137,31 +181,41 @@ export const Search = () => {
   const [searchKeyword, inputKeyword, setInputKeyword] = useDebounce<string>('', 500);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [isOnSkeleton, setIsOnSkeleton] = useState<boolean>(false);
+  const [isOpenSearchPopup, setIsOpenSearchPopup] = useState<boolean>(false);
+  const { data: searchData } = useQuickSearch(searchKeyword);
 
   useEffect(() => {
     setSelectedGroupId(null);
-    if (searchKeyword.length === 0) {
+    if (searchData === undefined || searchData.content.length === 0) {
       setSearchList([]);
+      setIsOpenSearchPopup(false);
       return;
     }
 
     const newSearchList: SearchItem[] = [];
 
-    searchData[0].list2.slice(0, 5).forEach((value) => {
+    searchData.content.slice(0, 5).forEach((value) => {
       newSearchList.push({
         groupId: value.groupId,
         postTitle: value.title,
-        groupName: value.name,
+        nickname: value.nickname,
         foodName: value.food,
       });
     });
 
     setSearchList(newSearchList);
     setIsOnSkeleton(false);
-  }, [searchKeyword]);
+  }, [searchData]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsOnSkeleton(true);
+    if (e.target.value.length === 0) {
+      setIsOnSkeleton(false);
+      setIsOpenSearchPopup(false);
+    } else {
+      setIsOnSkeleton(true);
+      setIsOpenSearchPopup(true);
+    }
+
     setInputKeyword(e.target.value);
   };
 
@@ -173,22 +227,36 @@ export const Search = () => {
     }
     (e.currentTarget as Element).classList.add('active');
     setSelectedGroupId(item.groupId);
+
+    if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
   };
+
+  const isPC = useMediaQuery({ query: '(min-width : 992px)' });
+
   return (
     <MainBg>
       <div className="bg-filter"></div>
       <MainContentsContainer>
         <MainText>
-          당신의 <span>Food Mate</span>를 찾아보세요
+          {isPC ? (
+            <>
+              당신의 <span>Food Mate</span>를 찾아보세요
+            </>
+          ) : (
+            <>
+              당신의 <span>Food Mate</span>를<br /> 찾아보세요
+            </>
+          )}
         </MainText>
         <MainSearchContainer>
           <SearchInputContainer>
             <SearchInput
+              autoFocus
               value={inputKeyword}
               onChange={onChange}
-              placeholder="원하는 음식으로 활성화된 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
+              placeholder="원하는 음식으로 모임을 찾아보세요(ex. 🍕, 🍗, 🍷)"
             />
-            {searchList.length === 0 ? (
+            {isOpenSearchPopup === false ? (
               ''
             ) : (
               <SearchPopup>
@@ -199,11 +267,19 @@ export const Search = () => {
                     {searchList.map((item, index) => {
                       return (
                         <li key={index} className="item-list" onClick={(e) => selectGroup(item, e)}>
-                          글제목:&nbsp;
-                          <span className="item-text">{item.postTitle}</span>
-                          모임명:&nbsp;
-                          <span className="item-text">{item.groupName}</span>
-                          음식명:&nbsp; <span> {item.foodName}</span>
+                          {isPC ? (
+                            <>
+                              <span className="item-text">글제목:&nbsp;{item.postTitle}</span>
+                              <span className="item-text">음식명:&nbsp;{item.foodName}</span>
+                              <span className="item-text">모임장 닉네임:&nbsp;{item.nickname}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="item-text">{item.postTitle}</span>
+                              <span className="item-text">{item.foodName}</span>
+                              <span className="item-text">{item.nickname}</span>
+                            </>
+                          )}
                         </li>
                       );
                     })}
@@ -212,23 +288,6 @@ export const Search = () => {
               </SearchPopup>
             )}
           </SearchInputContainer>
-          <BasicButton
-            onClick={() => {
-              if (selectedGroupId !== null) navigate(`/findfoodmate/${selectedGroupId}`);
-            }}
-            $fontSize={'16px'}
-            $fontColor="#fff"
-            $backgdColor={'#f96223'}
-            $hoverBackgdColor={'#fb8958'}
-            $borderColor={'transparent'}
-          >
-            <Shortcuts>
-              <div className="iconDiv">
-                <ImSearch />
-              </div>
-              모임 바로가기
-            </Shortcuts>
-          </BasicButton>
         </MainSearchContainer>
       </MainContentsContainer>
     </MainBg>

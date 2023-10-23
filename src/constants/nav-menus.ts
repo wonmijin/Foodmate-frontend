@@ -3,7 +3,7 @@ export const NAV_MENUS: {
   title: string;
   subList?: { path: string; title: string }[];
 }[] = [
-  { path: 'findfoodmate', title: '밥 친구 구해요' },
+  { path: 'findfoodmate', title: 'FoodMate 구해요' },
   { path: 'neighborhood', title: '내 근처 모임' },
   {
     path: 'meeting-info',
@@ -13,5 +13,13 @@ export const NAV_MENUS: {
       { path: 'meeting-info/inquiry', title: '요청 조회' },
     ],
   },
-  { path: 'mypage', title: '마이페이지' },
+  {
+    path: 'mypage',
+    title: '마이페이지',
+    subList: [
+      { path: 'mypage/modify-profile', title: '프로필 수정' },
+      { path: 'mypage/modify-password', title: '비밀번호 변경' },
+      { path: 'mypage/modify-quit', title: '회원 탈퇴' },
+    ],
+  },
 ];

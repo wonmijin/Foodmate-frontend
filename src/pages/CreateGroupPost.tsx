@@ -9,19 +9,26 @@ import { useNavigate } from 'react-router-dom';
 import { getGeocode } from '../components/kakao/getGeocode';
 import { KakaoMap } from '../components/kakao/KakaoMap';
 import { GeocodeType } from '../types/mapType';
+import { removeDot } from '../utils/removeDot';
+import DatePicker from 'react-datepicker';
+import { fetchCall } from '../api/fetchCall';
+// import { createGroup } from '../api/groupApi';
 
 export const CreateGroupPost = () => {
   const navigation = useNavigate();
   const [meetingPlaceGeocode, setMeetingPlaceGeocode] = useState<string[]>(['', '']);
   const [content, setContent] = useState('');
+  const [time, setTime] = useState(new Date());
   const [groupData, setGroupData] = useState({
     title: '',
-    groupName: '',
-    selectedMenu: '',
-    meetingDate: '',
-    maximum: '',
-    meetingAddress: '',
-    store: '',
+    name: '',
+    food: '',
+    date: '',
+    maximum: 2,
+    storeName: '',
+    storeAddress: '',
+    latitude: '',
+    longitude: '',
   });
 
   const handleContent = (content: string) => {
@@ -29,7 +36,8 @@ export const CreateGroupPost = () => {
   };
 
   const handleLabels = (menu: string) => {
-    setGroupData((prev) => ({ ...prev, selectedMenu: menu }));
+    const modifiedFood = removeDot(menu);
+    setGroupData((prev) => ({ ...prev, food: modifiedFood }));
   };
 
   const getAddress = () => {
@@ -37,11 +45,34 @@ export const CreateGroupPost = () => {
       oncomplete: async (data) => {
         const fullAddress = data.address;
         const extraAddress = '';
-        setGroupData((prev) => ({ ...prev, meetingAddress: fullAddress + ' ' + extraAddress }));
+        setGroupData((prev) => ({ ...prev, storeAddress: fullAddress + ' ' + extraAddress }));
         const geocode: GeocodeType = await getGeocode(fullAddress);
         setMeetingPlaceGeocode([geocode.La, geocode.Ma]);
+        setGroupData((prev) => ({ ...prev, latitude: geocode.La, longitude: geocode.Ma }));
       },
     }).open();
+  };
+
+  const handlePost = async () => {
+    const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+    if (confirm('글을 작성할까요?')) {
+      await fetchCall('post', '/group', {
+        title: groupData.title,
+        name: groupData.name,
+        content,
+        food: groupData.food,
+        date: groupData.date,
+        time: timeString,
+        maximum: groupData.maximum,
+        storeName: groupData.storeName,
+        storeAddress: groupData.storeAddress,
+        latitude: groupData.latitude,
+        longitude: groupData.longitude,
+      });
+      navigation('/findfoodmate');
+    } else {
+      return;
+    }
   };
 
   return (
@@ -70,7 +101,7 @@ export const CreateGroupPost = () => {
                 id="input-group-name"
                 type="text"
                 placeholder="모임명을 입력해 주세요"
-                onChange={(e) => setGroupData((prev) => ({ ...prev, groupName: e.target.value }))}
+                onChange={(e) => setGroupData((prev) => ({ ...prev, name: e.target.value }))}
               />
             </div>
           </div>
@@ -84,9 +115,10 @@ export const CreateGroupPost = () => {
             <div className="title">음식 선택</div>
             <div className="menu-labels">
               {LABELCOLOR.map((item, idx) => {
+                const isSelected = removeDot(groupData.food).includes(removeDot(item.menu));
                 return (
                   <div className="menu-label" key={idx}>
-                    <MenuLabel $menuColor={item.color} onClick={() => handleLabels(item.menu)}>
+                    <MenuLabel $menuColor={item.color} $isSelected={isSelected} onClick={() => handleLabels(item.menu)}>
                       {item.menu}
                     </MenuLabel>
                   </div>
@@ -104,7 +136,24 @@ export const CreateGroupPost = () => {
               <input
                 type="date"
                 id="date-title"
-                onChange={(e) => setGroupData((prev) => ({ ...prev, meetingDate: e.target.value }))}
+                onChange={(e) => setGroupData((prev) => ({ ...prev, date: e.target.value }))}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="time-title" className="title">
+                모임 시간
+              </label>
+              <br />
+              <DatePicker
+                id="time-title"
+                selected={time}
+                onChange={(date) => date && setTime(date)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
               />
             </div>
 
@@ -120,7 +169,7 @@ export const CreateGroupPost = () => {
                   max={8}
                   min={2}
                   placeholder="2"
-                  onChange={(e) => setGroupData((prev) => ({ ...prev, maximum: e.target.value }))}
+                  onChange={(e) => setGroupData((prev) => ({ ...prev, maximum: parseInt(e.target.value) }))}
                 />
                 <span>명</span>
               </div>
@@ -131,20 +180,23 @@ export const CreateGroupPost = () => {
             <div className="title">모임 장소</div>
             <input
               type="text"
+              readOnly
               onClick={getAddress}
               placeholder="주소를 입력해 주세요"
-              value={groupData.meetingAddress}
+              value={groupData.storeAddress}
             />
             <input
               type="text"
+              onChange={(e) => setGroupData((prev) => ({ ...prev, storeName: e.target.value }))}
               placeholder="가게명을 입력해 주세요"
-              onChange={(e) => setGroupData((prev) => ({ ...prev, store: e.target.value }))}
             />
           </div>
           {meetingPlaceGeocode && <KakaoMap geoCode={meetingPlaceGeocode} />}
 
           <div className="buttons">
-            <BasicButton $fontSize="12px">작성하기</BasicButton>
+            <BasicButton $fontSize="12px" onClick={handlePost}>
+              작성하기
+            </BasicButton>
             <BasicButton
               $fontSize="12px"
               $backgdColor="#c0c0c0"
