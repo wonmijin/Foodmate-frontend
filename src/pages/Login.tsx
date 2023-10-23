@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { styled } from 'styled-components';
 import kakao from '../assets/kakao_login_large.png';
-import { kakaoSignIn, onSignIn, signedMemberInfo } from '../api/memberApi';
+import { kakaoSignIn, onSignIn } from '../api/memberApi';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
