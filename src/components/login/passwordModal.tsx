@@ -16,6 +16,14 @@ export const PasswordModal = (props: PasswordModalType) => {
         <input type="text"></input>
         <PasswordButton>
           <BasicButton $fontSize="12px">확인</BasicButton>
+          <BasicButton
+            $fontSize="12px"
+            $backgdColor="#c0c0c0"
+            $hoverBackgdColor="#b0b0b0"
+            onClick={() => handlePasswordModal(false)}
+          >
+            닫기
+          </BasicButton>
         </PasswordButton>
       </PasswordModalContainer>
     </>
@@ -67,4 +75,8 @@ const PasswordModalContainer = styled.div`
 const PasswordButton = styled.div`
   display: flex;
   justify-content: flex-end;
+
+  button {
+    margin-left: 12px;
+  }
 `;
