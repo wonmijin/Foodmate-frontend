@@ -5,55 +5,83 @@ import { BasicButton } from './BasicButton';
 import { MenuLabel } from './MenuLabel';
 import { LABELCOLOR } from '../../constants/menu';
 
-export const ProfileModal = ({ userInfo }: { userInfo: UserInfoType }) => {
+interface ProfileModalProps {
+  userInfo: UserInfoType;
+  handleProfileModal: (value: boolean) => void;
+}
+
+export const ProfileModal = ({ userInfo, handleProfileModal }: ProfileModalProps) => {
   const favoriteFoods = LABELCOLOR.filter((item) => userInfo.food.includes(item.menu));
 
   return (
-    <ProfileModalContainer>
-      <Modal>
-        <div className="photo">
-          <img src={userInfo.image} alt="프로필사진" />
-        </div>
-        <div className="like-box">
-          <span className="icon">
-            <GoHeart />
-          </span>
-          <span className="like">{userInfo.likes}</span>
-        </div>
-        <div className="nickname-email-wrap">
-          <div>{userInfo.nickname}</div>
-          <div>{userInfo.email}</div>
-        </div>
+    <>
+      <Overlay onClick={() => handleProfileModal(false)} />
+      <ProfileModalContainer>
+        <Modal>
+          <div className="photo">
+            <img src={userInfo.image} alt="프로필사진" />
+          </div>
+          <div className="like-box">
+            <span className="icon">
+              <GoHeart />
+            </span>
+            <span className="like">{userInfo.likes}</span>
+          </div>
+          <div className="nickname-email-wrap">
+            <div>{userInfo.nickname}</div>
+            <div>{userInfo.email}</div>
+          </div>
 
-        <div className="menu-labels">
-          {favoriteFoods.map((food) => {
-            return (
-              <MenuLabel $menuColor={food.color} $isSelected={true}>
-                {food.menu}
-              </MenuLabel>
-            );
-          })}
-        </div>
-        <div className="buttons-wrap">
-          <BasicButton $fontSize="12px" $fontColor="#fff">
-            1:1 대화 요청
-          </BasicButton>
-          <BasicButton $fontSize="12px" $backgdColor="#c0c0c0" $hoverBackgdColor="#a1a1a1" $fontColor="#fff">
-            닫기
-          </BasicButton>
-        </div>
-      </Modal>
-    </ProfileModalContainer>
+          <div className="menu-labels">
+            {favoriteFoods.map((food, idx) => {
+              return (
+                <MenuLabel $menuColor={food.color} $isSelected={true} key={idx}>
+                  {food.menu}
+                </MenuLabel>
+              );
+            })}
+          </div>
+          <div className="buttons-wrap">
+            <BasicButton
+              onClick={() => handleProfileModal(false)}
+              $fontSize="12px"
+              $backgdColor="#c0c0c0"
+              $hoverBackgdColor="#a1a1a1"
+              $fontColor="#fff"
+            >
+              닫기
+            </BasicButton>
+          </div>
+        </Modal>
+      </ProfileModalContainer>
+    </>
   );
 };
 
-const ProfileModalContainer = styled.div`
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  background-color: rgba(26, 26, 26, 0.5);
+  z-index: 1000;
+`;
 
+const ProfileModalContainer = styled.div`
+  z-index: 1000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  padding: 24px;
+
+  background-color: #fff;
+  border: 3px solid ${(props) => props.theme.color.GRAY};
+  border-radius: 12px;
 `;
 
 const Modal = styled.div`
@@ -87,6 +115,7 @@ const Modal = styled.div`
   .like-box {
     display: flex;
     gap: 4px;
+    margin-top: 4px;
 
     .icon {
       font-size: 25px;
@@ -103,11 +132,13 @@ const Modal = styled.div`
     text-align: center;
 
     & > div:first-child {
+      font-size: 18px;
       font-weight: 900;
+      padding: 4px 0;
     }
 
     & > div:last-child {
-      font-size: 12px;
+      font-size: 14px;
       color: #858585;
     }
   }

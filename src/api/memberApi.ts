@@ -28,3 +28,13 @@ export const kakaoSignIn = async () => {
     console.error(error);
   }
 };
+
+// 특정 회원 프로필 조회
+export const userProfileView = async (nickname: string) => {
+  try {
+    const result = await axios.get(`/api/member/${nickname}`);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

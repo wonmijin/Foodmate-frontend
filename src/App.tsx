@@ -18,10 +18,11 @@ import { Register } from './pages/Register';
 import ScrollToTop from './utils/ScrollToTop';
 import { ModifyPost } from './pages/ModifyPost';
 import { PrivateRoute } from './components/common/PrivateRoute';
+import { useRecoilValue } from 'recoil';
+import { isSignenIn } from './store/login';
 
 export const App = (): JSX.Element => {
-  const isSignedIn = !!sessionStorage.getItem('nickname');
-
+  const isSignedIn = useRecoilValue(isSignenIn);
   return (
     <>
       <Nav />
