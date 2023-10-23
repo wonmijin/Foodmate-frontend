@@ -13,7 +13,7 @@ interface RegisterForm {
   password: string;
   passwordConfirm: string;
   extraError?: string;
-  image: File | null;
+  image: object;
   food: string[];
 }
 
@@ -40,7 +40,7 @@ export const Register = () => {
     setSelectedFood(selectedFood);
   };
 
-  const handleSelectedImage = (selectedImage: File | null) => {
+  const handleSelectedImage = (selectedImage) => {
     setSelectedImage(selectedImage);
   };
 
@@ -51,7 +51,7 @@ export const Register = () => {
       const image = selectedImage;
 
       if (food.length < 1) {
-        setExtraError('적어도 1개 이상의 음식을 선택해야 합니다.');
+        setExtraError('한개 이상의 메뉴를 선택해 주세요.');
         alert('한개 이상의 메뉴를 선택해 주세요.');
         return;
       }
