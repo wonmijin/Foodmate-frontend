@@ -14,6 +14,11 @@ import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
 import { fetchCall } from '../api/fetchCall';
+import { userProfileView } from '../api/memberApi';
+import { UserInfoType } from '../types/userInfoType';
+import { ProfileModal } from '../components/common/ProfileModal';
+import { useRecoilState } from 'recoil';
+import { profileModalIsOpened } from '../store/userInfo';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
@@ -24,6 +29,8 @@ export const MeetingPostDetailView = () => {
     func: (() => {}) as () => void,
   });
   const signedInUserNickname = sessionStorage.getItem('nickname');
+  const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
+  const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -50,6 +57,12 @@ export const MeetingPostDetailView = () => {
     } else {
       return;
     }
+  };
+
+  const handleProfileImage = async (nickname: string) => {
+    const selectedUser = await userProfileView(nickname);
+    setSelectedUserInfo(selectedUser);
+    setIsProfileModalOpen(true);
   };
 
   const {
@@ -87,8 +100,8 @@ export const MeetingPostDetailView = () => {
           <h2>{postData.title}</h2>
           <div className="user-menu-wrap">
             <div className="user-info">
-              <div className="photo">
-                <img src={postData.image} />
+              <div className="photo" onClick={() => handleProfileImage(postData.nickname)}>
+                <img src={postData.image} alt="프로필" />
               </div>
               <div>
                 <div className="nickname">{postData.nickname}</div>
@@ -163,12 +176,20 @@ export const MeetingPostDetailView = () => {
           </RightAlign>
         </div>
         {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
-        <Comments commentsData={commentsData.content} />
+        <Comments
+          commentsData={commentsData.content}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
 
         {isOpenedAlertModal && (
           <AlertModal handleYesClick={alertModalContent.func} handleAlertModal={setIsOpenedAlertModal}>
             {alertModalContent.question}
           </AlertModal>
+        )}
+
+        {isProfileModalOpened && selectedUserInfo && (
+          <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
         )}
       </BasicPadding>
     </PostContainer>

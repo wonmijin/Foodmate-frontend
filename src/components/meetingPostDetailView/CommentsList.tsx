@@ -5,8 +5,10 @@ import { RepliesList } from './RepliesList';
 import { useEffect, useState } from 'react';
 import { fetchCall } from '../../api/fetchCall';
 import { useParams } from 'react-router-dom';
+import { userProfileView } from '../../api/memberApi';
+import { CommentsProps } from './Comments';
 
-export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] }) => {
+export const CommentsList = ({ commentsData, setSelectedUserInfo, handleProfileModal }: CommentsProps) => {
   const [comments, setComments] = useState(commentsData);
   const [content, setContent] = useState('');
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
@@ -35,13 +37,19 @@ export const CommentsList = ({ commentsData }: { commentsData: CommentsType[] })
     }
   };
 
+  const handleProfileImage = async (nickname: string) => {
+    const selectedUser = await userProfileView(nickname);
+    setSelectedUserInfo(selectedUser);
+    handleProfileModal(true);
+  };
+
   return (
     <CommentsListContainer>
       {comments.map((item: CommentsType) => {
         return (
           <div key={item.commentId}>
             <div className="profile">
-              <div className="photo">
+              <div className="photo" onClick={() => handleProfileImage(item.nickname)}>
                 <img src={item.image} alt={item.nickname} />
               </div>
               <div>{item.nickname}</div>

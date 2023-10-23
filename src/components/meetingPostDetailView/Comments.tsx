@@ -1,11 +1,22 @@
 import styled from 'styled-components';
 import { CommentsList } from './CommentsList';
 import { CommentsType } from '../../types/postCardType';
+import { UserInfoType } from '../../types/userInfoType';
 
-export const Comments = ({ commentsData }: { commentsData: CommentsType[] }) => {
+export interface CommentsProps {
+  commentsData: CommentsType[];
+  setSelectedUserInfo: (userInfo: UserInfoType) => void;
+  handleProfileModal: (isOpen: boolean) => void;
+}
+
+export const Comments = ({ commentsData, setSelectedUserInfo, handleProfileModal }: CommentsProps) => {
   return (
     <CommentsContainer>
-      <CommentsList commentsData={commentsData} />
+      <CommentsList
+        commentsData={commentsData}
+        setSelectedUserInfo={setSelectedUserInfo}
+        handleProfileModal={handleProfileModal}
+      />
     </CommentsContainer>
   );
 };
