@@ -7,8 +7,8 @@ import { useState } from 'react';
 import { UserInfoType } from '../../types/userInfoType';
 import { useRecoilState } from 'recoil';
 import { profileModalIsOpened } from '../../store/userInfo';
-import { userProfileView } from '../../api/memberApi';
 import { ProfileModal } from './ProfileModal';
+import { fetchCall } from '../../api/fetchCall';
 
 export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingType }) => {
   const navigation = useNavigate();
@@ -19,7 +19,9 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
   const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
 
   const handleProfileImage = async (nickname: string) => {
-    const selectedUser = await userProfileView(nickname);
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
+    console.log(selectedUser);
+
     setSelectedUserInfo(selectedUser);
     setIsProfileModalOpen(true);
   };
@@ -70,7 +72,11 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
         </div>
       </WriterInfo>
       {isProfileModalOpened && selectedUserInfo && (
-        <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+        <ProfileModal
+          userInfo={selectedUserInfo}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
       )}
     </div>
   );

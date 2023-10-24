@@ -14,7 +14,6 @@ import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
 import { fetchCall } from '../api/fetchCall';
-import { userProfileView } from '../api/memberApi';
 import { UserInfoType } from '../types/userInfoType';
 import { ProfileModal } from '../components/common/ProfileModal';
 import { useRecoilState } from 'recoil';
@@ -60,7 +59,7 @@ export const MeetingPostDetailView = () => {
   };
 
   const handleProfileImage = async (nickname: string) => {
-    const selectedUser = await userProfileView(nickname);
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
     setSelectedUserInfo(selectedUser);
     setIsProfileModalOpen(true);
   };
@@ -79,9 +78,10 @@ export const MeetingPostDetailView = () => {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
-  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)), {
+  } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
+    refetchOnMount: false,
     onSuccess() {
-      queryClient.invalidateQueries(['comments']);
+      queryClient.invalidateQueries(['comments', groupId]);
     },
   });
 
@@ -189,7 +189,11 @@ export const MeetingPostDetailView = () => {
         )}
 
         {isProfileModalOpened && selectedUserInfo && (
-          <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+          <ProfileModal
+            userInfo={selectedUserInfo}
+            setSelectedUserInfo={setSelectedUserInfo}
+            handleProfileModal={setIsProfileModalOpen}
+          />
         )}
       </BasicPadding>
     </PostContainer>
