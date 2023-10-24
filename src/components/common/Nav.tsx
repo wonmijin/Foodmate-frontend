@@ -5,7 +5,7 @@ import { NAV_MENUS } from '../../constants/nav-menus';
 import Dropdown, { MenuItem } from './Dropdown';
 import { BasicButton } from './BasicButton';
 import { HiOutlineMenu } from 'react-icons/hi';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import drawerState from '../../store/drawer';
 import { useMediaQuery } from 'react-responsive';
 
@@ -186,7 +186,7 @@ const SubMenuTitle = styled.a`
 
 const Nav = () => {
   const navigate = useNavigate();
-  const setIsOpen = useRecoilState<boolean>(drawerState)[1];
+  const setIsOpen = useSetRecoilState<boolean>(drawerState);
   const isTablet = useMediaQuery({ query: '(max-width : 768px)' });
 
   //TODO: 로그인 이후, 프로필 드롭메뉴

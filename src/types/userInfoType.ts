@@ -3,6 +3,7 @@ export interface UserInfoType {
   email: string;
   nickname: string;
   image: string;
-  like: number;
+  likes: number;
   food: string[];
+  status: boolean;
 }

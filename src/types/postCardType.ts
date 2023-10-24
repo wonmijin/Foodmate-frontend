@@ -58,7 +58,6 @@ export interface ReplyType {
 }
 
 export interface CreateGroupType {
-  authorization: string;
   title: string;
   name: string;
   content: string;
@@ -70,4 +69,37 @@ export interface CreateGroupType {
   storeAddress: string;
   latitude: string;
   longitude: string;
+}
+
+export interface ModifyGroupType extends CreateGroupType {
+  groupId: number;
+}
+
+export interface MeetingRequestDataType {
+  enrollmentId: number;
+  groupId: number;
+  memberId: number;
+  nickname: string;
+  image: string;
+  title: string;
+  name: string;
+  food: string;
+  foodGroupGroupDateTime: string;
+  maximum: number;
+  storeName: string;
+  storeAddress: string;
+}
+
+export interface MeetingInfoDataType {
+  id: number;
+  foodGroupId: number;
+  foodGroupMemberImage: string;
+  foodGroupTitle: string;
+  foodGroupName: string;
+  foodGroupFoodType: string;
+  foodGroupGroupDateTime: string;
+  foodGroupMaximum: number;
+  foodGroupStoreName: string;
+  foodGroupStoreAddress: string;
+  status: string;
 }

@@ -1,13 +1,27 @@
 import styled from 'styled-components';
-import {  PostCardType } from '../../types/postCardType';
+import { PostCardType } from '../../types/postCardType';
 // import { BsStar, BsStarFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import TodayMeetingType from '../../types/todayMeetingType';
+import { useState } from 'react';
+import { UserInfoType } from '../../types/userInfoType';
+import { useRecoilState } from 'recoil';
+import { profileModalIsOpened } from '../../store/userInfo';
+import { ProfileModal } from './ProfileModal';
+import { fetchCall } from '../../api/fetchCall';
 
 export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingType }) => {
   const navigation = useNavigate();
   const postCardOnClickHandler = () => {
     navigation(`/findfoodmate/${cardData.groupId}`);
+  };
+  const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
+  const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
+
+  const handleProfileImage = async (nickname: string) => {
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
+    setSelectedUserInfo(selectedUser);
+    setIsProfileModalOpen(true);
   };
 
   return (
@@ -36,7 +50,7 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
         </RightAlign>
       </PostCards>
       <WriterInfo>
-        <div className="photo">
+        <div className="photo" onClick={() => handleProfileImage(cardData.nickname)}>
           <img src={cardData.image} />
         </div>
         <div className="status">
@@ -55,6 +69,13 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
           </div> */}
         </div>
       </WriterInfo>
+      {isProfileModalOpened && selectedUserInfo && (
+        <ProfileModal
+          userInfo={selectedUserInfo}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
+      )}
     </div>
   );
 };

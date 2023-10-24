@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { BasicButton } from '../components/common/BasicButton';
@@ -7,18 +9,27 @@ import { KakaoMap } from '../components/kakao/KakaoMap';
 import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDetailGroup, getPostComments } from '../api/groupApi';
-import { useState } from 'react';
 import { AlertModal } from '../components/common/AlertModal';
+import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
+import { fetchCall } from '../api/fetchCall';
+import { UserInfoType } from '../types/userInfoType';
+import { ProfileModal } from '../components/common/ProfileModal';
+import { useRecoilState } from 'recoil';
+import { profileModalIsOpened } from '../store/userInfo';
 
 export const MeetingPostDetailView = () => {
+  const navigation = useNavigate();
   const { groupId } = useParams();
   const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState({
     question: '',
     func: (() => {}) as () => void,
   });
+  const signedInUserNickname = sessionStorage.getItem('nickname');
+  const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
+  const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -38,6 +49,21 @@ export const MeetingPostDetailView = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (confirm('정말 삭제할까요?') && groupId) {
+      await fetchCall('delete', `/group/${groupId}`);
+      navigation('/findfoodmate');
+    } else {
+      return;
+    }
+  };
+
+  const handleProfileImage = async (nickname: string) => {
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
+    setSelectedUserInfo(selectedUser);
+    setIsProfileModalOpen(true);
+  };
+
   const {
     data: postData,
     isLoading: postDataLoading,
@@ -46,11 +72,18 @@ export const MeetingPostDetailView = () => {
     enabled: !!groupId,
   });
 
+  const queryClient = useQueryClient();
+
   const {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
-  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)));
+  } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
+    refetchOnMount: false,
+    onSuccess() {
+      queryClient.invalidateQueries(['comments', groupId]);
+    },
+  });
 
   if (commentsLoading) return '댓글 로딩중...';
   if (commentsError) return '댓글 에러';
@@ -67,8 +100,8 @@ export const MeetingPostDetailView = () => {
           <h2>{postData.title}</h2>
           <div className="user-menu-wrap">
             <div className="user-info">
-              <div className="photo">
-                <img src={postData.image} />
+              <div className="photo" onClick={() => handleProfileImage(postData.nickname)}>
+                <img src={postData.image} alt="프로필" />
               </div>
               <div>
                 <div className="nickname">{postData.nickname}</div>
@@ -130,18 +163,37 @@ export const MeetingPostDetailView = () => {
               <span>명</span>
             </div>
 
-            <div>
-              <SmallGrayButton onClick={() => ''}>수정</SmallGrayButton>
-              <SmallGrayButton onClick={() => ''}>삭제</SmallGrayButton>
-            </div>
+            {signedInUserNickname === postData.nickname && (
+              <div>
+                <SmallGrayButton
+                  onClick={() => navigation(`/findfoodmate/modify/${postData.groupId}`, { state: { postData } })}
+                >
+                  수정
+                </SmallGrayButton>{' '}
+                <SmallGrayButton onClick={handleDelete}>삭제</SmallGrayButton>
+              </div>
+            )}
           </RightAlign>
         </div>
-        <Comments commentsData={commentsData.content} />
+        {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
+        <Comments
+          commentsData={commentsData.content}
+          setSelectedUserInfo={setSelectedUserInfo}
+          handleProfileModal={setIsProfileModalOpen}
+        />
 
         {isOpenedAlertModal && (
           <AlertModal handleYesClick={alertModalContent.func} handleAlertModal={setIsOpenedAlertModal}>
             {alertModalContent.question}
           </AlertModal>
+        )}
+
+        {isProfileModalOpened && selectedUserInfo && (
+          <ProfileModal
+            userInfo={selectedUserInfo}
+            setSelectedUserInfo={setSelectedUserInfo}
+            handleProfileModal={setIsProfileModalOpen}
+          />
         )}
       </BasicPadding>
     </PostContainer>
@@ -149,7 +201,7 @@ export const MeetingPostDetailView = () => {
 };
 
 const PostContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
 
   .post-box {
     margin: 50px auto;

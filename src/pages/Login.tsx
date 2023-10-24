@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { styled } from 'styled-components';
-import kakao from '../assets/kakao_login.png';
-import { kakaoSignIn, onSignIn, signedMemberInfo } from '../api/memberApi';
+import kakao from '../assets/kakao_login_large.png';
+import { kakaoSignIn, onSignIn } from '../api/memberApi';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { BasicPadding } from '../components/common/BasicPadding';
+import { PasswordModal } from '../components/login/passwordModal';
+import { fetchCall } from '../api/fetchCall';
+import { refreshTokens } from '../utils/getRefreshTokenCookie';
 import { useSetRecoilState } from 'recoil';
-import { signedUserInfo } from '../store/groupAtoms';
+import { isSignenIn } from '../store/login';
 
 const LoginWrap = styled.div`
-  margin: 150px auto 0;
+  margin: 120px auto;
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -89,7 +93,7 @@ const SimpleWrap = styled.div`
   }
 `;
 
-const Kakao = styled.button`
+const KakaoLogin = styled.button`
   background-image: url(${kakao});
   width: 340px;
   height: 45px;
@@ -99,9 +103,11 @@ const Kakao = styled.button`
   background-size: cover;
   border-radius: 8px;
   cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
-const PasswordFind = styled.a`
+const PasswordFind = styled.span`
   font-size: 13px;
   color: #212121;
   display: flex;
@@ -109,6 +115,7 @@ const PasswordFind = styled.a`
   text-decoration: none;
   margin-right: 11px;
   margin-top: 15px;
+  cursor: pointer;
 `;
 
 export type FormValues = {
@@ -116,9 +123,14 @@ export type FormValues = {
   password: string;
 };
 
+interface ErrorResponse {
+  error: string;
+  message: string;
+}
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const setSignedUserInfo = useSetRecoilState(signedUserInfo);
+  const setIsSignenIn = useSetRecoilState(isSignenIn);
   const {
     register,
     handleSubmit,
@@ -136,18 +148,27 @@ const Login: React.FC = () => {
       (document.cookie = `refreshToken=${refreshToken}; expires=${expirationDate.toUTCString()}; path=/;`), [];
 
       sessionStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('accessToken')}`;
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-      const userInfo = await signedMemberInfo();
-      setSignedUserInfo(userInfo);
+      const userInfo = await fetchCall('get', '/member');
+      sessionStorage.setItem('nickname', userInfo.nickname);
+      setIsSignenIn(true);
 
       alert('로그인 되었습니다.');
       navigate('/');
     } catch (error) {
-      const axiosError = error as AxiosError;
+      const axiosError = error as AxiosError<ErrorResponse>;
       if (axiosError.response) {
-        alert(axiosError.response.data);
+        if (axiosError.response.status === 401 && axiosError.response.data.error === 'TOKEN_INVALID') {
+          const newTokens = await refreshTokens();
+          if (newTokens) {
+            successSignIn(newTokens.refreshToken, newTokens.accessToken);
+          } else {
+            console.log('재발급 실패');
+          }
+        } else {
+          alert(axiosError.response.data);
+        }
       } else {
         console.log('서버 응답 없음');
       }
@@ -160,42 +181,53 @@ const Login: React.FC = () => {
     successSignIn(tokens.refreshToken, tokens.accessToken);
   };
 
-  return (
-    <LoginWrap>
-      <LoginTitle>로그인</LoginTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <InputWrap>
-          <input placeholder="이메일을 입력하세요" {...register('email', { required: '이메일을 입력해주세요' })} />
-          {errors.email && <p>{errors.email.message}</p>}
-        </InputWrap>
+  const [isOpenedPasswordModal, setIsOpenedPasswordModal] = useState(false);
+  const onModalOpen = () => {
+    setIsOpenedPasswordModal(!isOpenedPasswordModal);
+  };
 
-        <InputWrap>
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            {...register('password', {
-              required: '비밀번호를 입력해주세요',
-              minLength: {
-                value: 6,
-                message: '최소 6자 이상의 비밀번호를 입력해주세요',
-              },
-            })}
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-        </InputWrap>
-        <LoginButton>로그인</LoginButton>
-        <Link to={'/register'}>
-          <RegisterButton>회원가입</RegisterButton>
-        </Link>
-        <SimpleWrap>
-          <hr></hr>
-          <span>간편로그인</span>
-          <hr></hr>
-        </SimpleWrap>
-        <Kakao onClick={handleKakaoSignIn}></Kakao>
-        <PasswordFind href="#">비밀번호 찾기</PasswordFind>
-      </form>
-    </LoginWrap>
+  return (
+    <>
+      <BasicPadding>
+        <LoginWrap>
+          <LoginTitle>로그인</LoginTitle>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <InputWrap>
+              <input placeholder="이메일을 입력하세요" {...register('email', { required: '이메일을 입력해주세요' })} />
+              {errors.email && <p>{errors.email.message}</p>}
+            </InputWrap>
+
+            <InputWrap>
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해주세요"
+                {...register('password', {
+                  required: '비밀번호를 입력해주세요',
+                  minLength: {
+                    value: 6,
+                    message: '최소 6자 이상의 비밀번호를 입력해주세요',
+                  },
+                })}
+              />
+              {errors.password && <p>{errors.password.message}</p>}
+            </InputWrap>
+            <LoginButton>로그인</LoginButton>
+            <Link to={'/register'}>
+              <RegisterButton>회원가입</RegisterButton>
+            </Link>
+            <SimpleWrap>
+              <hr></hr>
+              <span>간편로그인</span>
+              <hr></hr>
+            </SimpleWrap>
+            <KakaoLogin onClick={handleKakaoSignIn}></KakaoLogin>
+            <PasswordFind onClick={onModalOpen}>비밀번호 찾기</PasswordFind>
+          </form>
+        </LoginWrap>
+
+        {isOpenedPasswordModal && <PasswordModal handlePasswordModal={setIsOpenedPasswordModal} />}
+      </BasicPadding>
+    </>
   );
 };
 

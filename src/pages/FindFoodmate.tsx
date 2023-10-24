@@ -33,6 +33,8 @@ const categories = [
 export const FindFoodmate = () => {
   const navigation = useNavigate();
   const myLocation = useCurrentLocation();
+  const token = sessionStorage.getItem('accessToken');
+
   const [selectedCategory, setSelectedCategory] = useState<string>('total');
   const [menuLabelModalOpened, setMenuLabelModalOpened] = useState<boolean>(false);
   const [datePickerModalOpened, setDatePickerModalOpened] = useState<boolean>(false);
@@ -106,6 +108,14 @@ export const FindFoodmate = () => {
     setSearchText('');
   };
 
+  const handlePost = () => {
+    if (token) {
+      navigation('/findfoodmate/newpost');
+    } else {
+      alert('로그인이 필요합니다.');
+    }
+  };
+
   const queryFetchGroups = async (
     {
       queryKey,
@@ -154,7 +164,9 @@ export const FindFoodmate = () => {
     <BasicPadding>
       <FindFoodmateContainer>
         <div className="upper">
-          <h2>밥 친구 구해요!</h2>
+          <h2>
+            <span>#</span> Food Mate 구해요!
+          </h2>
           <div className="input-button-container">
             <div className="input-box">
               <BasicInput
@@ -172,7 +184,7 @@ export const FindFoodmate = () => {
                 </div>
               </div>
             </div>
-            <BasicButton $fontSize="12px" onClick={() => navigation('/findfoodmate/newpost')}>
+            <BasicButton $fontSize="12px" onClick={handlePost}>
               모임 만들기
             </BasicButton>
           </div>
@@ -226,7 +238,11 @@ export const FindFoodmate = () => {
 };
 
 const FindFoodmateContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
+
+  h2 > span {
+    color: ${(props) => props.theme.color.ORANGE};
+  }
 
   .upper {
     display: flex;
