@@ -2,7 +2,7 @@ export interface registerType {
   email: string;
   nickname: string;
   password: string;
-  image: object;
+  image: File | null;
   food: object;
 }
 
