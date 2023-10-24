@@ -89,3 +89,17 @@ export interface MeetingRequestDataType {
   storeName: string;
   storeAddress: string;
 }
+
+export interface MeetingInfoDataType {
+  id: number;
+  foodGroupId: number;
+  foodGroupMemberImage: string;
+  foodGroupTitle: string;
+  foodGroupName: string;
+  foodGroupFoodType: string;
+  foodGroupGroupDateTime: string;
+  foodGroupMaximum: number;
+  foodGroupStoreName: string;
+  foodGroupStoreAddress: string;
+  status: string;
+}
