@@ -2,9 +2,9 @@ import { BasicPadding } from '../components/common/BasicPadding';
 import { SideMenu } from '../components/common/SideMenu';
 import { MYPAGE_CATEGORY } from '../constants/mypage';
 import styled from 'styled-components';
-import { Food } from '../components/register/food';
+import { Food } from '../components/mypage/food';
 import { LoginButton } from '../components/common/LoginButton';
-import { UserProfileImage } from '../components/register/UserProfileImage';
+import { UserProfileImage } from '../components/mypage/UserProfileImage';
 
 export const Profile = () => {
   return (
