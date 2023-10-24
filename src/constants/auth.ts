@@ -12,3 +12,8 @@ export const ACCESS_TOKEN = 'accessToken';
  * Refresh Token
  */
 export const REFRESH_TOKEN = 'refreshToken';
+
+/**
+ * 인가 키워드
+ */
+export const AUTHORIZATION = 'Authorization';
