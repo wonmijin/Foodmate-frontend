@@ -201,7 +201,7 @@ export const MeetingPostDetailView = () => {
 };
 
 const PostContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
 
   .post-box {
     margin: 50px auto;

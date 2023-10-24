@@ -238,7 +238,7 @@ export const FindFoodmate = () => {
 };
 
 const FindFoodmateContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
 
   h2 > span {
     color: ${(props) => props.theme.color.ORANGE};
