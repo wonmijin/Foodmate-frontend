@@ -16,6 +16,7 @@ interface RegisterForm {
   image: File | null;
   food: string[];
 }
+// TODO : 1. 메뉴 선택 시 Dot 제거
 
 export const Register = () => {
   const navigate = useNavigate();

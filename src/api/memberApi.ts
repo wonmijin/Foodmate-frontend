@@ -32,16 +32,30 @@ export const kakaoSignIn = async () => {
 
 // 회원가입
 export const registerMember = async ({ email, nickname, password, image, food }: registerType) => {
-  const requestData = {
-    email,
-    nickname,
-    password,
-    image,
-    food,
-  };
+  const imageFormData = new FormData();
+  if (image) {
+    imageFormData.append('file', image);
+  }
+
+  const jsonDataBlob = new Blob([JSON.stringify({ email, nickname, password, food })], {
+    type: 'application/json',
+  });
+
+  const jsonFormData = new FormData();
+  jsonFormData.append('request', jsonDataBlob);
+
   try {
-    const response = await axios.post('/api/member/signup', requestData);
-    return response.data;
+    for (const [key, value] of jsonFormData.entries()) {
+      imageFormData.append(key, value);
+    }
+
+    const result = await axios.post('/api/member/signup', imageFormData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return result.data;
   } catch (error) {
     console.error(error);
   }
