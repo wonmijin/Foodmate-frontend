@@ -6,7 +6,6 @@ import { CiClock2 } from 'react-icons/ci';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import DefaultUserProfile from '../../assets/default-chat-user-profile.svg';
 import FullMessageSkeleton from '../../assets/message-skeleton_full.gif';
 import HalfMessageSkeleton from '../../assets/message-skeleton_half.gif';
 import { useChatroomMessage } from '../../hooks/useChatroomMessage';
@@ -14,6 +13,7 @@ import { isSignenIn } from '../../store/login';
 import { MessageType } from '../../types/chatroomMessageType';
 import { ChatroomType } from '../../types/chatroomType';
 import Image from '../common/Image';
+import MemberThumbnail from './MemberThumbnail';
 
 interface MessageProps {
   chatRoom: ChatroomType;
@@ -242,9 +242,9 @@ const Message = ({ chatRoom, closeMessage }: MessageProps) => {
       client.current = new Client({
         brokerURL: `${import.meta.env.VITE_WS_URL}/chat`,
         // NOTE: 채팅 PubSub 기능 테스트용
-        debug: (msg) => {
-          console.log(msg);
-        },
+        // debug: (msg) => {
+        //   console.log(msg);
+        // },
         connectHeaders: {
           Authorization: axios.defaults.headers.common['Authorization']!.toString(),
         },
@@ -304,11 +304,9 @@ const Message = ({ chatRoom, closeMessage }: MessageProps) => {
         </ChatMeetingTitle>
         <ChatPersonInfo>
           <ChatMessageProfile>
+            <div className="Chat-message-profile"></div>
             <div className="Chat-message-profile">
-              {/* <img src={DefaultProfile} alt="푸드메이트 프로필 사진" /> */}
-            </div>
-            <div className="Chat-message-profile">
-              <img src={DefaultUserProfile} alt="사용자 프로필 사진"></img>
+              <MemberThumbnail chatMembers={chatRoom.chatMembers} />
             </div>
           </ChatMessageProfile>
           <span>{chatRoom.attendance}</span>
