@@ -2,7 +2,7 @@ import { MdArrowForwardIos } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../../assets/logo2.png';
-import MessageSvg from '../../assets/message.svg';
+import ChatMessageSvg from '../../assets/chat-foodmate-default-profile.svg';
 import { BasicButton } from '../common/BasicButton';
 import { isSignenIn } from '../../store/login';
 import { useRecoilValue } from 'recoil';
@@ -35,21 +35,7 @@ const ChatHomeHeader = styled.header`
 `;
 
 const ChatHomeMain = styled.main`
-  /* background: linear-gradient(180deg, #ffce00 0%, #ffdc4b 10.42%, #fff 35.34%); */
-  background-image: linear-gradient(
-    180deg,
-    hsl(48deg 100% 50%) 0%,
-    hsl(48deg 100% 57%) 10%,
-    hsl(47deg 100% 59%) 20%,
-    hsl(48deg 100% 61%) 30%,
-    hsl(48deg 100% 63%) 40%,
-    hsl(48deg 100% 65%) 50%,
-    hsl(47deg 100% 76%) 60%,
-    hsl(45deg 100% 84%) 70%,
-    hsl(45deg 100% 90%) 80%,
-    hsl(44deg 100% 95%) 90%,
-    hsl(0deg 0% 100%) 100%
-  );
+  background: linear-gradient(180deg, #ffce00 0%, #ffdc4b 10.42%, #fff 35.34%);
   padding: 10px 9px;
   border-radius: 0 0 24px 24px;
 
@@ -60,6 +46,11 @@ const ChatHomeMain = styled.main`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    > img {
+      width: 35px;
+      height: 35px;
+    }
   }
 
   .styled-intro-message {
@@ -87,8 +78,17 @@ const ChatHomeMain = styled.main`
 
   .intro-basic-message {
     margin-left: 10px;
-    margin-right: 20px;
     font-size: 13px;
+    width: 100%;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > svg {
+      margin-left: 20px;
+    }
   }
 
   .go-to-login-btn {
@@ -107,7 +107,6 @@ const ChatHomeMain = styled.main`
 const IntroMessage = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-top: 10px;
 `;
 
@@ -129,13 +128,12 @@ const Home = ({ selectChatRoom }: HomeProps) => {
                   <p>Recent message</p>
                   <IntroMessage>
                     <div className="mini-message-icon">
-                      <img src={MessageSvg} alt="" />
+                      <img src={ChatMessageSvg} alt="" />
                     </div>
                     <div className="intro-basic-message">
                       안녕하세요. 푸드메이트 채널톡입니다. <br />
                       즐거운 주변모임에 참여해보세요!
                     </div>
-                    <MdArrowForwardIos />
                   </IntroMessage>
                 </div>
               </div>
@@ -187,7 +185,7 @@ const RecentChatroomMessage = ({ selectChatRoom }: RecentChatroomMessageProps) =
     });
 
     setRecentChatroom(chatroomList[0]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatroomList]);
 
   if (recentChatroom === null) {
@@ -197,13 +195,12 @@ const RecentChatroomMessage = ({ selectChatRoom }: RecentChatroomMessageProps) =
           <p>Recent message</p>
           <IntroMessage>
             <div className="mini-message-icon">
-              <img src={MessageSvg} alt="" />
+              <img src={ChatMessageSvg} alt="" />
             </div>
             <div className="intro-basic-message">
               안녕하세요. 푸드메이트 채널톡입니다. <br />
               즐거운 주변모임에 참여해보세요!
             </div>
-            <MdArrowForwardIos />
           </IntroMessage>
         </div>
       </div>
@@ -217,8 +214,10 @@ const RecentChatroomMessage = ({ selectChatRoom }: RecentChatroomMessageProps) =
             <div className="mini-message-icon">
               <MemberThumbnail chatMembers={recentChatroom.chatMembers} />
             </div>
-            <div className="intro-basic-message">{recentChatroom.lastMessage}</div>
-            <MdArrowForwardIos />
+            <div className="intro-basic-message">
+              {recentChatroom.lastMessage}
+              <MdArrowForwardIos />
+            </div>
           </IntroMessage>
         </div>
       </div>
