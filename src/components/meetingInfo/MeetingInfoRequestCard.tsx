@@ -6,8 +6,10 @@ import { MeetingRequestDataType } from '../../types/postCardType';
 import { useRecoilValue } from 'recoil';
 import { requestCategory } from '../../store/meetingInfo';
 import { fetchCall } from '../../api/fetchCall';
+import { useNavigate } from 'react-router-dom';
 
 export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: MeetingRequestDataType }) => {
+  const navigation = useNavigate();
   const [isOpenedAlertModal, setIsOpenedAlertModal] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState({
     question: '',
@@ -35,16 +37,20 @@ export const MeetingInfoRequestCard = ({ meetingInfoData }: { meetingInfoData: M
     }
   };
 
+  const handleCardSelect = () => {
+    navigation(`/findfoodmate/${meetingInfoData.groupId}`);
+  };
+
   return (
     <CardContainer>
-      <LeftSection>
+      <LeftSection onClick={handleCardSelect}>
         <div className="profile-image">
           <img src={meetingInfoData.image} alt="프로필 사진" />
         </div>
         <div>
-          <div className="nickname">{meetingInfoData.nickname}</div>
+          <div className="title">{meetingInfoData.title}</div>
           <div className="info">
-            <strong>{meetingInfoData.title}</strong> <br />
+            <strong>{meetingInfoData.nickname}</strong> <br />
             {meetingInfoData.storeName} | {meetingInfoData.name} (총 {meetingInfoData.maximum}명)
           </div>
         </div>
@@ -95,6 +101,7 @@ const LeftSection = styled.div`
   min-width: 400px;
   display: flex;
   flex: 1;
+  cursor: pointer;
 
   align-items: center;
   gap: 24px;
@@ -113,7 +120,7 @@ const LeftSection = styled.div`
     overflow: hidden;
   }
 
-  .nickname {
+  .title {
     font-weight: 900;
   }
 

@@ -13,17 +13,17 @@ import { MeetingInfoDataType } from '../types/postCardType';
 
 export const History = () => {
   const [selectedCategory, setSelectedCategory] = useState('신청 현황');
-  const [decision, setDecision] = useState('all-receive');
+  const [decision, setDecision] = useState('subscription');
   const [currentData, setCurrentData] = useState<MeetingInfoDataType[]>();
   const setRequestCategory = useSetRecoilState(subscriptionCategory);
 
   const handleCategory = (category: string) => {
     setSelectedCategory(category);
     if (category === '신청 현황') {
-      setDecision('all-receive');
+      setDecision('subscription');
       setRequestCategory('받은 요청');
     } else {
-      setDecision('all-receive');
+      setDecision('history');
       setRequestCategory('지난 모임');
     }
   };
@@ -35,8 +35,6 @@ export const History = () => {
       setCurrentData(data.content);
     }
   }, [currentData, data]);
-
-  console.log(currentData);
 
   return (
     <>
@@ -76,19 +74,17 @@ export const History = () => {
 };
 
 const HistoryContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   width: 100%;
-  height: 500px;
 
   .contents-box {
     width: 100%;
     display: flex;
     gap: 12px;
-    padding: 32px 24px;
   }
 `;
 
