@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ChatroomType } from '../types/chatroomType';
 import { ChatroomMessageType } from '../types/chatroomMessageType';
+import { ACCESS_TOKEN, AUTHORIZATION } from '../constants/auth';
 
 type Chatroom = {
   chatRoomId: number;
@@ -26,42 +27,52 @@ type ChatroomInfo = {
 };
 
 const getChatroomInfo = async (chatroomId: number): Promise<ChatroomInfo> => {
+  if (axios.defaults.headers.common[AUTHORIZATION] === undefined)
+    axios.defaults.headers.common[AUTHORIZATION] = 'Bearer ' + sessionStorage.getItem(ACCESS_TOKEN);
+
   const { data } = await axios.get(`/api/chatroom/${chatroomId}`);
   return data;
 };
 
 export const getChatroomList = async (): Promise<ChatroomType[]> => {
-  const chatroomAllInfoList: ChatroomType[] = [];
-  const { data } = await axios.get(`/api/chatroom`);
-  const chatroomList: Chatroom[] = data;
-  const chatroomInfoPromise: Promise<ChatroomInfo>[] = [];
+  try {
+    if (axios.defaults.headers.common[AUTHORIZATION] === undefined)
+      axios.defaults.headers.common[AUTHORIZATION] = 'Bearer ' + sessionStorage.getItem(ACCESS_TOKEN);
 
-  for (let i = 0; i < chatroomList.length; i++) {
-    chatroomInfoPromise[i] = getChatroomInfo(chatroomList[i].chatRoomId);
+    const chatroomAllInfoList: ChatroomType[] = [];
+    const { data } = await axios.get(`/api/chatroom`, {});
+    const chatroomList: Chatroom[] = data;
+    const chatroomInfoPromise: Promise<ChatroomInfo>[] = [];
+
+    for (let i = 0; i < chatroomList.length; i++) {
+      chatroomInfoPromise[i] = getChatroomInfo(chatroomList[i].chatRoomId);
+    }
+
+    for (let i = 0; i < chatroomList.length; i++) {
+      const chatroomInfo = await chatroomInfoPromise[i];
+
+      chatroomAllInfoList.push({
+        chatRoomId: chatroomList[i].chatRoomId,
+        chatRoomName: chatroomList[i].chatRoomName,
+        lastMessage: chatroomList[i].lastMessage,
+        lastMessageTime: chatroomList[i].lastMessageTime,
+        attendance: chatroomList[i].attendance,
+        count: chatroomList[i].count,
+        groupDate: chatroomInfo.groupDate,
+        chatMembers: [...chatroomInfo.chatMembers],
+      });
+    }
+
+    return chatroomAllInfoList;
+  } catch (err) {
+    return [];
   }
-
-  for (let i = 0; i < chatroomList.length; i++) {
-    const chatroomInfo = await chatroomInfoPromise[i];
-
-    chatroomAllInfoList.push({
-      chatRoomId: chatroomList[i].chatRoomId,
-      chatRoomName: chatroomList[i].chatRoomName,
-      lastMessage: chatroomList[i].lastMessage,
-      lastMessageTime: chatroomList[i].lastMessageTime,
-      attendance: chatroomList[i].attendance,
-      count: chatroomList[i].count,
-      groupDate: chatroomInfo.groupDate,
-      chatMembers: [...chatroomInfo.chatMembers],
-    });
-  }
-
-  return chatroomAllInfoList;
 };
 
-
 export const getChatroomMessage = async (chatroomId: number): Promise<ChatroomMessageType> => {
+  if (axios.defaults.headers.common[AUTHORIZATION] === undefined)
+    axios.defaults.headers.common[AUTHORIZATION] = 'Bearer ' + sessionStorage.getItem(ACCESS_TOKEN);
+
   const { data } = await axios.get(`/api/chatroom/${chatroomId}/message`);
   return data;
 };
-
-
