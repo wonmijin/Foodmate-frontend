@@ -20,8 +20,6 @@ export const PostCard = ({ cardData }: { cardData: PostCardType | TodayMeetingTy
 
   const handleProfileImage = async (nickname: string) => {
     const selectedUser = await fetchCall('get', `/member/${nickname}`);
-    console.log(selectedUser);
-
     setSelectedUserInfo(selectedUser);
     setIsProfileModalOpen(true);
   };
