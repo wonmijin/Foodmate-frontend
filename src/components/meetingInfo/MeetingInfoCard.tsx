@@ -1,27 +1,19 @@
 import styled from 'styled-components';
-
-interface MeetingInfoDataType {
-  date: string;
-  location: string;
-  name: string;
-  count: number;
-  state: string;
-  image: string;
-}
+import { MeetingInfoDataType } from '../../types/postCardType';
 
 export const MeetingInfoCard = ({ meetingInfoData }: { meetingInfoData: MeetingInfoDataType }) => {
   return (
     <CardContainer>
       <div className="profile-image">
-        <img src={meetingInfoData.image} alt="프로필 사진" />
+        <img src={meetingInfoData.foodGroupMemberImage} alt="프로필 사진" />
       </div>
       <div>
-        <div className="date">{meetingInfoData.date}</div>
-        <div className="location">{meetingInfoData.location}</div>
+        <div className="date">{meetingInfoData.foodGroupGroupDateTime}</div>
+        <div className="location">{meetingInfoData.foodGroupStoreAddress}</div>
         <div className="info">
-          {meetingInfoData.name} (총 {meetingInfoData.count}명)
+          {meetingInfoData.foodGroupStoreName} (총 {meetingInfoData.foodGroupMaximum}명)
         </div>
-        <div className="state">{meetingInfoData.state}</div>
+        <div className="state">{meetingInfoData.status}</div>
       </div>
     </CardContainer>
   );
