@@ -194,10 +194,12 @@ const SendButton = styled.button<{ disabled: boolean }>`
   padding: 8px 12px;
 `;
 
+let backupChatList: MessageType[] = [];
+
 const Message = ({ chatRoom, closeMessage }: MessageProps) => {
   const client = useRef<Client>();
   const isSignedIn = useRecoilValue(isSignenIn);
-  const { data: initChatroomMessage, status } = useChatroomMessage(chatRoom.chatRoomId);
+  const { data: initChatroomMessage, status } = useChatroomMessage(chatRoom);
   const [loginMemberId, setLoginMemberId] = useState<number | null>(null);
   const [chatMassage, setChatMassage] = useState<MessageType[]>([]);
   const [inputMessage, setInputMessage] = useState<string>('');
@@ -228,6 +230,7 @@ const Message = ({ chatRoom, closeMessage }: MessageProps) => {
 
     setLoginMemberId(initChatroomMessage.loginMemberId);
     setChatMassage(initChatroomMessage.chatRoomMessageResponses);
+    backupChatList = [...initChatroomMessage.chatRoomMessageResponses];
   }, [initChatroomMessage]);
 
   useEffect(() => {
@@ -254,18 +257,18 @@ const Message = ({ chatRoom, closeMessage }: MessageProps) => {
           client.current.subscribe(
             `/topic/chatroom/${chatRoom.chatRoomId}`,
             (message: IMessage) => {
-              let chatMessage: MessageType | null;
+              let newChatMessage: MessageType | null;
               try {
-                chatMessage = JSON.parse(message.body);
+                newChatMessage = JSON.parse(message.body);
               } catch (e) {
-                chatMessage = null;
+                newChatMessage = null;
               }
 
-              if (chatMessage === null) return;
+              if (newChatMessage === null) return;
 
-              const newChatMessage = [...chatMassage];
-              newChatMessage.push(chatMessage);
-              setChatMassage(newChatMessage);
+              const chatArr = [...backupChatList, newChatMessage];
+              setChatMassage(chatArr);
+              backupChatList = [...chatArr];
             },
             { Authorization: axios.defaults.headers.common['Authorization']!.toString() },
           );
@@ -292,6 +295,7 @@ const Message = ({ chatRoom, closeMessage }: MessageProps) => {
             onClick={() => {
               closeMessage();
               setLoginMemberId(null);
+              setChatMassage([]);
             }}
           />
           <div className="chat-meeting-title-contents">
