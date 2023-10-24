@@ -13,7 +13,7 @@ interface RegisterForm {
   password: string;
   passwordConfirm: string;
   extraError?: string;
-  image: object;
+  image: File | null;
   food: string[];
 }
 
@@ -36,11 +36,11 @@ export const Register = () => {
   const [selectedFood, setSelectedFood] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const handleSelectedFood = (selectedFood) => {
+  const handleSelectedFood = (selectedFood: string[]) => {
     setSelectedFood(selectedFood);
   };
 
-  const handleSelectedImage = (selectedImage) => {
+  const handleSelectedImage = (selectedImage: File | null) => {
     setSelectedImage(selectedImage);
   };
 

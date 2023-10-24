@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { LABELCOLOR } from '../../constants/menu';
 import { MenuLabel } from '../common/MenuLabel';
 
-export const Food = ({ onFoodSelection }) => {
+export const Food = ({ onFoodSelection }: { onFoodSelection: (selectedMenus: string[]) => void }) => {
   const [selectedMenus, setSelectedMenus] = useState<string[]>([]);
 
   const handleLabels = (menu: string) => {

@@ -3,7 +3,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
 import { AiFillPlusCircle } from 'react-icons/ai';
 
-export const UserProfileImage = ({ onImageSelect }) => {
+export const UserProfileImage = ({ onImageSelect }: { onImageSelect: (file: File | null) => void }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
