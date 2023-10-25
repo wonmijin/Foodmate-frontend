@@ -1,6 +1,8 @@
 import { registerType, emailType, nicknameType } from '../types/registerType';
 import axios, { AxiosError } from 'axios';
 import { ErrorResponse } from 'react-router-dom';
+import { UserInfoType } from '../types/userInfoType';
+import { ACCESS_TOKEN, AUTHORIZATION } from '../constants/auth';
 
 // 로그인
 export const onSignIn = async (email: string, password: string) => {
@@ -80,4 +82,16 @@ export const nicknameConfirm = async ({ nickname }: nicknameType) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+/**
+ * 로그인 사용자 정보 조회
+ * @returns UserInfoType
+ */
+export const getMyProfile = async (): Promise<UserInfoType> => {
+  if (axios.defaults.headers.common[AUTHORIZATION] === undefined)
+    axios.defaults.headers.common[AUTHORIZATION] = 'Bearer ' + sessionStorage.getItem(ACCESS_TOKEN);
+
+  const { data } = await axios.get(`/api/member`);
+  return data;
 };

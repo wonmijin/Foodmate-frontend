@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { getChatroomMessage } from '../api/ChatApi';
+import { ChatroomType } from '../types/chatroomType';
 
-export const useChatroomMessage = (chatroomId: number) => {
+export const useChatroomMessage = (chatroom: ChatroomType) => {
   return useQuery({
-    queryKey: ['chatroomMessage'],
-    queryFn: () => getChatroomMessage(chatroomId),
+    queryKey: ['chatroomMessage', chatroom.lastMessageTime],
+    queryFn: () => getChatroomMessage(chatroom.chatRoomId),
   });
 };

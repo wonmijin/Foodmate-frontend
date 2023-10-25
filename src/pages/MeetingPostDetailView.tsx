@@ -31,6 +31,7 @@ export const MeetingPostDetailView = () => {
   const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
   const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
   const [currentComments, setCurrentComments] = useState();
+  
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');

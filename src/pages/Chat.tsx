@@ -7,6 +7,8 @@ import Message from '../components/chat/Message';
 import Room from '../components/chat/Room';
 import ChatNavType from '../constants/chatNavType';
 import { ChatroomType } from '../types/chatroomType';
+import { isSignenIn } from '../store/login';
+import { useRecoilValue } from 'recoil';
 
 const ChatIconBox = styled.button`
   width: 56px;
@@ -102,6 +104,8 @@ const Chat = () => {
   const [isOpenMessage, setIsOpenMessage] = useState<boolean>(false);
   const [selectedChatRoom, setSelectedChatRoom] = useState<ChatroomType | null>(null);
 
+  const isSignedIn = useRecoilValue(isSignenIn);
+
   const closeMessage = () => {
     setNav(ChatNavType.Room);
     setIsOpenMessage(false);
@@ -144,6 +148,10 @@ const Chat = () => {
                   <li
                     className={nav === ChatNavType.Room ? 'active' : ''}
                     onClick={() => {
+                      if (!isSignedIn) {
+                        alert('로그인 후 이용해주세요');
+                        return;
+                      }
                       setNav(ChatNavType.Room);
                     }}
                   >
