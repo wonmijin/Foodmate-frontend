@@ -100,10 +100,6 @@ const PostCards = styled.div`
 `;
 
 const LeftAlign = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
   .title {
     font-size: 14px;
     color: #000;
@@ -174,11 +170,3 @@ const WriterInfo = styled.div`
     }
   }
 `;
-
-// const Participated = styled.div`
-//   color: ${(props) => props.theme.color.ORANGE};
-//   font-weight: 600;
-// `;
-// const NotParticipating = styled.div`
-//   color: #777777;
-// `;

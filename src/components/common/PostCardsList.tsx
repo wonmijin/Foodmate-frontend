@@ -1,6 +1,15 @@
 import { PostCard } from './PostCard';
 import { AllPostCardType } from '../../types/postCardType';
+import styled from 'styled-components';
 
 export const PostCardsList = ({ groupsData }: { groupsData: AllPostCardType[] }) => {
-  return <div>{groupsData?.map((card: AllPostCardType, idx: number) => <PostCard cardData={card} key={idx} />)}</div>;
+  return (
+    <CardsContainer>
+      {groupsData?.map((card: AllPostCardType, idx: number) => <PostCard cardData={card} key={idx} />)}
+    </CardsContainer>
+  );
 };
+
+const CardsContainer = styled.div`
+  width: fit-content;
+`;
