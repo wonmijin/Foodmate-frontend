@@ -9,7 +9,7 @@ import { KakaoMap } from '../components/kakao/KakaoMap';
 import { SmallGrayButton } from '../components/common/SmallGrayButton';
 import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
