@@ -19,10 +19,13 @@ const OneThumbnail = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+
   > img {
     position: absolute;
     top: 0;
     left: 0;
+    border-radius: 50%;
+    border: 1px solid #e8e8e8;
   }
 `;
 
@@ -30,6 +33,8 @@ const TwoThumbnail = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  border-radius: 50%;
+  border: 1px solid #e8e8e8;
 
   > img {
     width: 50%;
@@ -38,14 +43,17 @@ const TwoThumbnail = styled.div`
 `;
 
 const ThreeThumbnail = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
   position: relative;
+  border-radius: 50%;
 
   > img {
     position: absolute;
-    width: 60%;
-    height: 60%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid #e8e8e8;
 
     &:nth-child(1) {
       top: 0;
@@ -53,13 +61,13 @@ const ThreeThumbnail = styled.div`
     }
 
     &:nth-child(2) {
-      top: 40%;
+      top: 50%;
       left: 0;
     }
 
     &:nth-child(3) {
-      top: 40%;
-      left: 40%;
+      top: 50%;
+      left: 48%;
     }
   }
 `;
