@@ -1,7 +1,7 @@
 import { BiSolidDownArrow } from 'react-icons/bi';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { useMediaQuery } from 'react-responsive';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Logo from '../../assets/logo2.png';
@@ -147,7 +147,8 @@ const MenuTitle = styled.span`
   font-weight: 400;
   font-size: 14px;
 
-  &:hover {
+  &:hover,
+  &.active {
     color: #f96223;
     font-weight: bold;
   }
@@ -176,6 +177,7 @@ const DefaultProfile = styled.div`
     align-items: center;
     display: flex;
     justify-content: center;
+    overflow: hidden;
   }
 
   .nick-name {
@@ -194,6 +196,7 @@ const Nav = () => {
   const isTablet = useMediaQuery({ query: '(max-width : 768px)' });
   const [isSignedIn, setIsSignedIn] = useRecoilState(isSignenIn);
   const { data: myProfile } = useMyProfile(isSignedIn);
+  const { pathname } = useLocation();
 
   const myProfileDropMenu = [
     {
@@ -247,11 +250,12 @@ const Nav = () => {
                   <li key={menu.path}>
                     {menu.subList === undefined ? (
                       <Link to={`/${menu.path}`}>
-                        <MenuTitle>{menu.title}</MenuTitle>
+                        <MenuTitle className={pathname.includes(menu.path) ? 'active' : ''}>{menu.title}</MenuTitle>
                       </Link>
                     ) : (
                       <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
                         <MenuTitle
+                          className={pathname.split('/')[1] === menu.path.split('/')[0] ? 'active' : ''}
                           onClick={() => {
                             navigate(`/${menu.subList![0].path}`);
                           }}
