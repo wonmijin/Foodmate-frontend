@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import mainBg from '../../assets/main-background.png';
+import skeletonImg from '../../assets/skeleton.gif';
 import useDebounce from '../../hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -261,7 +262,7 @@ export const Search = () => {
             ) : (
               <SearchPopup>
                 {isOnSkeleton ? (
-                  <Skeleton src="src/assets/skeleton.gif" />
+                  <Skeleton src={skeletonImg} />
                 ) : (
                   <ul>
                     {searchList.map((item, index) => {

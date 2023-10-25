@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BiHome, BiMessageRoundedDots, BiSolidHome, BiSolidMessageRoundedDots } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import MessageBtn from '../assets/message.svg';
 import Home from '../components/chat/Home';
 import Message from '../components/chat/Message';
 import Room from '../components/chat/Room';
-import MessageBtn from '../assets/message.svg';
-
-enum ChatNavType {
-  Home,
-  Room,
-}
+import ChatNavType from '../constants/chatNavType';
+import { ChatroomType } from '../types/chatroomType';
+import { isSignenIn } from '../store/login';
+import { useRecoilValue } from 'recoil';
 
 const ChatIconBox = styled.button`
   width: 56px;
@@ -51,6 +49,7 @@ const Nav = styled.nav`
   box-shadow: 0px 0px 70px 0px rgba(0, 0, 0, 0.05);
   position: absolute;
   bottom: 0;
+  height: 63px;
 
   ul {
     display: flex;
@@ -100,42 +99,22 @@ const ChatBody = styled.div`
 `;
 
 const Chat = () => {
-  const navigate = useNavigate();
-
-  const goToLogin = useCallback(() => {
-    navigate('/login');
-  }, [navigate]);
-
-  const goToRoom = () => {
-    setNav(ChatNavType.Room);
-  };
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nav, setNav] = useState<ChatNavType>(ChatNavType.Home);
-  const [body, setBody] = useState<JSX.Element>(Home({ goToLogin: goToLogin, goToRoom: goToRoom }));
   const [isOpenMessage, setIsOpenMessage] = useState<boolean>(false);
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState<number | null>(null);
+  const [selectedChatRoom, setSelectedChatRoom] = useState<ChatroomType | null>(null);
+
+  const isSignedIn = useRecoilValue(isSignenIn);
 
   const closeMessage = () => {
     setNav(ChatNavType.Room);
     setIsOpenMessage(false);
   };
 
-  const selectChatRoom = (chatRoomId: number) => {
-    setSelectedChatRoomId(chatRoomId);
+  const selectChatRoom = (chatRoom: ChatroomType) => {
+    setSelectedChatRoom(chatRoom);
     setIsOpenMessage(true);
   };
-
-  useEffect(() => {
-    switch (nav) {
-      case ChatNavType.Home:
-        setBody(Home({ goToLogin: goToLogin, goToRoom: goToRoom }));
-        break;
-      case ChatNavType.Room:
-        setBody(Room({ selectChatRoom: selectChatRoom }));
-        break;
-    }
-  }, [nav, goToLogin]);
 
   return (
     <div>
@@ -150,7 +129,11 @@ const Chat = () => {
         <ChatBody>
           {isOpenMessage === false ? (
             <>
-              {body}
+              {nav === ChatNavType.Home ? (
+                <Home selectChatRoom={selectChatRoom} />
+              ) : (
+                <Room selectChatRoom={selectChatRoom} />
+              )}
               <Nav>
                 <ul>
                   <li
@@ -165,6 +148,10 @@ const Chat = () => {
                   <li
                     className={nav === ChatNavType.Room ? 'active' : ''}
                     onClick={() => {
+                      if (!isSignedIn) {
+                        alert('로그인 후 이용해주세요');
+                        return;
+                      }
                       setNav(ChatNavType.Room);
                     }}
                   >
@@ -174,8 +161,10 @@ const Chat = () => {
                 </ul>
               </Nav>
             </>
+          ) : selectedChatRoom !== null ? (
+            <Message chatRoom={selectedChatRoom} closeMessage={closeMessage} />
           ) : (
-            <Message chatRoomId={selectedChatRoomId} closeMessage={closeMessage} />
+            ''
           )}
         </ChatBody>
       ) : (

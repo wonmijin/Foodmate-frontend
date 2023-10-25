@@ -7,7 +7,7 @@ interface TinyEditorProps {
   handleContent: (content: string) => void;
 }
 
-const editor_api: string = import.meta.env.VITE_EDITER_API_KEY;
+const editor_api: string = import.meta.env.VITE_EDITOR_API_KEY;
 
 export const TinyEditor = ({ value, handleContent }: TinyEditorProps) => {
   const editorRef = useRef<TinyMCEEditor | null>(null);

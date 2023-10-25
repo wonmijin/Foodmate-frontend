@@ -1,5 +1,8 @@
+import { registerType, emailType, nicknameType } from '../types/registerType';
 import axios, { AxiosError } from 'axios';
 import { ErrorResponse } from 'react-router-dom';
+import { UserInfoType } from '../types/userInfoType';
+import { ACCESS_TOKEN, AUTHORIZATION } from '../constants/auth';
 
 // 로그인
 export const onSignIn = async (email: string, password: string) => {
@@ -29,12 +32,66 @@ export const kakaoSignIn = async () => {
   }
 };
 
-// 특정 회원 프로필 조회
-export const userProfileView = async (nickname: string) => {
+// 회원가입
+export const registerMember = async ({ email, nickname, password, image, food }: registerType) => {
+  const imageFormData = new FormData();
+  if (image) {
+    imageFormData.append('file', image);
+  }
+
+  const jsonDataBlob = new Blob([JSON.stringify({ email, nickname, password, food })], {
+    type: 'application/json',
+  });
+
+  const jsonFormData = new FormData();
+  jsonFormData.append('request', jsonDataBlob);
+
   try {
-    const result = await axios.get(`/api/member/${nickname}`);
+    for (const [key, value] of jsonFormData.entries()) {
+      imageFormData.append(key, value);
+    }
+
+    const result = await axios.post('/api/member/signup', imageFormData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
     return result.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+};
+
+// 이메일 중복확인
+export const emailConfirm = async ({ email }: emailType) => {
+  try {
+    const response = await axios.get('/api/member/email', { params: { email } });
+    console.log('response>>>>>>>>>>>>>>' + response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 닉네임 중복확인
+export const nicknameConfirm = async ({ nickname }: nicknameType) => {
+  try {
+    const response = await axios.get('/api/member/nickname', { params: { nickname } });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/**
+ * 로그인 사용자 정보 조회
+ * @returns UserInfoType
+ */
+export const getMyProfile = async (): Promise<UserInfoType> => {
+  if (axios.defaults.headers.common[AUTHORIZATION] === undefined)
+    axios.defaults.headers.common[AUTHORIZATION] = 'Bearer ' + sessionStorage.getItem(ACCESS_TOKEN);
+
+  const { data } = await axios.get(`/api/member`);
+  return data;
 };

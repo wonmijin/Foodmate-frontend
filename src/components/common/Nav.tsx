@@ -1,17 +1,18 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { BiSolidDownArrow } from 'react-icons/bi';
+import { HiOutlineMenu } from 'react-icons/hi';
+import { useMediaQuery } from 'react-responsive';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Logo from '../../assets/logo2.png';
+import { ACCESS_TOKEN, NICKNAME, REFRESH_TOKEN } from '../../constants/auth';
 import { NAV_MENUS } from '../../constants/nav-menus';
-import Dropdown, { MenuItem } from './Dropdown';
-import { BasicButton } from './BasicButton';
-import { HiOutlineMenu } from 'react-icons/hi';
-import { useRecoilState } from 'recoil';
+import { useMyProfile } from '../../hooks/useMyProfile';
 import drawerState from '../../store/drawer';
-import { useMediaQuery } from 'react-responsive';
-
-// TODO: 로그인 후 필요한 아이콘
-// import { BsPersonFill } from 'react-icons/bs';
-// import { BiSolidDownArrow } from 'react-icons/bi';
+import { isSignenIn } from '../../store/login';
+import { BasicButton } from './BasicButton';
+import Dropdown, { MenuItem } from './Dropdown';
+import Image from './Image';
 
 const FakeNav = styled.div`
   height: 60px;
@@ -40,11 +41,15 @@ const StyledNavContainer = styled.div`
 `;
 
 const NavContent = styled.div`
-  display: flex;
   width: 100%;
-  align-items: center;
   position: relative;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+
+  @media only screen and (max-width: 768px) {
+    justify-content: unset;
+  }
 `;
 
 const NavLeftContent = styled.div`
@@ -117,7 +122,6 @@ const Hamburger = styled.button`
   }
 `;
 
-// TODO: 로그인 회원가입 버튼 스타일
 const SignInUp = styled.div`
   display: flex;
   white-space: nowrap;
@@ -143,42 +147,44 @@ const MenuTitle = styled.span`
   font-weight: 400;
   font-size: 14px;
 
-  &:hover {
+  &:hover,
+  &.active {
     color: #f96223;
     font-weight: bold;
   }
 `;
 
-//TODO: 로그인 후, 스타일
-// const SignInContainer = styled.div`
-//   width: 160px;
-//   height: 50px;
-//   display: flex;
-//   justify-content: end;
-//   align-items: center;
-// `;
+const SignInContainer = styled.div`
+  width: 160px;
+  height: 50px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
 
-// const DefaultProfile = styled.div`
-//   display: flex;
-//   align-items: center;
-//   position: absolute;
-//   right: 0px;
+const DefaultProfile = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0px;
 
-//   .profile-bg {
-//     border-radius: 50%;
-//     width: 40px;
-//     height: 40px;
-//     background-color: #e8e8e8;
-//     margin-right: 10px;
-//     align-items: center;
-//     display: flex;
-//     justify-content: center;
-//   }
+  .profile-bg {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: #e8e8e8;
+    margin-right: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-//   .nick-name {
-//     margin-right: 5px;
-//   }
-// `;
+  .nick-name {
+    margin-right: 5px;
+    font-weight: 400;
+  }
+`;
 
 const SubMenuTitle = styled.a`
   font-size: 14px;
@@ -186,24 +192,30 @@ const SubMenuTitle = styled.a`
 
 const Nav = () => {
   const navigate = useNavigate();
-  const setIsOpen = useRecoilState<boolean>(drawerState)[1];
+  const setIsOpen = useSetRecoilState<boolean>(drawerState);
   const isTablet = useMediaQuery({ query: '(max-width : 768px)' });
+  const [isSignedIn, setIsSignedIn] = useRecoilState(isSignenIn);
+  const { data: myProfile } = useMyProfile(isSignedIn);
+  const { pathname } = useLocation();
 
-  //TODO: 로그인 이후, 프로필 드롭메뉴
-  // const myProfileDropMenu = [
-  //   {
-  //     children: <SubMenuTitle>마이페이지</SubMenuTitle>,
-  //     onClick: () => {
-  //       navigate(`/mypage/profile`);
-  //     },
-  //   },
-  //   {
-  //     children: <SubMenuTitle>로그아웃</SubMenuTitle>,
-  //     onClick: () => {
-  //       console.log('로그아웃');
-  //     },
-  //   },
-  // ];
+  const myProfileDropMenu = [
+    {
+      children: <SubMenuTitle>마이페이지</SubMenuTitle>,
+      onClick: () => {
+        navigate(`/mypage/profile`);
+      },
+    },
+    {
+      children: <SubMenuTitle>로그아웃</SubMenuTitle>,
+      onClick: () => {
+        document.cookie = `${REFRESH_TOKEN}=; expires=Thu, 01 Jan 1999 00:00:10 GMT;`;
+        sessionStorage.removeItem(ACCESS_TOKEN);
+        sessionStorage.removeItem(NICKNAME);
+        setIsSignedIn(false);
+        alert('로그아웃 되었습니다.');
+      },
+    },
+  ];
 
   const getMenus = (subList: { path: string; title: string }[]): MenuItem[] => {
     return subList.map<MenuItem>(({ title, path }) => {
@@ -238,11 +250,12 @@ const Nav = () => {
                   <li key={menu.path}>
                     {menu.subList === undefined ? (
                       <Link to={`/${menu.path}`}>
-                        <MenuTitle>{menu.title}</MenuTitle>
+                        <MenuTitle className={pathname.includes(menu.path) ? 'active' : ''}>{menu.title}</MenuTitle>
                       </Link>
                     ) : (
                       <Dropdown trigger="hover" menus={getMenus(menu.subList)}>
                         <MenuTitle
+                          className={pathname.split('/')[1] === menu.path.split('/')[0] ? 'active' : ''}
                           onClick={() => {
                             navigate(`/${menu.subList![0].path}`);
                           }}
@@ -256,34 +269,40 @@ const Nav = () => {
               })}
             </LinksContainer>
           </NavLeftContent>
-          <SignInUp>
-            <BasicButton $fontSize={isTablet ? '12px' : '13px'} onClick={() => navigate('/login')}>
-              <span>로그인</span>
-            </BasicButton>
-            <BasicButton
-              $fontSize={isTablet ? '12px' : '13px'}
-              $backgdColor={'#fff'}
-              $borderColor={'#FFCE00'}
-              onClick={() => navigate('/register')}
-            >
-              <span>회원가입</span>
-            </BasicButton>
-          </SignInUp>
-          {/* 
-          // TODO: 로그인 이후 사용될 마크업
-          <DefaultProfile>
-            <div>
-              <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
-                <SignInContainer>
-                  <div className="profile-bg">
-                    <BsPersonFill size="30" color="#fff" />
-                  </div>
-                  <span className="nick-name">{'sera1313 '}</span>
-                  <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
-                </SignInContainer>
-              </Dropdown>
-            </div>
-          </DefaultProfile> */}
+          {myProfile === undefined ? (
+            <SignInUp>
+              <BasicButton $fontSize={isTablet ? '12px' : '13px'} onClick={() => navigate('/login')}>
+                <span>로그인</span>
+              </BasicButton>
+              <BasicButton
+                $fontSize={isTablet ? '12px' : '13px'}
+                $backgdColor={'#fff'}
+                $borderColor={'#FFCE00'}
+                onClick={() => navigate('/register')}
+              >
+                <span>회원가입</span>
+              </BasicButton>
+            </SignInUp>
+          ) : (
+            <DefaultProfile>
+              <div>
+                <Dropdown fontWeight="600" trigger="all" menus={myProfileDropMenu}>
+                  <SignInContainer>
+                    <div className="profile-bg">
+                      <Image
+                        imageKey={myProfile.image ?? ''}
+                        alt={myProfile.nickname}
+                        imageUrl={myProfile.image ?? ''}
+                        tooltip={myProfile.nickname}
+                      />
+                    </div>
+                    <span className="nick-name">{myProfile.nickname}</span>
+                    <BiSolidDownArrow style={{ color: '#c5c4c4' }} />
+                  </SignInContainer>
+                </Dropdown>
+              </div>
+            </DefaultProfile>
+          )}
         </NavContent>
       </StyledNavContainer>
     </>

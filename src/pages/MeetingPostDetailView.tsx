@@ -1,24 +1,25 @@
+import { Client, IFrame } from '@stomp/stompjs';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { BasicPadding } from '../components/common/BasicPadding';
-import { BasicButton } from '../components/common/BasicButton';
-import { MenuLabel } from '../components/common/MenuLabel';
-import { LABELCOLOR } from '../constants/menu';
-import { KakaoMap } from '../components/kakao/KakaoMap';
-import { SmallGrayButton } from '../components/common/SmallGrayButton';
-import { Comments } from '../components/meetingPostDetailView/Comments';
 import { useParams } from 'react-router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import styled from 'styled-components';
+import { fetchCall } from '../api/fetchCall';
 import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
-import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
-import { fetchCall } from '../api/fetchCall';
-import { userProfileView } from '../api/memberApi';
-import { UserInfoType } from '../types/userInfoType';
+import { BasicButton } from '../components/common/BasicButton';
+import { BasicPadding } from '../components/common/BasicPadding';
+import { MenuLabel } from '../components/common/MenuLabel';
 import { ProfileModal } from '../components/common/ProfileModal';
-import { useRecoilState } from 'recoil';
+import { SmallGrayButton } from '../components/common/SmallGrayButton';
+import { KakaoMap } from '../components/kakao/KakaoMap';
+import { Comments } from '../components/meetingPostDetailView/Comments';
+import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
+import { LABELCOLOR } from '../constants/menu';
+import { isSignenIn } from '../store/login';
 import { profileModalIsOpened } from '../store/userInfo';
+import { UserInfoType } from '../types/userInfoType';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
@@ -31,12 +32,44 @@ export const MeetingPostDetailView = () => {
   const signedInUserNickname = sessionStorage.getItem('nickname');
   const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
   const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
+  const [currentComments, setCurrentComments] = useState();
+  const isSignedIn = useRecoilValue(isSignenIn);
+
+  const {
+    data: postData,
+    isLoading: postDataLoading,
+    error: postDataError,
+  } = useQuery(['detailGroup'], () => groupId && getDetailGroup(parseInt(groupId)), {
+    enabled: !!groupId,
+  });
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
   };
   const joinedChat = () => {
-    alert('대화에 참여했어요!');
+    if (isSignedIn === false) {
+      alert('로그인 후 이용해 주세요');
+      return;
+    }
+    const auth = `Bearer ${sessionStorage.getItem('accessToken')}`;
+
+    const client = new Client({
+      brokerURL: `${import.meta.env.VITE_WS_URL}/chat`,
+      connectHeaders: { Authorization: auth },
+      onConnect: () => {
+        if (client === undefined) return;
+        client.subscribe(`/topic/chatroom/${postData.chatRoomId}`, () => {}, { Authorization: auth });
+        alert('채팅방 목록을 확인해 주세요!');
+      },
+      onStompError: (receipt: IFrame) => {
+        if (receipt.headers.message.includes('해당 요청에 권한이 없습니다.')) {
+          client.deactivate();
+          alert('모임 참여 여부 또는 참여 수락 여부를 확인해 주세요!');
+        }
+      },
+    });
+
+    client.activate();
   };
 
   const handleAttend = (event: string, question: string) => {
@@ -60,28 +93,20 @@ export const MeetingPostDetailView = () => {
   };
 
   const handleProfileImage = async (nickname: string) => {
-    const selectedUser = await userProfileView(nickname);
+    const selectedUser = await fetchCall('get', `/member/${nickname}`);
     setSelectedUserInfo(selectedUser);
     setIsProfileModalOpen(true);
   };
 
   const {
-    data: postData,
-    isLoading: postDataLoading,
-    error: postDataError,
-  } = useQuery(['detailGroup'], () => groupId && getDetailGroup(parseInt(groupId)), {
-    enabled: !!groupId,
-  });
-
-  const queryClient = useQueryClient();
-
-  const {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
-  } = useQuery(['comments'], () => groupId && getPostComments(parseInt(groupId)), {
-    onSuccess() {
-      queryClient.invalidateQueries(['comments']);
+  } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
+    refetchOnMount: false,
+    onSuccess: async () => {
+      const result = await fetchCall('get', `/group/${groupId}/comment`);
+      setCurrentComments(result.content);
     },
   });
 
@@ -177,7 +202,7 @@ export const MeetingPostDetailView = () => {
         </div>
         {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
         <Comments
-          commentsData={commentsData.content}
+          commentsData={currentComments ? currentComments : commentsData.content}
           setSelectedUserInfo={setSelectedUserInfo}
           handleProfileModal={setIsProfileModalOpen}
         />
@@ -189,7 +214,11 @@ export const MeetingPostDetailView = () => {
         )}
 
         {isProfileModalOpened && selectedUserInfo && (
-          <ProfileModal userInfo={selectedUserInfo} handleProfileModal={setIsProfileModalOpen} />
+          <ProfileModal
+            userInfo={selectedUserInfo}
+            setSelectedUserInfo={setSelectedUserInfo}
+            handleProfileModal={setIsProfileModalOpen}
+          />
         )}
       </BasicPadding>
     </PostContainer>
@@ -197,7 +226,7 @@ export const MeetingPostDetailView = () => {
 };
 
 const PostContainer = styled.div`
-  margin: 120px 0;
+  margin: 60px 0;
 
   .post-box {
     margin: 50px auto;

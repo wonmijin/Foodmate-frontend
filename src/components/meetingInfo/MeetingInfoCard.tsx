@@ -1,27 +1,51 @@
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
-interface MeetingInfoDataType {
-  date: string;
-  location: string;
-  name: string;
-  count: number;
-  state: string;
-  image: string;
-}
+import { MeetingInfoDataType } from '../../types/postCardType';
+import { formatDateTime } from '../../utils/formatDate';
+import { useNavigate } from 'react-router-dom';
 
 export const MeetingInfoCard = ({ meetingInfoData }: { meetingInfoData: MeetingInfoDataType }) => {
+  const navigation = useNavigate();
+  const [status, setStatus] = useState('');
+  const [dateTime, setDateTime] = useState<string>();
+
+  useEffect(() => {
+    setDateTime(formatDateTime(meetingInfoData.foodGroupGroupDateTime));
+  }, [meetingInfoData.foodGroupGroupDateTime]);
+
+  useEffect(() => {
+    switch (meetingInfoData.status) {
+      case 'ACCEPT':
+        setStatus('수락됨');
+        break;
+      case 'CANCEL':
+        setStatus('신청 취소');
+        break;
+      case 'SUBMIT':
+        setStatus('신청 완료');
+        break;
+      case 'REFUSE':
+        setStatus('거절됨');
+        break;
+    }
+  }, [meetingInfoData.status]);
+
+  const handleCardSelect = () => {
+    navigation(`/findfoodmate/${meetingInfoData.foodGroupId}`);
+  };
+
   return (
-    <CardContainer>
+    <CardContainer onClick={handleCardSelect}>
       <div className="profile-image">
-        <img src={meetingInfoData.image} alt="프로필 사진" />
+        <img src={meetingInfoData.foodGroupMemberImage} alt="프로필 사진" />
       </div>
       <div>
-        <div className="date">{meetingInfoData.date}</div>
-        <div className="location">{meetingInfoData.location}</div>
+        <div className="date">{dateTime}</div>
+        <div className="location">{meetingInfoData.foodGroupStoreAddress}</div>
         <div className="info">
-          {meetingInfoData.name} (총 {meetingInfoData.count}명)
+          {meetingInfoData.foodGroupStoreName} (총 {meetingInfoData.foodGroupMaximum}명)
         </div>
-        <div className="state">{meetingInfoData.state}</div>
+        <div className="state">{status}</div>
       </div>
     </CardContainer>
   );
@@ -30,6 +54,7 @@ export const MeetingInfoCard = ({ meetingInfoData }: { meetingInfoData: MeetingI
 const CardContainer = styled.div`
   width: 100%;
   min-width: 400px;
+  cursor: pointer;
 
   height: 140px;
   background-color: ${(props) => props.theme.color.GRAY}60;
