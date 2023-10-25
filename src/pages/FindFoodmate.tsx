@@ -214,24 +214,30 @@ export const FindFoodmate = () => {
             )}
           </div>
         </div>
-        <InfiniteScroll
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr 1fr',
-            gap: '60px 16px',
-          }}
-          dataLength={(data && data.pages.length) || 0}
-          next={fetchNextPage}
-          hasMore={!!hasNextPage}
-          loader={<h4>Loading...</h4>}
-          endMessage={hasNextPage ? null : <NullBox>더 이상 모임이 없어요.</NullBox>}
-        >
-          {(data?.pages || [])
-            .flatMap((page) => page?.content || [])
-            .map((item, idx) => (
-              <div key={idx}>{item && <PostCardsList groupsData={searchedData ? searchedData : [item]} />}</div>
-            ))}
-        </InfiniteScroll>
+        {searchedData ? (
+          <PostCardsList groupsData={searchedData} />
+        ) : (
+          <InfiniteScroll
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: '12px',
+            }}
+            dataLength={(data && data.pages.length) || 0}
+            next={fetchNextPage}
+            hasMore={!!hasNextPage}
+            loader={<h4>Loading...</h4>}
+            endMessage={hasNextPage ? null : <NullBox>더 이상 모임이 없어요.</NullBox>}
+          >
+            {(data?.pages || [])
+              .flatMap((page) => page?.content || [])
+              .map((item, idx) => (
+                <div key={idx}>{item && <PostCardsList groupsData={[item]} />}</div>
+              ))}
+          </InfiniteScroll>
+        )}
       </FindFoodmateContainer>
     </BasicPadding>
   );
