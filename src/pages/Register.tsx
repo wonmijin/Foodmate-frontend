@@ -63,7 +63,7 @@ export const Register = () => {
       }
 
       await registerMember({ email, nickname, password, image, food });
-      alert('회원가입이 완료되었습니다.');
+      alert('회원가입이 완료되었습니다. 이메일 인증 후 로그인 가능합니다.');
       navigate('/login');
     } catch (error) {
       console.error(error);

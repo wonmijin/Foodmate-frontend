@@ -2,19 +2,25 @@ import { styled } from 'styled-components';
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
 import { AiFillPlusCircle } from 'react-icons/ai';
+import { useSetRecoilState } from 'recoil';
+import { imageAndFoodsModifiedData } from '../../store/userInfo';
 
-export const UserProfileImage = () => {
+export const UserProfileImage = ({ currentImage }: { currentImage?: string }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const setImageModified = useSetRecoilState(imageAndFoodsModifiedData);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setSelectedImage(file);
+    setImageModified((prev) => ({ ...prev, image: file }));
   };
 
   return (
     <UserImage>
       {selectedImage ? (
         <img src={URL.createObjectURL(selectedImage)} alt="profile-image" className="profile-image" />
+      ) : currentImage ? (
+        <img src={currentImage} alt="profile-image" className="profile-image" />
       ) : (
         <UserIcon />
       )}

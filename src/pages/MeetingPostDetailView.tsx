@@ -1,26 +1,23 @@
-import { Client, IFrame } from '@stomp/stompjs';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { fetchCall } from '../api/fetchCall';
+import { BasicPadding } from '../components/common/BasicPadding';
+import { BasicButton } from '../components/common/BasicButton';
+import { MenuLabel } from '../components/common/MenuLabel';
+import { LABELCOLOR } from '../constants/menu';
+import { KakaoMap } from '../components/kakao/KakaoMap';
+import { SmallGrayButton } from '../components/common/SmallGrayButton';
+import { Comments } from '../components/meetingPostDetailView/Comments';
+import { useParams } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 import { getDetailGroup, getPostComments } from '../api/groupApi';
 import { AlertModal } from '../components/common/AlertModal';
-import { BasicButton } from '../components/common/BasicButton';
-import { BasicPadding } from '../components/common/BasicPadding';
-import { MenuLabel } from '../components/common/MenuLabel';
-import { ProfileModal } from '../components/common/ProfileModal';
-import { SmallGrayButton } from '../components/common/SmallGrayButton';
-import { KakaoMap } from '../components/kakao/KakaoMap';
-import { Comments } from '../components/meetingPostDetailView/Comments';
 import { CreateComment } from '../components/meetingPostDetailView/CreateComments';
-import { LABELCOLOR } from '../constants/menu';
-import { isSignenIn } from '../store/login';
-import { profileModalIsOpened } from '../store/userInfo';
+import { fetchCall } from '../api/fetchCall';
 import { UserInfoType } from '../types/userInfoType';
-import { AxiosError } from 'axios';
+import { ProfileModal } from '../components/common/ProfileModal';
+import { useRecoilState } from 'recoil';
+import { profileModalIsOpened } from '../store/userInfo';
 
 export const MeetingPostDetailView = () => {
   const navigation = useNavigate();
@@ -33,57 +30,22 @@ export const MeetingPostDetailView = () => {
   const signedInUserNickname = sessionStorage.getItem('nickname');
   const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
   const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
-  const isSignedIn = useRecoilValue(isSignenIn);
-
-  const {
-    data: postData,
-    isLoading: postDataLoading,
-    error: postDataError,
-  } = useQuery(['detailGroup'], () => groupId && getDetailGroup(parseInt(groupId)), {
-    enabled: !!groupId,
-  });
+  const [currentComments, setCurrentComments] = useState();
+  
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
   };
-
   const joinedChat = () => {
-    if (isSignedIn === false) {
-      alert('로그인 후 이용해 주세요');
-      return;
-    }
-    const auth = `Bearer ${sessionStorage.getItem('accessToken')}`;
-
-    const client = new Client({
-      brokerURL: `${import.meta.env.VITE_WS_URL}/chat`,
-      connectHeaders: { Authorization: auth },
-      onConnect: () => {
-        if (client === undefined) return;
-        client.subscribe(`/topic/chatroom/${postData.chatRoomId}`, () => {}, { Authorization: auth });
-        alert('채팅방 목록을 확인해 주세요!');
-      },
-      onStompError: (receipt: IFrame) => {
-        if (receipt.headers.message.includes('해당 요청에 권한이 없습니다.')) {
-          client.deactivate();
-          alert('모임 참여 여부 또는 참여 수락 여부를 확인해 주세요!');
-        }
-      },
-    });
-
-    client.activate();
+    alert('대화에 참여했어요!');
   };
 
-  const handleAttend = async (event: string, question: string) => {
+  const handleAttend = (event: string, question: string) => {
+    setIsOpenedAlertModal(true);
+    setAlertModalContent((prev) => ({ ...prev, question: question }));
+
     if (event === '모임') {
-      try {
-        await fetchCall('post', `group/${groupId}/enrollment`);
-        setIsOpenedAlertModal(true);
-        setAlertModalContent((prev) => ({ ...prev, question: question }));
-        setAlertModalContent((prev) => ({ ...prev, func: joinedMeeting }));
-      } catch (error) {
-        const axiosError = error as AxiosError;
-        alert(axiosError.response?.data);
-      }
+      setAlertModalContent((prev) => ({ ...prev, func: joinedMeeting }));
     } else if (event === '대화') {
       setAlertModalContent((prev) => ({ ...prev, func: joinedChat }));
     }
@@ -104,7 +66,13 @@ export const MeetingPostDetailView = () => {
     setIsProfileModalOpen(true);
   };
 
-  const queryClient = useQueryClient();
+  const {
+    data: postData,
+    isLoading: postDataLoading,
+    error: postDataError,
+  } = useQuery(['detailGroup'], () => groupId && getDetailGroup(parseInt(groupId)), {
+    enabled: !!groupId,
+  });
 
   const {
     data: commentsData,
@@ -112,8 +80,9 @@ export const MeetingPostDetailView = () => {
     error: commentsError,
   } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
     refetchOnMount: false,
-    onSuccess() {
-      queryClient.invalidateQueries(['comments', groupId]);
+    onSuccess: async () => {
+      const result = await fetchCall('get', `/group/${groupId}/comment`);
+      setCurrentComments(result.content);
     },
   });
 
@@ -175,21 +144,20 @@ export const MeetingPostDetailView = () => {
             <KakaoMap geoCode={geoCode} />
           </MapContainer>
 
-          {signedInUserNickname !== postData.nickname && (
-            <div className="basic-buttons-wrap">
-              <BasicButton $fontSize="12px" onClick={() => handleAttend('모임', '모임에 참여할까요?')}>
-                모임 참여
-              </BasicButton>
-              <BasicButton
-                $fontSize="12px"
-                onClick={() => handleAttend('대화', '대화에 참여할까요?')}
-                $backgdColor="#c0c0c0"
-                $hoverBackgdColor="#b6b6b6"
-              >
-                대화 참여
-              </BasicButton>
-            </div>
-          )}
+          <div className="basic-buttons-wrap">
+            <BasicButton $fontSize="12px" onClick={() => handleAttend('모임', '모임에 참여할까요?')}>
+              모임 참여
+            </BasicButton>
+            <BasicButton
+              $fontSize="12px"
+              onClick={() => handleAttend('대화', '대화에 참여할까요?')}
+              $backgdColor="#c0c0c0"
+              $hoverBackgdColor="#b6b6b6"
+            >
+              대화 참여
+            </BasicButton>
+          </div>
+
           <RightAlign>
             <div className="personnel">
               {postData.current} / {postData.maximum}
@@ -210,7 +178,7 @@ export const MeetingPostDetailView = () => {
         </div>
         {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
         <Comments
-          commentsData={commentsData.content}
+          commentsData={currentComments ? currentComments : commentsData.content}
           setSelectedUserInfo={setSelectedUserInfo}
           handleProfileModal={setIsProfileModalOpen}
         />
