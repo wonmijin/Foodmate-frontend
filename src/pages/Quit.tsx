@@ -63,7 +63,7 @@ export const Quit = () => {
                 <IoCaretForwardOutline size="17px" color="#fff" text-align="center" />
               </span>
               <p>
-                탈퇴한 아이디는 다시 사용할 수 없습니다.
+                탈퇴한 이메일은 다시 사용할 수 없습니다.
                 <br />
                 입력하신 개인정보 모두 삭제 처리됩니다.
               </p>
@@ -71,7 +71,7 @@ export const Quit = () => {
             <hr></hr>
             <QuitPaddig>
               <QuitInBox>
-                <p>아이디</p>
+                <p>이메일</p>
                 <div>{myEmail}</div>
               </QuitInBox>
 
