@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { UserProfileImage } from '../components/register/UserProfileImage';
 import { Food } from '../components/register/food';
 import { BasicPadding } from '../components/common/BasicPadding';
 import { useNavigate } from 'react-router-dom';
 import { registerMember, emailConfirm, nicknameConfirm } from '../api/memberApi';
+import { removeDot } from '../utils/removeDot';
 
 interface RegisterForm {
   nickname: string;
@@ -16,6 +17,7 @@ interface RegisterForm {
   image: File | null;
   food: string[];
 }
+// TODO : 1. 메뉴 선택 시 Dot 제거
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -36,9 +38,13 @@ export const Register = () => {
   const [selectedFood, setSelectedFood] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const handleSelectedFood = (selectedFood: string[]) => {
-    setSelectedFood(selectedFood);
-  };
+  const handleSelectedFood = useCallback(
+    (selectedFood: string[]) => {
+      const formattedFoods = selectedFood.map((item) => removeDot(item));
+      setSelectedFood(formattedFoods);
+    },
+    [setSelectedFood],
+  );
 
   const handleSelectedImage = (selectedImage: File | null) => {
     setSelectedImage(selectedImage);
@@ -56,8 +62,7 @@ export const Register = () => {
         return;
       }
 
-      const response = await registerMember({ email, nickname, password, image, food });
-      console.log(response);
+      await registerMember({ email, nickname, password, image, food });
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch (error) {
@@ -71,8 +76,8 @@ export const Register = () => {
     try {
       const response = await emailConfirm({ email });
       if (response == true) {
-        console.log('중복되지 않은 이메일입니다.');
-        alert('중복되지 않은 이메일입니다.');
+        console.log('사용 가능한 이메일입니다.');
+        alert('사용 가능한 이메일입니다.');
       } else {
         setExtraError('중복된 이메일입니다.');
         alert('중복된 이메일입니다.');
@@ -94,8 +99,7 @@ export const Register = () => {
     try {
       const response = await nicknameConfirm({ nickname });
       if (response == true) {
-        console.log('중복되지 않은 닉네임입니다.');
-        alert('중복되지 않은 닉네임입니다.');
+        alert('사용 가능한 닉네임입니다.');
       } else {
         setExtraError('중복된 닉네임입니다.');
         alert('중복된 닉네임입니다.');

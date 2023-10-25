@@ -3,7 +3,7 @@ export interface registerType {
   nickname: string;
   password: string;
   image: File | null;
-  food: object;
+  food: string[];
 }
 
 export interface emailType {
