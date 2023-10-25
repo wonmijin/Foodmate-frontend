@@ -30,6 +30,7 @@ export const MeetingPostDetailView = () => {
   const signedInUserNickname = sessionStorage.getItem('nickname');
   const [selectedUserInfo, setSelectedUserInfo] = useState<UserInfoType>();
   const [isProfileModalOpened, setIsProfileModalOpen] = useRecoilState(profileModalIsOpened);
+  const [currentComments, setCurrentComments] = useState();
 
   const joinedMeeting = () => {
     alert('모임에 참여했어요!');
@@ -72,16 +73,15 @@ export const MeetingPostDetailView = () => {
     enabled: !!groupId,
   });
 
-  const queryClient = useQueryClient();
-
   const {
     data: commentsData,
     isLoading: commentsLoading,
     error: commentsError,
   } = useQuery(['comments', groupId], () => groupId && getPostComments(parseInt(groupId)), {
     refetchOnMount: false,
-    onSuccess() {
-      queryClient.invalidateQueries(['comments', groupId]);
+    onSuccess: async () => {
+      const result = await fetchCall('get', `/group/${groupId}/comment`);
+      setCurrentComments(result.content);
     },
   });
 
@@ -177,7 +177,7 @@ export const MeetingPostDetailView = () => {
         </div>
         {signedInUserNickname && <CreateComment groupId={Number(groupId)} />}
         <Comments
-          commentsData={commentsData.content}
+          commentsData={currentComments ? currentComments : commentsData.content}
           setSelectedUserInfo={setSelectedUserInfo}
           handleProfileModal={setIsProfileModalOpen}
         />
