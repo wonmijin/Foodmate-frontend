@@ -2,13 +2,15 @@ import { BasicPadding } from '../components/common/BasicPadding';
 import { SideMenu } from '../components/common/SideMenu';
 import { MYPAGE_CATEGORY } from '../constants/mypage';
 import styled from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
 import { LoginButton } from '../components/common/LoginButton';
+import { fetchCall } from '../api/fetchCall';
+import { AxiosError } from 'axios';
 
 interface PasswordForm {
-  nowpassword: string;
-  newpassword: string;
+  currentPassword: string;
+  newPassword: string;
   passwordConfirm: string;
   extraError?: string;
 }
@@ -17,15 +19,32 @@ export const Password = () => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
-    watch,
   } = useForm<PasswordForm>({ mode: 'onBlur' });
 
   const passwordRef = useRef<string | null>(null);
-  passwordRef.current = watch('newpassword');
 
-  const onSubmitHandler: SubmitHandler<PasswordForm> = (data) => {
-    console.log(data);
+  const [password, setPassword] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const handleSubmit = async () => {
+    if (password.newPassword !== password.confirmPassword) {
+      alert('새 비밀번호를 확인해주세요');
+      return;
+    }
+    try {
+      await fetchCall('patch', '/member/password', {
+        oldPassword: password.currentPassword,
+        newPassword: password.newPassword,
+      });
+      setPassword({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      alert('비밀번호가 변경되었습니다.');
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      alert(axiosError.response?.data);
+    }
   };
 
   return (
@@ -35,75 +54,81 @@ export const Password = () => {
           <SideMenu sideMenuList={MYPAGE_CATEGORY} navMenuIdx={3} />
           <PasswordBox>
             <h3>비밀번호 변경</h3>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
-              <hr></hr>
-              <PasswordPaddig>
-                <PasswordInBox>
-                  <p>현재 비밀번호</p>
-                  <div>
-                    <input
-                      type="password"
-                      {...register('nowpassword', {
-                        required: '필수 값입니다.',
-                        minLength: {
-                          value: 8,
-                          message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
-                        },
-                        pattern: {
-                          value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                          message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
-                        },
-                      })}
-                      placeholder="현재 비밀번호를 입력해주세요."
-                    />
-                    <p>{errors?.newpassword?.message}</p>
-                  </div>
-                </PasswordInBox>
+            <hr></hr>
+            <PasswordPaddig>
+              <PasswordInBox>
+                <p>현재 비밀번호</p>
+                <div>
+                  <input
+                    type="password"
+                    {...register('currentPassword', {
+                      required: '필수 값입니다.',
+                      minLength: {
+                        value: 8,
+                        message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                      },
+                      pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                        message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                      },
+                    })}
+                    placeholder="현재 비밀번호를 입력해주세요."
+                    onChange={(e) => setPassword((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                    value={password.currentPassword}
+                  />
+                  <p>{errors?.newPassword?.message}</p>
+                </div>
+              </PasswordInBox>
 
-                <PasswordInBox>
-                  <p>새 비밀번호</p>
-                  <div>
-                    <input
-                      type="password"
-                      {...register('newpassword', {
-                        required: '필수 값입니다.',
-                        minLength: {
-                          value: 8,
-                          message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
-                        },
-                        pattern: {
-                          value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                          message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
-                        },
-                      })}
-                      placeholder="새로운 비밀번호를 입력해주세요."
-                    />
-                    <p>{errors?.newpassword?.message}</p>
-                  </div>
-                </PasswordInBox>
+              <PasswordInBox>
+                <p>새 비밀번호</p>
+                <div>
+                  <input
+                    type="password"
+                    {...register('newPassword', {
+                      required: '필수 값입니다.',
+                      minLength: {
+                        value: 8,
+                        message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                      },
+                      pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                        message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                      },
+                    })}
+                    placeholder="새로운 비밀번호를 입력해주세요."
+                    onChange={(e) => setPassword((prev) => ({ ...prev, newPassword: e.target.value }))}
+                    value={password.newPassword}
+                  />
+                  <p>{errors?.newPassword?.message}</p>
+                </div>
+              </PasswordInBox>
 
-                <PasswordInBox>
-                  <p>새 비밀번호 확인</p>
-                  <div>
-                    <input
-                      type="password"
-                      {...register('passwordConfirm', {
-                        required: '필수 값입니다.',
-                        minLength: {
-                          value: 8,
-                          message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
-                        },
-                        validate: (value) => value === passwordRef.current,
-                      })}
-                      placeholder="비밀번호를 한번 더 입력해주세요"
-                    />
-                    <p>{errors?.passwordConfirm?.message}</p>
-                  </div>
-                </PasswordInBox>
-              </PasswordPaddig>
-              <hr></hr>
-              <LoginButton $fontSize="16px">비밀번호 변경</LoginButton>
-            </form>
+              <PasswordInBox>
+                <p>새 비밀번호 확인</p>
+                <div>
+                  <input
+                    type="password"
+                    {...register('passwordConfirm', {
+                      required: '필수 값입니다.',
+                      minLength: {
+                        value: 8,
+                        message: '비밀번호는 숫자, 영문 대문자, 소문자, 특수문자를 포함한 8글자 이상이어야 합니다.',
+                      },
+                      validate: (value) => value === passwordRef.current,
+                    })}
+                    placeholder="비밀번호를 한번 더 입력해주세요"
+                    onChange={(e) => setPassword((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                    value={password.confirmPassword}
+                  />
+                  <p>{errors?.passwordConfirm?.message}</p>
+                </div>
+              </PasswordInBox>
+            </PasswordPaddig>
+            <hr></hr>
+            <LoginButton $fontSize="16px" onClick={handleSubmit}>
+              비밀번호 변경
+            </LoginButton>
           </PasswordBox>
         </PasswordWrap>
       </BasicPadding>
