@@ -1,3 +1,9 @@
+# 시연영상
+
+https://github.com/wonmijin/Foodmate-frontend/assets/101543286/89ea4dfd-0c56-4566-85db-8e6d8869f89c
+
+
+
 # Dir. Layout
 ```
 ├─api: API를 모아놓은 폴더입니다.
